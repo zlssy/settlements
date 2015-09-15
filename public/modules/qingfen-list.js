@@ -47,63 +47,63 @@ define(function(require, exports, module) {
 			}, {
 				name: 'tradeAmount',
 				index: 'tradeAmount',
-				width: 60,
+				width: 50,
 				sortable: false,
 				sort: 'int',
 				editable: true
 			}, {
 				name: 'tradeTrans',
 				index: 'tradeTrans',
-				width: 60,
+				width: 50,
 				sortable: false,
 				sort: 'int',
 				editable: true
 			}, {
 				name: 'refundAmount',
 				index: 'refundAmount',
-				width: 60,
+				width: 50,
 				sortable: false,
 				sort: 'int',
 				editable: true
 			}, {
 				name: 'refundTrans',
 				index: 'refundTrans',
-				width: 60,
+				width: 50,
 				sortable: false,
 				sort: 'int',
 				editable: true
 			}, {
 				name: 'cost',
 				index: 'cost',
-				width: 60,
+				width: 50,
 				sortable: false,
 				sort: 'int',
 				editable: true
 			}, {
 				name: 'serviceCharge',
 				index: 'serviceCharge',
-				width: 60,
+				width: 50,
 				sortable: false,
 				sort: 'int',
 				editable: true
 			}, {
 				name: 'settleAmount',
 				index: 'settleAmount',
-				width: 60,
+				width: 50,
 				sortable: false,
 				sort: 'int',
 				editable: true
 			}, {
 				name: 'profit',
 				index: 'profit',
-				width: 60,
+				width: 50,
 				sortable: false,
 				sort: 'int',
 				editable: true
 			}, {
 				name: 'status',
 				index: 'status',
-				width: 90,
+				width: 80,
 				sortable: false,
 				editable: true,
 				edittype: "select",
