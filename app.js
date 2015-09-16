@@ -27,6 +27,10 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/test', test_route);
 
+
+//接口模拟
+app.use('/settlement',require('./routes/settlement'))
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
