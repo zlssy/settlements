@@ -15,7 +15,7 @@ if(daili){//代理
 		var callback = req.query.callback;
 		var obj = {
 			"method" : req.method,
-			"uri" : daili_url + req.url
+			"uri" : daili_url + req.url,
 			"headers" : {
 				"userId" : userid
 			}
