@@ -143,11 +143,18 @@ router.all('/dataDictionary/dropdownlist', function(req, res, next){
 	res.json(data);
 });
 
+var fileapi = {
+	'/clearing/list': "settlement-clearing-list.json"
+}
 
 //加载文件数据
 router.all('/clearing/list',function(req,res,next){
-	var dataFileName = "settlement-clearing-list.json"
-	fs.createReadStream(path.resolve(__dirname,'../temp_data/',dataFileName)).pipe(res);
+	var dataFileName = "settlement-clearing-list.json";
+	if(fileapi[req.path]){
+		fs.createReadStream(path.resolve(__dirname,'../temp_data/',fileapi[req.path])).pipe(res);
+	}else{
+		next();
+	}
 })
 
 
