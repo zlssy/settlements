@@ -1,10 +1,13 @@
 define(function(require, exports, module) {
 	var utils = require('utils'),
 		content = $('#content'),
+		listContainer = $('#grid_list_body'),
+		firstRowTemplate = $('#first_row_template').html(),
+		rowTemplate = $('#row_template').html(),
 		userParam = {};
 
 	function init() {
-		loadData();
+		loadDataA();
 	}
 
 	function loadData() {
@@ -19,6 +22,7 @@ define(function(require, exports, module) {
 			url: global_config.serverRoot + 'clearing/list?userId=' + utils.object2param(userParam), // 获取数据地址
 			datatype: 'json', // 获取数据的响应格式
 			mtype: 'post', // 上传数据的方式
+			loadonce: false,
 			editurl: global_config.serverRoot + 'clearing/edit', // 添加or编辑数据的地址
 			// data: grid_data,
 			// datatype: 'local',
@@ -112,8 +116,8 @@ define(function(require, exports, module) {
 				}
 			}],
 			viewrecords: true,
-			rowNum: 20,
-			rowList: [20, 30, 40],
+			rowNum: 10,
+			// rowList: [20, 30, 40],
 			pager: pager_selector,
 			altRow: true,
 			multiselect: true,
@@ -323,6 +327,20 @@ define(function(require, exports, module) {
 		}
 
 		registerEvents();
+	}
+
+	function loadDataA(){
+		$.ajax({
+			url:global_config.serverRoot + 'clearing/list?userId=' + utils.object2param(userParam),
+			success: function(json){
+				if('0' == json.code){
+					var html = utils.formatJson(rowTemplate, {
+						data: json.data.pageData
+					});
+					listContainer.append(firstRowTemplate).append(html);
+				}
+			}
+		});
 	}
 
 	function registerEvents() {
