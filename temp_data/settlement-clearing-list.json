@@ -1,0 +1,62 @@
+{
+	"code": "0",
+	"message": "success",
+	"data": {
+		"pageCnt": "1",
+		"pageSize": 20,
+		"pageNo": 1,
+		"pageData": [{
+			"merchantId": "11111111",
+			"accountNumber": "11111111",
+			"clearingDate": "08/31/2015 12:20:23",
+			"tradeAmount": 100.00,
+			"tradeTrans": 10,
+			"refundAmount": 100.00,
+			"refundTrans": 1.00,
+			"cost": 11.00,
+			"serviceCharge": 100.00,
+			"settleAmount": 100.00,
+			"profit": 100.00,
+			"status": "待结算"
+		},{
+			"merchantId": "22222222",
+			"accountNumber": "22222222",
+			"clearingDate": "08/31/2015 12:20:23",
+			"tradeAmount": 100.00,
+			"tradeTrans": 10,
+			"refundAmount": 100.00,
+			"refundTrans": 1.00,
+			"cost": 11.00,
+			"serviceCharge": 100.00,
+			"settleAmount": 100.00,
+			"profit": 100.00,
+			"status": "待结算"
+		},{
+			"merchantId": "33333333",
+			"accountNumber": "33333333",
+			"clearingDate": "08/31/2015 12:20:23",
+			"tradeAmount": 100.00,
+			"tradeTrans": 10,
+			"refundAmount": 100.00,
+			"refundTrans": 1.00,
+			"cost": 11.00,
+			"serviceCharge": 100.00,
+			"settleAmount": 100.00,
+			"profit": 100.00,
+			"status": "待结算"
+		},{
+			"merchantId": "444444444",
+			"accountNumber": "444444444",
+			"clearingDate": "08/31/2015 12:20:23",
+			"tradeAmount": 100.00,
+			"tradeTrans": 10,
+			"refundAmount": 100.00,
+			"refundTrans": 1.00,
+			"cost": 11.00,
+			"serviceCharge": 100.00,
+			"settleAmount": 100.00,
+			"profit": 100.00,
+			"status": "待结算"
+		}]
+	}
+}

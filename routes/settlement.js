@@ -1,7 +1,9 @@
 //数据模拟
 var express = require('express');
-var request = require('request')
+var request = require('request');
 var tool = require('../lib/tool');
+var fs = require('fs');
+var path = require('path');
 var router = express.Router();
 global._ = require('underscore');
 
@@ -140,5 +142,13 @@ router.all('/dataDictionary/dropdownlist', function(req, res, next){
 	})
 	res.json(data);
 });
+
+
+//加载文件数据
+router.all('/clearing/list',function(req,res,next){
+	var dataFileName = "settlement-clearing-list.json"
+	fs.createReadStream(path.resolve(__dirname,'../temp_data/',dataFileName)).pipe(res);
+})
+
 
 module.exports = router;
