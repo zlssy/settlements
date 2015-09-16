@@ -172,7 +172,7 @@
 															<td id="first_pager" class="ui-pg-button ui-corner-all ui-state-disabled" style="cursor: default;"><span class="ui-icon ace-icon fa fa-angle-double-left bigger-140"></span></td>
 															<td id="prev_pager" class="ui-pg-button ui-corner-all ui-state-disabled" style="cursor: default;"><span class="ui-icon ace-icon fa fa-angle-left bigger-140"></span></td>
 															<td class="ui-pg-button ui-state-disabled" style="width: 4px; cursor: default;"><span class="ui-separator"></span></td>
-															<td dir="ltr"> <input class="ui-pg-input" type="text" size="2" maxlength="7" value="0" role="textbox"> 共 <span id="sp_1_pager">2</span> 页</td><td class="ui-pg-button ui-state-disabled" style="width: 4px; cursor: default;"><span class="ui-separator"></span></td>
+															<td dir="ltr">第 <input class="ui-pg-input" type="text" size="2" maxlength="7" value="1" role="textbox">页 共 <span id="sp_1_pager">2</span> 页</td><td class="ui-pg-button ui-state-disabled" style="width: 4px; cursor: default;"><span class="ui-separator"></span></td>
 															<td id="next_pager" class="ui-pg-button ui-corner-all" style="cursor: default;"><span class="ui-icon ace-icon fa fa-angle-right bigger-140"></span></td>
 															<td id="last_pager" class="ui-pg-button ui-corner-all" style="cursor: default;"><span class="ui-icon ace-icon fa fa-angle-double-right bigger-140"></span></td>
 														</tr>
@@ -203,10 +203,24 @@
 </script>
 <script id="row_template" type="text/html">
 <$
+	var item;
 	for(var i=0;i<data.length;i++){
+		item = data[i];
 $>
 	<tr role="row" id="1" tabindex="-1" class="ui-widget-content jqgrow ui-row-ltr" aria-selected="false">
-		<td role="gridcell" style="text-align:center;width: 25px;" aria-describedby="grid_cb"><input role="checkbox" type="checkbox" id="jqg_grid_1" class="cbox" name="jqg_grid_1"></td><td role="gridcell" style="" title="11111111" aria-describedby="grid_merchantId">11111111</td><td role="gridcell" style="" title="11111111" aria-describedby="grid_accountNumber">11111111</td><td role="gridcell" style="" title="08/31/2015 12:20:23" aria-describedby="grid_clearingDate">08/31/2015 12:20:23</td><td role="gridcell" style="" title="100" aria-describedby="grid_tradeAmount">100</td><td role="gridcell" style="" title="10" aria-describedby="grid_tradeTrans">10</td><td role="gridcell" style="" title="100" aria-describedby="grid_refundAmount">100</td><td role="gridcell" style="" title="1" aria-describedby="grid_refundTrans">1</td><td role="gridcell" style="" title="11" aria-describedby="grid_cost">11</td><td role="gridcell" style="" title="100" aria-describedby="grid_serviceCharge">100</td><td role="gridcell" style="" title="100" aria-describedby="grid_settleAmount">100</td><td role="gridcell" style="" title="100" aria-describedby="grid_profit">100</td><td role="gridcell" style="" title="待结算" aria-describedby="grid_status">待结算</td>
+		<td role="gridcell" style="text-align:center;width: 25px;" aria-describedby="grid_cb"><input role="checkbox" type="checkbox" id="jqg_grid_1" class="cbox" name="jqg_grid_1"></td>
+		<td role="gridcell" style="" title="<$=item.merchantId$>" aria-describedby="grid_merchantId"><$=item.merchantId$></td>
+		<td role="gridcell" style="" title="<$=item.accountNumber$>" aria-describedby="grid_accountNumber"><$=item.accountNumber$></td>
+		<td role="gridcell" style="" title="<$=item.clearingDate$>" aria-describedby="grid_clearingDate"><$=item.clearingDate$></td>
+		<td role="gridcell" style="" title="<$=item.tradeAmount$>" aria-describedby="grid_tradeAmount"><$=item.tradeAmount$></td>
+		<td role="gridcell" style="" title="<$=item.tradeTrans$>" aria-describedby="grid_tradeTrans"><$=item.tradeTrans$></td>
+		<td role="gridcell" style="" title="<$=item.refundAmount$>" aria-describedby="grid_refundAmount"><$=item.refundAmount$></td>
+		<td role="gridcell" style="" title="<$=item.refundTrans$>" aria-describedby="grid_refundTrans"><$=item.refundTrans$></td>
+		<td role="gridcell" style="" title="<$=item.cost$>" aria-describedby="grid_cost"><$=item.cost$></td>
+		<td role="gridcell" style="" title="<$=item.serviceCharge$>" aria-describedby="grid_serviceCharge"><$=item.serviceCharge$></td>
+		<td role="gridcell" style="" title="<$=item.settleAmount$>" aria-describedby="grid_settleAmount"><$=item.settleAmount$></td>
+		<td role="gridcell" style="" title="<$=item.profit$>" aria-describedby="grid_profit"><$=item.profit$></td>
+		<td role="gridcell" style="" title="<$=item.status$>" aria-describedby="grid_status"><$=item.status$></td>
 	</tr>
 <$}$>
 </script>
