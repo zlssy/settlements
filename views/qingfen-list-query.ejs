@@ -202,27 +202,27 @@
 </tr>
 </script>
 <script id="row_template" type="text/html">
-<$
+<%%
 	var item;
 	for(var i=0;i<data.length;i++){
 		item = data[i];
-$>
+%>
 	<tr role="row" id="1" tabindex="-1" class="ui-widget-content jqgrow ui-row-ltr" aria-selected="false">
 		<td role="gridcell" style="text-align:center;width: 25px;" aria-describedby="grid_cb"><input role="checkbox" type="checkbox" id="jqg_grid_1" class="cbox" name="jqg_grid_1"></td>
-		<td role="gridcell" style="" title="<$=item.merchantId$>" aria-describedby="grid_merchantId"><$=item.merchantId$></td>
-		<td role="gridcell" style="" title="<$=item.accountNumber$>" aria-describedby="grid_accountNumber"><$=item.accountNumber$></td>
-		<td role="gridcell" style="" title="<$=item.clearingDate$>" aria-describedby="grid_clearingDate"><$=item.clearingDate$></td>
-		<td role="gridcell" style="" title="<$=item.tradeAmount$>" aria-describedby="grid_tradeAmount"><$=item.tradeAmount$></td>
-		<td role="gridcell" style="" title="<$=item.tradeTrans$>" aria-describedby="grid_tradeTrans"><$=item.tradeTrans$></td>
-		<td role="gridcell" style="" title="<$=item.refundAmount$>" aria-describedby="grid_refundAmount"><$=item.refundAmount$></td>
-		<td role="gridcell" style="" title="<$=item.refundTrans$>" aria-describedby="grid_refundTrans"><$=item.refundTrans$></td>
-		<td role="gridcell" style="" title="<$=item.cost$>" aria-describedby="grid_cost"><$=item.cost$></td>
-		<td role="gridcell" style="" title="<$=item.serviceCharge$>" aria-describedby="grid_serviceCharge"><$=item.serviceCharge$></td>
-		<td role="gridcell" style="" title="<$=item.settleAmount$>" aria-describedby="grid_settleAmount"><$=item.settleAmount$></td>
-		<td role="gridcell" style="" title="<$=item.profit$>" aria-describedby="grid_profit"><$=item.profit$></td>
-		<td role="gridcell" style="" title="<$=item.status$>" aria-describedby="grid_status"><$=item.status$></td>
+		<td role="gridcell" style="" title="<%%=item.merchantId%>" aria-describedby="grid_merchantId"><%%=item.merchantId%></td>
+		<td role="gridcell" style="" title="<%%=item.accountNumber%>" aria-describedby="grid_accountNumber"><%%=item.accountNumber%></td>
+		<td role="gridcell" style="" title="<%%=item.clearingDate%>" aria-describedby="grid_clearingDate"><%%=item.clearingDate%></td>
+		<td role="gridcell" style="" title="<%%=item.tradeAmount%>" aria-describedby="grid_tradeAmount"><%%=item.tradeAmount%></td>
+		<td role="gridcell" style="" title="<%%=item.tradeTrans%>" aria-describedby="grid_tradeTrans"><%%=item.tradeTrans%></td>
+		<td role="gridcell" style="" title="<%%=item.refundAmount%>" aria-describedby="grid_refundAmount"><%%=item.refundAmount%></td>
+		<td role="gridcell" style="" title="<%%=item.refundTrans%>" aria-describedby="grid_refundTrans"><%%=item.refundTrans%></td>
+		<td role="gridcell" style="" title="<%%=item.cost%>" aria-describedby="grid_cost"><%%=item.cost%></td>
+		<td role="gridcell" style="" title="<%%=item.serviceCharge%>" aria-describedby="grid_serviceCharge"><%%=item.serviceCharge%></td>
+		<td role="gridcell" style="" title="<%%=item.settleAmount%>" aria-describedby="grid_settleAmount"><%%=item.settleAmount%></td>
+		<td role="gridcell" style="" title="<%%=item.profit%>" aria-describedby="grid_profit"><%%=item.profit%></td>
+		<td role="gridcell" style="" title="<%%=item.status%>" aria-describedby="grid_status"><%%=item.status%></td>
 	</tr>
-<$}$>
+<%%}%>
 </script>
 
 <%- include('public/footscript1') %>

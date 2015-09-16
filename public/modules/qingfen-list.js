@@ -329,15 +329,16 @@ define(function(require, exports, module) {
 		registerEvents();
 	}
 
-	function loadDataA(){
+	function loadDataA() {
 		$.ajax({
-			url:global_config.serverRoot + 'clearing/list?userId=' + utils.object2param(userParam),
-			success: function(json){
-				if('0' == json.code){
+			url: global_config.serverRoot + 'clearing/list?userId=' + utils.object2param(userParam),
+			success: function(json) {
+				if ('0' == json.code) {
 					var html = utils.formatJson(rowTemplate, {
 						data: json.data.pageData
 					});
 					listContainer.append(firstRowTemplate).append(html);
+					registerEvents();
 				}
 			}
 		});
@@ -352,6 +353,7 @@ define(function(require, exports, module) {
 				$el.parent().siblings().focus();
 			}
 		};
+
 		$(document.body).on('click', evtListener);
 		$('.datepicker').datepicker({
 			autoclose: true,
