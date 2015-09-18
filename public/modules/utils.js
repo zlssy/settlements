@@ -144,12 +144,153 @@ define(function(require, exports, module) {
 		}
 	}
 
+	/**
+	 * [setHash 设置hash值]
+	 * @param {[type]} val [description]
+	 */
+	function setHash(val) {
+		setTimeout(function() {
+			location.hash = val;
+		}, 0);
+	}
+
+	/**
+	 * [getHash 获取hash值]
+	 * @param  {[type]} url [取值的url]
+	 * @return {[type]}     [hash值]
+	 */
+	function getHash(url) {
+		var u = url || location.hash;
+		return u ? u.replace(/.*#/, "") : "";
+	}
+
+	/**
+	 * [getHashParam 获取hash值]
+	 * @param  {[type]} name [hash名]
+	 * @return {[type]}      [hash值]
+	 */
+	function getHashParam(name) {
+		var result = this.getHash().match(new RegExp("(^|&)" + name + "=([^&]*)(&|$)"));
+		return result != null ? result[2] : "";
+	}
+
+	/**
+	 * [getUrlParam 获取url参数值]
+	 * @param  {[type]} name [url参数名]
+	 * @param  {[type]} url  [url地址，默认当前host]
+	 * @return {[type]}      [url参数值]
+	 */
+	function getUrlParam(name, url) {
+		var u = arguments[1] || window.location.search,
+			reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"),
+			r = u.substr(u.indexOf("\?") + 1).match(reg);
+		return r != null ? r[2] : "";
+	}
+
+	/**
+	 * [getParams 获取所有的参数]
+	 * @return {[type]} [参数数组]
+	 */
+	function getParams() {
+		var param = [],
+			hash = this.getHash();
+		paramArr = hash ? hash.split("&") : [];
+		for (var i = 1, l = paramArr.length; i < l; i++) {
+			param.push(paramArr[i]);
+		}
+		return param;
+	}
+
+	/**
+	 * [decodeUrl 解码url地址]
+	 * @param  {[type]} url [url地址]
+	 * @return {[type]}     [description]
+	 */
+	function decodeUrl(url) {
+		url = decodeURIComponent(url);
+		var urlObj = this.parseUrl(url),
+			decodedParam = [];
+		$.each(urlObj.params, function(key, value) {
+			value = decodeURIComponent(value);
+			decodedParam.push(key + "=" + value);
+		});
+		var urlPrefix = url.split("?")[0];
+		return urlPrefix + "?" + decodedParam.join("&");
+	}
+
+	/**
+	 * [parseUrl 处理url地址]
+	 * @param  {[type]} url [url地址]
+	 * @return {[type]}     [description]
+	 */
+	function parseUrl(url) {
+		var a = document.createElement('a');
+		a.href = url;
+		return {
+			source: url,
+			protocol: a.protocol.replace(':', ''),
+			host: a.hostname,
+			port: a.port,
+			query: a.search,
+			params: (function() {
+				var ret = {},
+					seg = a.search.replace(/^\?/, '').split('&'),
+					len = seg.length,
+					i = 0,
+					s;
+				for (; i < len; i++) {
+					if (!seg[i]) {
+						continue;
+					}
+					s = seg[i].split('=');
+					ret[s[0]] = s[1];
+				}
+				return ret;
+			})(),
+			file: (a.pathname.match(/([^\/?#]+)$/i) || [, ''])[1],
+			hash: a.hash.replace('#', ''),
+			path: a.pathname.replace(/^([^\/])/, '/$1'),
+			relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [, ''])[1],
+			segments: a.pathname.replace(/^\//, '').split('/')
+		};
+	}
+
+	/**
+	 * [replaceParam 替换url参数值]
+	 * @param  {[type]} param        [参数名]
+	 * @param  {[type]} value        [参数值]
+	 * @param  {[type]} url          [url地址]
+	 * @param  {[type]} forceReplace [强制地图换]
+	 * @return {[type]}              [结果值]
+	 */
+	function replaceParam(param, value, url, forceReplace) {
+		url = url || location.href;
+		var reg = new RegExp("([\\?&]" + param + "=)[^&#]*");
+		if (!url.match(reg)) {
+			return (url.indexOf("?") == -1) ? (url + "?" + param + "=" + value) : (url + "&" + param + "=" + value);
+		}
+		if (forceReplace) {
+			return url.replace(reg, "$1" + value);
+		}
+		return url;
+	}
+
 	return {
 		object2param: object2param,
 		cookie: {
 			get: getCookie,
 			set: setCookie,
 			del: delCookie
+		},
+		url: {
+			setHash: setHash,
+			getHash: getHash,
+			getHashParam: getHashParam,
+			getUrlParam: getUrlParam,
+			getParams: getParams,
+			decodeUrl: decodeUrl,
+			parseUrl: parseUrl,
+			replaceParam: replaceParam
 		},
 		formatJson: formatJson,
 		loadJsonp: loadJsonp
