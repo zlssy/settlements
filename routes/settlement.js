@@ -33,6 +33,24 @@ if(daili){//代理
 	})
 }
 
+router.all("/dataDictionary/dropdownlist",function(req,res,next){
+	var callback = req.query.callback;
+	var obj = {
+		"method" : req.method,
+		"uri" : 'http://testtclpay.tclclouds.com/settlement' + req.url,
+		"headers" : {
+			"userId" : userid
+		}
+	};
+	if(req.method === "POST"){
+		obj.form = _.extend({},req.body)
+	}
+	tool.qrequestStr(obj).done(function(data){
+		res.send(data);
+	},function(e){
+		next(e)
+	})
+})
 
 
 
@@ -60,13 +78,17 @@ router.all('/*', function(req, res, next){
 // sort	String	否	排序字段 默认类型编码
 // order	String	否	asc/desc 默认升序
 router.all('/dataDictionary/list', function(req, res, next){
-	var data = _.extend({},DATAY,{
-		"data":_.extend(req._page,{
-			"pageData" :[{
-				"id" :1,
+	var arr = []
+	for(var i = 1; i<=res._Page.pageSize; i++){
+		arr.push({
+				"id" :i,
 				"type" :'clearingStatus',	//字典类型编码
 				"label" :'清分状态'			//字典类型名称
-			}]
+			})
+	}
+	var data = _.extend({},DATAY,{
+		"data":_.extend(res._Page,{
+			"pageData" :arr
 		})
 	})
 	res.json(data);
