@@ -201,6 +201,7 @@ define(function(require, exports, module) {
 		this.controls.nPageBtn.val(this.page);
 		this.controls.totalPageView.html(this.totalPage);
 		this.controls.pageInfo.html(from + ' - ' + to + ' 共 ' + this.total + ' 条');
+		ensureFirsAndLast.call(this);
 	}
 
 	function load() {
@@ -290,8 +291,35 @@ define(function(require, exports, module) {
 		this.url = url;
 	}
 
-	function ensureFirsAndLast(){
-		
+	function ensureFirsAndLast() {
+		var page = this.page - 0,
+			totalPage = this.totalPage - 0,
+			isFirst = isLast = true;
+		if (totalPage > 1) {
+			if (page <= 1) {
+				isLast = false;
+				isFirst = true;
+			} else if (page >= totalPage) {
+				isLast = true;
+				isFirst = false;
+			} else {
+				isFirst = isLast = false;
+			}
+		}
+		if (isFirst) {
+			this.controls.firstPageBtn.addClass('ui-state-disabled');
+			this.controls.prevPageBtn.addClass('ui-state-disabled');
+		} else {
+			this.controls.firstPageBtn.removeClass('ui-state-disabled');
+			this.controls.prevPageBtn.removeClass('ui-state-disabled');
+		}
+		if (isLast) {
+			this.controls.lastPageBtn.addClass('ui-state-disabled');
+			this.controls.nextPageBtn.addClass('ui-state-disabled');
+		} else {
+			this.controls.lastPageBtn.removeClass('ui-state-disabled');
+			this.controls.nextPageBtn.removeClass('ui-state-disabled');
+		}
 	}
 
 	function listen(evtname, evtfn) {
@@ -381,7 +409,7 @@ define(function(require, exports, module) {
 
 		this.controls.firstPageBtn.off().on('click', function(e) {
 			if (!$(this).hasClass('ui-state-disabled')) {
-				self.setUrl(Utils.url.replaceParam('pageNo', 1, self.getUrl()));
+				self.setUrl(Utils.url.replaceParam('pageNo', 1, self.getUrl(), true));
 				self.loadData();
 			}
 		});
@@ -389,23 +417,24 @@ define(function(require, exports, module) {
 			if (!$(this).hasClass('ui-state-disabled')) {
 				var page = self.page - 1;
 				if (page > 0 && page < self.totalPage) {
-					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl()));
+					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
 					self.loadData();
 				}
 			}
 		});
 		this.controls.nextPageBtn.off().on('click', function(e) {
 			if (!$(this).hasClass('ui-state-disabled')) {
-				var page = self.page + 1;
-				if (page > 0 && page < self.totalPage) {
-					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl()));
+				var page = (self.page - 0) + 1;
+				if (page > 0 && page <= self.totalPage) {
+					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
 					self.loadData();
 				}
 			}
 		});
 		this.controls.lastPageBtn.off().on('click', function(e) {
+			console.log(e);
 			if (!$(this).hasClass('ui-state-disabled')) {
-				self.setUrl(Utils.url.replaceParam('pageNo', self.totalPage, self.getUrl()));
+				self.setUrl(Utils.url.replaceParam('pageNo', self.totalPage, self.getUrl(), true));
 				self.loadData();
 			}
 		});
