@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 		html.push('				<table class="ui-jqgrid-htable" style="width: 100%" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
 		html.push('					<thead>');
 		html.push('						<tr class="ui-jqgrid-labels" role="rowheader">');
-		html.push(this.getHeader());
+		html.push(getHeader.call(this));
 		html.push('						</tr>');
 		html.push('					</thead>');
 		html.push('				</table>');
@@ -51,7 +51,7 @@ define(function(require, exports, module) {
 		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable" style="width: 100%;">');
 		html.push('				<tbody id="' + this.id + '_list">');
 		html.push('				</tbody>');
-		html.push(this.getFirstRow());
+		html.push(getFirstRow.call(this));
 		html.push('				</table>');
 		html.push('				</div>');
 		html.push('			</div>');
@@ -162,7 +162,7 @@ define(function(require, exports, module) {
 	function setContent(cont) {
 		var container = this.controls.list || (this.controls.list = $('#' + this.id + '_list'));
 		if (container.size()) {
-			container.html(this.getFirstRow() + cont);
+			container.html(getFirstRow.call(this) + cont);
 		} else {
 			throw new Error('Could\'t find the list container. Maybe your html struct did\'t render on the dom.')
 		}
@@ -205,9 +205,9 @@ define(function(require, exports, module) {
 	}
 
 	function load() {
-		this.getControls();
+		getControls.call(this);
 		this.loadData();
-		this.registerEvents()
+		registerEvents.call(this);
 	}
 
 	function loadData() {
@@ -447,9 +447,6 @@ define(function(require, exports, module) {
 		create: create,
 		init: create,
 		getHtml: getHtml,
-		getFirstRow: getFirstRow,
-		getHeader: getHeader,
-		getControls: getControls,
 		getSelectedRow: getSelectedRow,
 		getUrl: getUrl,
 		setUrl: setUrl,
@@ -457,7 +454,6 @@ define(function(require, exports, module) {
 		render: render,
 		load: load,
 		loadData: loadData,
-		updatePager: updatePager,
-		registerEvents: registerEvents
+		updatePager: updatePager
 	};
 });
