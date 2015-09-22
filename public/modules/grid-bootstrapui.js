@@ -206,7 +206,7 @@ define(function(require, exports, module) {
 
 	function load() {
 		getControls.call(this);
-		this.loadData();
+		loadData.call(this);
 		registerEvents.call(this);
 	}
 
@@ -216,7 +216,7 @@ define(function(require, exports, module) {
 			url: self.getUrl(),
 			success: function(json) {
 				if ('0' == json.code) {
-					self.render(getMapData(json, self.jsonReader.root));
+					render.call(self, getMapData(json, self.jsonReader.root));
 					self.jsonReader.page && (self.page = getMapData(json, self.jsonReader.page));
 					self.jsonReader.records && (self.total = getMapData(json, self.jsonReader.records));
 					if (self.total) {
@@ -410,7 +410,7 @@ define(function(require, exports, module) {
 		this.controls.firstPageBtn.off().on('click', function(e) {
 			if (!$(this).hasClass('ui-state-disabled')) {
 				self.setUrl(Utils.url.replaceParam('pageNo', 1, self.getUrl(), true));
-				self.loadData();
+				loadData.call(self);
 			}
 		});
 		this.controls.prevPageBtn.off().on('click', function(e) {
@@ -418,7 +418,7 @@ define(function(require, exports, module) {
 				var page = self.page - 1;
 				if (page > 0 && page < self.totalPage) {
 					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
-					self.loadData();
+					loadData.call(self);
 				}
 			}
 		});
@@ -427,7 +427,7 @@ define(function(require, exports, module) {
 				var page = (self.page - 0) + 1;
 				if (page > 0 && page <= self.totalPage) {
 					self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
-					self.loadData();
+					loadData.call(self);
 				}
 			}
 		});
@@ -435,25 +435,23 @@ define(function(require, exports, module) {
 			console.log(e);
 			if (!$(this).hasClass('ui-state-disabled')) {
 				self.setUrl(Utils.url.replaceParam('pageNo', self.totalPage, self.getUrl(), true));
-				self.loadData();
+				loadData.call(self);
 			}
 		});
 	}
 
 	return {
-		evts: {},
-		listen: listen,
-		trigger: trigger,
-		create: create,
-		init: create,
-		getHtml: getHtml,
-		getSelectedRow: getSelectedRow,
-		getUrl: getUrl,
-		setUrl: setUrl,
-		setContent: setContent,
-		render: render,
-		load: load,
-		loadData: loadData,
-		updatePager: updatePager
+		evts: {}, // 事件属性集合 readyonly
+		listen: listen, // 事件监听函数
+		trigger: trigger, // 事件触发函数
+		create: create, // 初始化
+		init: create, // 初始化 
+		getHtml: getHtml, // 获取html元素
+		getSelectedRow: getSelectedRow, // 获取选中元素
+		getUrl: getUrl, // 获取ajax访问数据的url地址
+		setUrl: setUrl, // 设置ajax访问数据的url地址
+		setContent: setContent, // 设置tboby的内容
+		load: load, // 加载入口
+		updatePager: updatePager //刷新页码
 	};
 });
