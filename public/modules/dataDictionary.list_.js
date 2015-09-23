@@ -37,7 +37,8 @@ define(function(require, exports, module) {
 				index: 'type'
 			}, {
 				name: '字典类型名称',
-				index: 'label'
+				index: 'label',
+				sortable: true
 			}, {
 				name: '操作',
 				index: 'clearingDate'

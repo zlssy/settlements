@@ -183,10 +183,62 @@ define(function(require, exports, module) {
         return o
     })()
 
-    exports.cookie(key,value,expiredays){
+    exports.QueryString = (function(){
+        var ms = {a:'&',b:'='};
+        var Stringify = function(obj){
+            var str = '';
+            var qsArr = [];
+            for(var k in obj){
+                var v = obj[k],
+                    type = typeOf(v);
+                if(type == 'array'){
+                    for(var i = 0; i<v.length; i++){
+                        qsArr.push({name:k,value:v[i].toString()}) 
+                    }
+                }else{
+                    qsArr.push({name:k,value:v.toString()}) 
+                }
+            }
+            for(var i = 0; i < qsArr.length; i++){
+                qsArr[i] = [qsArr[i].name,encodeURIComponent(qsArr[i].value)].join(this.b)
+            }
+            return qsArr.join(this.a)
+        }
+        var Parse = function(str){
+            var qsArr = str.split(this.a),obj = {}
+            for(var i=0; i< qsArr.length; i++){
+                var _arr = qsArr[i].split(this.b)
+                if(_arr.length == 2){
+                    //qsArr[i] = {name:_arr[0],value:decodeURIComponent(_arr[1])}
+                    var _type = typeOf(obj[_arr[0]]);
+                    switch(_type){
+                        case 'undefined':
+                        case 'null':
+                            obj[_arr[0]] = decodeURIComponent(_arr[1]);
+                            break;
+                        case 'array':
+                            obj[_arr[0]].push(decodeURIComponent(_arr[1]));
+                            break;
+                        default:
+                            obj[_arr[0]] = [obj[_arr[0]]];
+                            obj[_arr[0]].push(decodeURIComponent(_arr[1]));
+                    }
+                }
+            }
+            return obj;
+        }
+        return {
+            Stringify : function(a){
+                return Stringify.call(ms,a)
+            },
+            Parse: function(a){return Parse.call(ms,a)},
+        }
+    })()
+
+    exports.cookie = function(key,value,expiredays){
         if(arguments.length <= 1){
             return getCookie(key)
-        }else if(typeOf value == 'null' || typeOf value == 'undefined'){
+        }else if(typeOf(value) == 'null' || typeOf(value) == 'undefined'){
             return deleteCookie(key)
         }else{
             setCookie.call(null,Array.prototype.slice.call(arguments,0));
