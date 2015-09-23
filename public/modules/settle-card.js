@@ -41,10 +41,10 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: '',
 				format: function(v) {
-					return '<button type="button" class="btn btn-xs btn-info" data-id="'+v+'">历史操作</button>';
+					return '<button type="button" class="btn btn-xs btn-info" data-toggle="button" data-id="' + v + '">历史操作</button>';
 				}
 			}],
-			actions:{
+			actions: {
 				add: true
 			},
 			url: getUrl(),
@@ -60,7 +60,7 @@ define(function(require, exports, module) {
 		_grid.load();
 	}
 
-	function getUrl(){
+	function getUrl() {
 		return global_config.serverRoot + 'settleCard/list?userId=' + Utils.object2param(userParam);
 	}
 
