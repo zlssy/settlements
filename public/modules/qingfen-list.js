@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 	var Utils = require('utils'),
-		Grid = require('grid-bootstrapui'),
+		Grid = require('gridBootstrap'),
 
 		content = $('#content'),
 		listContainer = $('#grid_list'),
