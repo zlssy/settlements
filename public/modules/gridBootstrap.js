@@ -169,7 +169,7 @@ define(function(require, exports, module) {
 	}
 
 	function render(data) {
-		var d, col, colfn, colval, wstr,
+		var d, col, colfn, colval, wstr, xsscheck,
 			html = [];
 		if (data) {
 			this.data = data;
@@ -182,9 +182,10 @@ define(function(require, exports, module) {
 				for (var j = 0; j < this.colLen; j++) {
 					col = this.cols[j];
 					colfn = col.format;
-					colval = d[col.index] || '';
-					colval = 'function' === typeof colfn ? colfn(colval) : colval;
-					html.push('<td role="gridcell" title="' + Xss.inDoubleQuotedAttr(colval) + '" aria-describedby="' + this.id + '_' + col.index + '">' + Xss.inHTMLData(colval) + '</td>');
+					colval = d[col.index];
+					xsscheck = !!colval;
+					colval = 'function' === typeof colfn ? colfn(xsscheck ? colval : d[this.key]) : colval;
+					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
 				}
 				html.push('</tr>');
 			};

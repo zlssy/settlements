@@ -67,7 +67,7 @@ define(function(require, exports, module) {
 			jsonReader: {
 				root: 'data.pageData',
 				page: 'data.pageNo',
-				records: 'data.totalCount'
+				records: 'data.totalCnt'
 			}
 		});
 
