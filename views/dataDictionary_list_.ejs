@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title><%=title%></title>
+
+		<meta name="description" content="Tcl settlements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<link href='/css/jquery-ui.min.css' rel="stylesheet" />
+		<link href='/css/jquery-ui.custom.min.css' rel="stylesheet" />
+		<link href='/css/datepicker.min.css' rel="stylesheet" />
+		<link href='/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
+		<link href='/css/ui.jqgrid.css' rel="stylesheet" />
+		<%- include('public/header') %>
+		<style>
+			.lm-5{
+				margin-top: 5px;
+			}
+			.row{
+				margin: 4px 0;
+			}
+			.ui-jqgrid-hdiv .ui-jqgrid-htable {border: 1px solid #E1E1E1; background:#FFF;}
+			.ui-jqgrid .ui-jqgrid-htable th div {height:44px; line-height:20px;}
+			.ui-jqgrid .ui-jqgrid-htable th div .s-ico {line-height:15px;}
+			.ui-jqgrid .ui-jqgrid-htable tbody td {word-wrap: break-word;}
+		</style>
+	</head>
+<body class="no-skin">
+<%- include('public/nav')%>
+
+<div class="main-container" id="main-container">
+	<%- include('public/side') %>
+	<div class="main-content">
+		<div id="content" class="main-content-inner">
+		<div class="page-content">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="widget-box">
+						<div class="widget-header">
+							<h4 class="widget-title">搜索：</h4>
+							<div class="widget-toolbar">
+							<a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+							</div>
+						</div>
+						<div class="widget-body">
+							<div class="widget-main">
+								<form class="form" id="sform">
+									<label>字典类型编码：</label>
+									<input style="text" class="text" name="clearingStatus">
+									<button class="btn btn-info btn-xs" type="submit"><i class="ace-icon fa fa-check bigger-110"></i>查询</button>
+									<button class="btn btn-xs" type="reset"><i class="ace-icon fa fa-undo bigger-110"></i>重置</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div id="grid_list" class="col-xs-12">
+					<div class="ui-jqgrid ui-widget ui-widget-content ui-corner-all">
+						<div class="ui-state-default ui-jqgrid-hdiv">
+	                        <!--表格-->
+	                        <table class="g-table ui-jqgrid-htable col-xs-12">
+	                            <thead>
+	                                <tr class="g-tc ui-jqgrid-labels">
+	                                    <th width="30" class="ui-state-default ui-th-column ui-th-ltr"><div>
+	                                        <input type="checkbox" data-checkname='id'>
+	                                    </div></th>
+	                                    <th><div>序号</div></th>
+	                                    <th><div>师说名称</div></th>
+	                                    <th><div>状态</div></th>
+	                                    <th><div class="ui-jqgrid-sortable">更新时间<span class="s-ico" style=""><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-icon ui-icon-triangle-1-s ui-sort-ltr ui-state-disabled"></span></span></div></th>
+	                                    <th><div>操作</div></th>
+	                                </tr>
+	                            </thead>
+	                            <tbody></tbody>
+	                        </table>
+	                        <!--分页-->
+	                        <div class="pagenav g-tr">
+	                        </div>
+	                    </div>
+                    </div>
+				</div>
+			</div><!-- end grid row-->
+		</div>
+		</div>
+	</div>
+</div>
+<div id="mask" class="widget-box-overlay hide"></div>
+
+<%- include('public/footscript1') %>
+<%- include('public/footscript2') %>
+
+<script src='/js/jquery-ui.custom.min.js'></script>
+<script src='/js/moment.min.js'></script>
+<script src='/js/bootstrap-datepicker.min.js'></script>
+<script src='/js/bootstrap-datetimepicker.min.js'></script>
+<script src='/js/jquery.jqGrid.min.js'></script>
+<script src='/js/grid.locale-cn.js'></script>
+
+
+<!-- process enter -->
+<script>
+seajs.use('dataDictionary.list_', function(m){
+	//m.init();
+});
+</script>
+<%- include('public/footer') %>
