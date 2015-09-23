@@ -190,6 +190,7 @@ define(function(require, exports, module) {
 				html.push('</tr>');
 			};
 			this.setContent(html.join(''));
+			$('.ui-pg-div *[title]').tooltip({container:'body'});
 		}
 	}
 
@@ -469,6 +470,8 @@ define(function(require, exports, module) {
 				loadData.call(self);
 			}
 		});
+
+		$('.ui-pg-button').tooltip({container:'body'});
 	}
 
 	return {

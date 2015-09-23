@@ -45,8 +45,7 @@ define(function(require, exports, module) {
 				}
 			}],
 			actions: {
-				add: true,
-				edit:true
+				add: true
 			},
 			url: getUrl(),
 			pagesize: 10,
@@ -57,6 +56,15 @@ define(function(require, exports, module) {
 			}
 		});
 
+		_grid.listen('addCallback', function(){
+			console.log('add');
+		});
+		_grid.listen('editCallback', function(row){
+			console.log(row);
+		});
+		_grid.listen('viewCallback', function(row){
+			console.log('view', row);
+		});
 		listContainer.html(_grid.getHtml());
 		_grid.load();
 	}
