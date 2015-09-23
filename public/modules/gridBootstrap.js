@@ -47,7 +47,7 @@ define(function(require, exports, module) {
 		html.push('		</div>');
 		html.push('		<div class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; width:100%;">');
 		html.push('			<div style="position:relative;">');
-		html.push('				<div class="">');
+		html.push('				<div class="ui-jqgrid-hbox">');
 		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable" style="width: 100%;">');
 		html.push('				<tbody id="' + this.id + '_list">');
 		html.push('				</tbody>');

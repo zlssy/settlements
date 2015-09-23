@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: '',
 				format: function(v) {
-					return '<div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus grey" title="历史记录"></span></div>';
+					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus grey" title="历史记录"></span></div>';
 				}
 			}],
 			actions: {
