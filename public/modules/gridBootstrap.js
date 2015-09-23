@@ -166,6 +166,7 @@ define(function(require, exports, module) {
 		} else {
 			throw new Error('Could\'t find the list container. Maybe your html struct did\'t render on the dom.')
 		}
+		this.trigger('setContentCallback', this);
 	}
 
 	function render(data) {
@@ -190,7 +191,7 @@ define(function(require, exports, module) {
 				html.push('</tr>');
 			};
 			this.setContent(html.join(''));
-			$('.ui-pg-div *[title]').tooltip({container:'body'});
+			this.trigger('renderCallback', this);
 		}
 	}
 
@@ -210,6 +211,7 @@ define(function(require, exports, module) {
 		getControls.call(this);
 		loadData.call(this);
 		registerEvents.call(this);
+		this.trigger('loadCallback', this);
 	}
 
 	function loadData() {
@@ -471,7 +473,9 @@ define(function(require, exports, module) {
 			}
 		});
 
-		$('.ui-pg-button').tooltip({container:'body'});
+		$('.ui-pg-button').tooltip({
+			container: 'body'
+		});
 	}
 
 	return {
