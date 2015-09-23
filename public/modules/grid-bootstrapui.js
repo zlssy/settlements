@@ -452,6 +452,7 @@ define(function(require, exports, module) {
 		setUrl: setUrl, // 设置ajax访问数据的url地址
 		setContent: setContent, // 设置tboby的内容
 		load: load, // 加载入口
+		loadData: loadData, // 载入数据
 		updatePager: updatePager //刷新页码
 	};
 });
