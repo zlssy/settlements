@@ -67,25 +67,25 @@ define(function(require, exports, module) {
 		html.push('							<table cellspacing="0" cellpadding="0" border="0" class="ui-pg-table navtable" style="float:left;table-layout:auto;">	<tbody>');
 		html.push('								<tr>');
 		if (this.actions.add) {
-			html.push('										<td class="ui-pg-button ui-corner-all"title=""id="add_grid-table"data-original-title="添加新纪录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-plus-circle purple"></span></div></td>');
+			html.push('										<td class="ui-pg-button ui-corner-all" id="add_grid-table" title="添加新纪录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-plus-circle purple"></span></div></td>');
 		}
 		if (this.actions.edit) {
-			html.push('										<td class="ui-pg-button ui-corner-all"title=""id="edit_grid-table"data-original-title="编辑所选记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-pencil blue"></span></div></td>');
+			html.push('										<td class="ui-pg-button ui-corner-all" id="edit_grid-table" title="编辑所选记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-pencil blue"></span></div></td>');
 		}
 		if (this.actions.view) {
-			html.push('										<td class="ui-pg-button ui-corner-all"title=""id="view_grid-table"data-original-title="查看所选记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-search-plus grey"></span></div></td>');
+			html.push('										<td class="ui-pg-button ui-corner-all" id="view_grid-table" title="查看所选记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-search-plus grey"></span></div></td>');
 		}
 		if (this.actions.del) {
-			html.push('										<td class="ui-pg-button ui-corner-all"title=""id="del_grid-table"data-original-title="删除所选记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-trash-o red"></span></div></td>');
+			html.push('										<td class="ui-pg-button ui-corner-all" id="del_grid-table" title="删除所选记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-trash-o red"></span></div></td>');
 		}
 		if ((this.actions.add || this.actions.edit || this.actions.view || this.actions.del) && (this.actions.search || this.actions.refresh)) {
-			html.push('										<td class="ui-pg-button ui-state-disabled"style="width:4px;"data-original-title=""title=""><span class="ui-separator"></span></td>');
+			html.push('										<td class="ui-pg-button ui-state-disabled"style="width:4px;"  ><span class="ui-separator"></span></td>');
 		}
 		if (this.actions.search) {
-			html.push('										<td class="ui-pg-button ui-corner-all"title=""id="search_grid-table"data-original-title="查找记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-search orange"></span></div></td>');
+			html.push('										<td class="ui-pg-button ui-corner-all" id="search_grid-table" title="查找记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-search orange"></span></div></td>');
 		}
 		if (this.actions.refresh) {
-			html.push('										<td class="ui-pg-button ui-corner-all"title=""id="refresh_grid-table"data-original-title="刷新记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-refresh green"></span></div></td>');
+			html.push('										<td class="ui-pg-button ui-corner-all" id="refresh_grid-table" title="刷新记录"><div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-refresh green"></span></div></td>');
 		}
 		html.push('								</tr>');
 		html.push('								</tbody>');
@@ -352,7 +352,7 @@ define(function(require, exports, module) {
 			var $this = $(e.target || e.srcElement),
 				tag = $this.get(0).tagName.toLowerCase(),
 				cls = $this.attr('class') || '',
-				chk;
+				chk, selectedRow;
 			if ('input' === tag && cls.indexOf('cbox') > -1) {
 				chk = $this.is(':checked');
 				$this.parent().parent()[chk ? 'addClass' : 'removeClass']('ui-state-highlight');
@@ -363,6 +363,36 @@ define(function(require, exports, module) {
 				$this.parents('tr.jqgrow').addClass('ui-state-highlight').find('.cbox').prop('checked', true);
 			}
 			self.controls.headerCheckbox.prop('checked', false);
+			if (cls.indexOf('fa-plus-circle') > -1) {
+				self.trigger('addCallback', self);
+			}
+			if (cls.indexOf('fa-pencil') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('editCallback', selectedRow, self);
+				} else {
+					alert('请先选择要编辑的行.');
+					return;
+				}
+			}
+			if (cls.indexOf('fa-search-plus') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('viewCallback', selectedRow, self);
+				} else {
+					alert('请先选择要查看的行.');
+					return;
+				}
+			}
+			if (cls.indexOf('fa-trash-o') > -1) {
+				selectedRow = self.getSelectedRow();
+				if (selectedRow.length) {
+					self.trigger('delCallback', selectedRow, self);
+				} else {
+					alert('请先选择要删除的行.');
+					return;
+				}
+			}
 		});
 		this.controls.pager.off().on('click', function(e) {
 			var $this = $(e.target || e.srcElement),

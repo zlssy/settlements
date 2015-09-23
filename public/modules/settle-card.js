@@ -41,11 +41,12 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: '',
 				format: function(v) {
-					return '<button type="button" class="btn btn-xs btn-info" data-toggle="button" data-id="' + v + '">历史操作</button>';
+					return '<div class="ui-pg-div"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus grey" title="历史记录"></span></div>';
 				}
 			}],
 			actions: {
-				add: true
+				add: true,
+				edit:true
 			},
 			url: getUrl(),
 			pagesize: 10,
