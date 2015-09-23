@@ -60,27 +60,27 @@
 			<div class="row">
 				<div id="grid_list" class="col-xs-12">
 					<div class="ui-jqgrid ui-widget ui-widget-content ui-corner-all">
-						<div class="ui-state-default ui-jqgrid-hdiv">
-	                        <!--表格-->
-	                        <table class="g-table ui-jqgrid-htable col-xs-12">
-	                            <thead>
-	                                <tr class="g-tc ui-jqgrid-labels">
-	                                    <th width="30" class="ui-state-default ui-th-column ui-th-ltr"><div>
-	                                        <input type="checkbox" data-checkname='id'>
-	                                    </div></th>
-	                                    <th><div>序号</div></th>
-	                                    <th><div>师说名称</div></th>
-	                                    <th><div>状态</div></th>
-	                                    <th><div class="ui-jqgrid-sortable">更新时间<span class="s-ico" style=""><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-icon ui-icon-triangle-1-s ui-sort-ltr ui-state-disabled"></span></span></div></th>
-	                                    <th><div>操作</div></th>
-	                                </tr>
-	                            </thead>
-	                            <tbody></tbody>
-	                        </table>
-	                        <!--分页-->
-	                        <div class="pagenav g-tr">
-	                        </div>
-	                    </div>
+					<div id="ajaxbox" class="ui-state-default ui-jqgrid-hdiv">
+                        <!--表格-->
+                        <table class="g-table ui-jqgrid-htable col-xs-12">
+                            <thead>
+                                <tr class="g-tc ui-jqgrid-labels">
+                                    <th width="30" class="ui-state-default ui-th-column ui-th-ltr"><div>
+                                        <input type="checkbox" data-checkname='id'>
+                                    </div></th>
+                                    <th><div>序号</div></th>
+                                    <th><div>师说名称</div></th>
+                                    <th><div>状态</div></th>
+                                    <th><div class="ui-jqgrid-sortable">更新时间<span class="s-ico" style=""><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-icon ui-icon-triangle-1-s ui-sort-ltr ui-state-disabled"></span></span></div></th>
+                                    <th><div>操作</div></th>
+                                </tr>
+                            </thead>
+                            <tbody><tr class="jqgfirstrow" role="row" style="height:auto"><td role="gridcell" style="height:0px;width:25px;"></td><td role="gridcell" style="height: 0px; width: 285px;"></td><td role="gridcell" style="height: 0px; width: 285px;"></td><td role="gridcell" style="height: 0px; width: 285px;"></td><td role="gridcell" style="height: 0px; width: 285px;"></td><td role="gridcell" style="height:0px;width:170px;"></td></tr><tr role="row" id="1" tabindex="-1" class="ui-widget-content jqgrow ui-row-ltr"><td role="gridcell" style="text-align:center;width: 25px;" aria-describedby="grid_cb"><input role="checkbox" type="checkbox" id="jqg_grid_1" class="cbox" name="jqg_grid_1"></td><td role="gridcell" style="" title="PendingSettle" aria-describedby="grid_code">PendingSettle</td><td role="gridcell" style="" title="可用" aria-describedby="grid_dataDictionaryStatus">可用</td><td role="gridcell" style="" title="待结算" aria-describedby="grid_label">待结算</td><td role="gridcell" style="" title="Pending Settle" aria-describedby="grid_label_en">Pending Settle</td><td role="gridcell" style="" aria-describedby="grid_comm"><a class="btn btn-xs btn-link">添加</a><a class="btn btn-xs btn-link">修改</a><a class="btn btn-xs btn-link">删除</a></td></tr><tr role="row" id="2" tabindex="-1" class="ui-widget-content jqgrow ui-row-ltr ui-priority-secondary"><td role="gridcell" style="text-align:center;" aria-describedby="grid_cb"><input role="checkbox" type="checkbox" id="jqg_grid_2" class="cbox" name="jqg_grid_2"></td><td role="gridcell" style="" title="InSettling" aria-describedby="grid_code">InSettling</td><td role="gridcell" style="" title="可用" aria-describedby="grid_dataDictionaryStatus">可用</td><td role="gridcell" style="" title="结算中" aria-describedby="grid_label">结算中</td><td role="gridcell" style="" title="In Settling" aria-describedby="grid_label_en">In Settling</td><td role="gridcell" style="" aria-describedby="grid_comm"><a class="btn btn-xs btn-link">添加</a><a class="btn btn-xs btn-link">修改</a><a class="btn btn-xs btn-link">删除</a></td></tr><tr role="row" id="3" tabindex="-1" class="ui-widget-content jqgrow ui-row-ltr"><td role="gridcell" style="text-align:center;" aria-describedby="grid_cb"><input role="checkbox" type="checkbox" id="jqg_grid_3" class="cbox" name="jqg_grid_3"></td><td role="gridcell" style="" title="Settled" aria-describedby="grid_code">Settled</td><td role="gridcell" style="" title="可用" aria-describedby="grid_dataDictionaryStatus">可用</td><td role="gridcell" style="" title="已结算" aria-describedby="grid_label">已结算</td><td role="gridcell" style="" title="Settled" aria-describedby="grid_label_en">Settled</td><td role="gridcell" style="" aria-describedby="grid_comm"><a class="btn btn-xs btn-link">添加</a><a class="btn btn-xs btn-link">修改</a><a class="btn btn-xs btn-link">删除</a></td></tr></tbody>
+                        </table>
+                        <!--分页-->
+                        <div id="pagenav" class="pagenav g-tr">
+                        </div>
+                    </div>
                     </div>
 				</div>
 			</div><!-- end grid row-->
