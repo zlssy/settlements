@@ -27,13 +27,20 @@ router.get('/settle-card', function(req, res, next){
 		title: 'TCL业务清算平台'
 	});
 });
-router.get('/', function(req, res, next) {
-	res.render('index', {
+router.get('/settle-rule', function(req,res, next){
+	res.render('settle-rule', {
 		title: 'TCL业务清算平台'
 	});
 });
 router.get('/rate', function(req, res, next){
 	res.render('rate', {
+		title: 'TCL业务清算平台'
+	});
+});
+
+/** get root 放到最后 */
+router.get('/', function(req, res, next) {
+	res.render('index', {
 		title: 'TCL业务清算平台'
 	});
 });

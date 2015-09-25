@@ -43,7 +43,7 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: '',
 				format: function(v) {
-					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus grey" title="历史记录"></span></div>';
+					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-clock-o blue" title="历史记录"></span></div>';
 				}
 			}],
 			url: getUrl(),
@@ -59,15 +59,17 @@ define(function(require, exports, module) {
 			$('.ui-pg-div *[title]').tooltip({
 				container: 'body'
 			});
+			$('.ui-pg-div .fa-clock-o').on('click', function() {
+				setTimeout(function() {
+					viewHistory(_grid.getSelectedRow())
+				}, 0);
+			})
 		});
 		_grid.listen('addCallback', function() {
 			addAndUpdate();
 		});
 		_grid.listen('editCallback', function(row) {
 			addAndUpdate(row);
-		});
-		_grid.listen('viewCallback', function(row) {
-			viewHistory(row);
 		});
 		listContainer.html(_grid.getHtml());
 		_grid.load();

@@ -169,7 +169,8 @@ var fileapi = {
 	'/clearing/list': "settlement-clearing-list.json",
 	'/settleCard/list': 'settle-card-list.json',
 	'/settleCard/list:2':'settle-card-list2.json',
-	'/settleCard/history':'settle-card-history.json'
+	'/settleCard/history':'settle-card-history.json',
+	'/settleRule/list':'settle-rule-list.json'
 }
 
 //加载文件数据
