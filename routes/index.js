@@ -32,4 +32,9 @@ router.get('/', function(req, res, next) {
 		title: 'TCL业务清算平台'
 	});
 });
+router.get('/rate', function(req, res, next){
+	res.render('rate', {
+		title: 'TCL业务清算平台'
+	});
+});
 module.exports = router;
