@@ -2,6 +2,7 @@ define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Box = require('boxBootstrap'),
 		Grid = require('gridBootstrap'),
+		Xss = require('xss'),
 
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
@@ -66,7 +67,7 @@ define(function(require, exports, module) {
 			addAndUpdate(row);
 		});
 		_grid.listen('viewCallback', function(row) {
-			console.log('view', row);
+			viewHistory(row);
 		});
 		listContainer.html(_grid.getHtml());
 		_grid.load();
@@ -191,46 +192,79 @@ define(function(require, exports, module) {
 			cardType = $('#lx').val(),
 			effectiveDate = $('#sxsj').val(),
 			expirationDate = $('#xxsj').val();
-		if(merchantId){
+		if (merchantId) {
 			data.merchantId = merchantId;
 		}
-		if(cardNumber){
+		if (cardNumber) {
 			data.cardNumber = cardNumber;
 		}
-		if(userName){
+		if (userName) {
 			data.userName = userName;
 		}
-		if(priority){
+		if (priority) {
 			data.priority = priority;
 		}
-		if(status){
+		if (status) {
 			data.status = status;
 		}
-		if(cardType){
+		if (cardType) {
 			data.cardType = cardType;
 		}
-		if(effectiveDate){
+		if (effectiveDate) {
 			data.effectiveDate = effectiveDate;
 		}
-		if(expirationDate){
+		if (expirationDate) {
 			data.expirationDate = expirationDate;
 		}
 		$.ajax({
-			url:global_config.serverRoot+'settleCard/addOrUpdate',
+			url: global_config.serverRoot + 'settleCard/addOrUpdate',
 			method: 'post',
 			data: data,
-			success: function(json){
-				if('0' == json.code){
+			success: function(json) {
+				if ('0' == json.code) {
 					_grid.loadData();
-				}
-				else{
+				} else {
 					Box.alert('数据保存失败！');
 				}
 			},
-			error: function(json){
+			error: function(json) {
 				Box.alert('数据保存失败~');
 			}
 		})
+	}
+
+	function viewHistory(row) {
+		var id = row[0].id;
+		$.ajax({
+			url: global_config.serverRoot + '/settleCard/history?userId=' + '&id=' + id,
+			success: function(json) {
+				if ('0' == json.code) {
+					showHistory(json.data.pageData);
+				}
+			},
+			error: function(json) {
+				// some report
+			}
+		})
+	}
+
+	function showHistory(data) {
+		var html = ['<h4><b>操作历史</b></h4><hr class="no-margin">'],
+			d;
+		html.push('<table class="table table-striped table-bordered table-hover">');
+		html.push('<thead><tr><th>操作人</th><th>操作时间</th><th>操作类型</th></tr></thead>');
+		html.push('<tbody>');
+		for (var i = 0; i < data.length; i++) {
+			d = data[i];
+			html.push('<tr>');
+			html.push('<td>' + Xss.inHTMLData(d.operater) + '</td>');
+			html.push('<td>' + d.date + '</td>');
+			html.push('<td>' + d.type + '</td>');
+			html.push('</tr>');
+		}
+		html.push('</tbody></table>');
+
+		Box.alert(html.join(''));
 	}
 
 	function showDialog(opt) {
