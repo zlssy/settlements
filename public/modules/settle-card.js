@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
-		_grid,
+		_grid, doms = {},
 		userParam = {};
 
 	function init() {
@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 				index: 'id'
 			}, {
 				name: '状态',
-				index: 'status'
+				index: 'settleCardStatus'
 			}, {
 				name: '结算类型',
 				index: 'settleCardType'
@@ -74,6 +74,10 @@ define(function(require, exports, module) {
 		registerEvents();
 	}
 
+	/**
+	 * [addAndUpdate 添加、编辑功能]
+	 * @param {[type]} data [description]
+	 */
 	function addAndUpdate(data) {
 		var opt = {},
 			id = '';
@@ -106,6 +110,11 @@ define(function(require, exports, module) {
 		});
 	}
 
+	/**
+	 * [validate 检验函数]
+	 * @param  {[HTML Element]} el [要校验的元素，不传递则全部检查]
+	 * @return {[Boolean]}    [description]
+	 */
 	function validate(el) {
 		var pass = true;
 		if (el) {
@@ -141,16 +150,20 @@ define(function(require, exports, module) {
 		return pass;
 	}
 
+	/**
+	 * [isDate 检查数据是否是日期类型]
+	 * @param  {[String]}  d [要检查的字符串]
+	 * @return {Boolean}   [返回值]
+	 */
 	function isDate(d) {
-		var r;
-		try {
-			r = !!Date.parse(d);
-		} catch (e) {
-			r = false;
-		}
-		return r;
+		return Utils.isDate(d);
 	}
 
+	/**
+	 * [fillData 编辑时，填充数据]
+	 * @param  {[Object]} d [选中行数据]
+	 * @return {[type]}   [description]
+	 */
 	function fillData(d) {
 		var data = d[0] || {};
 		if (data.merchantId) {
@@ -179,6 +192,11 @@ define(function(require, exports, module) {
 		}
 	}
 
+	/**
+	 * [submitData 最终的数据提交]
+	 * @param  {[Object]} d [选中行的数据]
+	 * @return {[type]}   [description]
+	 */
 	function submitData(d) {
 		var id = d && d[0] && d[0].id || '',
 			data = {
@@ -233,6 +251,11 @@ define(function(require, exports, module) {
 		})
 	}
 
+	/**
+	 * [viewHistory 查看历史记录]
+	 * @param  {[Array]} row [选中行的数组]
+	 * @return {[type]}     [description]
+	 */
 	function viewHistory(row) {
 		var id = row[0].id;
 		$.ajax({
@@ -248,6 +271,11 @@ define(function(require, exports, module) {
 		})
 	}
 
+	/**
+	 * [showHistory 展示历史操作信息]
+	 * @param  {[Array]} data [要展示的数据]
+	 * @return {[type]}      [description]
+	 */
 	function showHistory(data) {
 		var html = ['<h4><b>操作历史</b></h4><hr class="no-margin">'],
 			d;
@@ -267,15 +295,39 @@ define(function(require, exports, module) {
 		Box.alert(html.join(''));
 	}
 
+	/**
+	 * [showDialog 展示对话框]
+	 * @param  {[type]} opt [参数]
+	 * @return {[type]}     [description]
+	 */
 	function showDialog(opt) {
 		Box.dialog(opt);
 	}
 
+	/**
+	 * [getUrl 获取查询url]
+	 * @return {[type]} [description]
+	 */
 	function getUrl() {
 		return global_config.serverRoot + 'settleCard/list?userId=' + Utils.object2param(userParam);
 	}
 
+	/**
+	 * [registerEvents 注册事件]
+	 * @return {[type]} [description]
+	 */
 	function registerEvents() {
+		doms.commercialId = $('#commercialId');
+		doms.bankAccount = $('#bankAccount');
+		doms.bankAccountName = $('#bankAccountName');
+		doms.bank = $('#bank');
+		doms.type = $('#type');
+		doms.status = $('#status');
+		doms.effectiveDateStart = $('#effectiveDateStart');
+		doms.effectiveDateEnd = $('#effectiveDateEnd');
+		doms.expirationDateStart = $('#expirationDateStart');
+		doms.expirationDateEnd = $('#expirationDateEnd');
+
 		$('#add-btn').on('click', function() {
 			_grid.trigger('addCallback');
 		});
@@ -290,7 +342,86 @@ define(function(require, exports, module) {
 			if (cls && cls.indexOf('fa-calendar') > -1) {
 				$el.parent().siblings('input').focus();
 			}
+			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
+				if (getParams()) {
+					_grid.setUrl(getUrl());
+					_grid.loadData();
+				}
+			}
+			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
+				userParam = {};
+				doms.commercialId.val('');
+				doms.bankAccount.val('');
+				doms.bankAccountName.val('');
+				doms.bank.val('');
+				doms.type.val(0);
+				doms.status.val(0);
+				doms.effectiveDateStart.val('');
+				doms.effectiveDateEnd.val('');
+				doms.expirationDateStart.val('');
+				doms.expirationDateEnd.val('');
+			}
 		});
+
+	}
+
+	function getParams() {
+		var newchange = false,
+			newParam = {},
+			commercialId = doms.commercialId.val(),
+			bankAccount = doms.bankAccount.val(),
+			bankAccountName = doms.bankAccountName.val(),
+			bank = doms.bank.val(),
+			type = doms.type.val(),
+			status = doms.status.val(),
+			effectiveDateStart = doms.effectiveDateStart.val(),
+			effectiveDateEnd = doms.effectiveDateEnd.val(),
+			expirationDateStart = doms.expirationDateStart.val(),
+			expirationDateEnd = doms.expirationDateEnd.val();
+		if (commercialId) {
+			newParam.commercialId = encodeURIComponent(commercialId);
+		}
+		if (bankAccount) {
+			newParam.bankAccount = encodeURIComponent(bankAccount);
+		}
+		if (bankAccountName) {
+			newParam.bankAccountName = encodeURIComponent(bankAccountName);
+		}
+		if (bank) {
+			newParam.bank = encodeURIComponent(bank);
+		}
+		if (type) {
+			newParam.type = type;
+		}
+		if (status) {
+			newParam.status = status;
+		}
+		if (isDate(effectiveDateStart)) {
+			newParam.effectiveDateStart = effectiveDateStart;
+		}
+		if (isDate(effectiveDateEnd)) {
+			newParam.effectiveDateEnd = effectiveDateEnd;
+		}
+		if (isDate(expirationDateStart)) {
+			newParam.expirationDateStart = expirationDateStart;
+		}
+		if (isDate(expirationDateEnd)) {
+			newParam.expirationDateEnd = expirationDateEnd;
+		}
+
+		for (var k in newParam) {
+			if (newParam[k] != userParam[k]) {
+				newchange = true;
+				break;
+			}
+		}
+		if (newchange) {
+			userParam = newParam;
+		} else {
+			Box.alert('您的查询条件并没有做任何修改.');
+			return false;
+		}
+		return true;
 	}
 
 	exports.init = init;

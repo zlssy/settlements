@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Grid = require('gridBootstrap'),
+		Box = require('boxBootstrap'),
 
 		content = $('#content'),
 		listContainer = $('#grid_list'),
@@ -177,7 +178,7 @@ define(function(require, exports, module) {
 		if (newchange) {
 			userParam = newParam;
 		} else {
-			alert('您的查询条件并没有做任何修改.');
+			Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
 		return true;
