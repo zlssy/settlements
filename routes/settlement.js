@@ -166,18 +166,61 @@ router.all('/dataDictionary/dropdownlist', function(req, res, next){
 });
 
 var fileapi = {
-	'/clearing/list': "settlement-clearing-list.json"
+	'/clearing/list': "settlement-clearing-list.json",
+	'/settleCard/list': 'settle-card-list.json',
+	'/settleCard/list:2':'settle-card-list2.json'
 }
 
 //加载文件数据
-router.all('/clearing/list',function(req,res,next){
-	var dataFileName = "settlement-clearing-list.json";
-	if(fileapi[req.path]){
-		fs.createReadStream(path.resolve(__dirname,'../temp_data/',fileapi[req.path])).pipe(res);
-	}else{
-		next();
+// router.all('/clearing/list',function(req,res,next){
+// 	if(fileapi[req.path]){
+// 		fs.createReadStream(path.resolve(__dirname,'../temp_data/',fileapi[req.path])).pipe(res);
+// 	}else{
+// 		next();
+// 	}
+// });
+
+router.get('/*', function(req, res, next){
+	var href = req.url,
+		basePath = req.path,
+		pageNo = href.indexOf('pageNo') > -1 ? href.replace(/^.*pageNo=(\d+).*/, '$1') : 0,
+		fileName = '';
+	if(pageNo){
+		fileName = req.path+':'+pageNo;
+		if(fileapi[fileName]){
+			console.log(fileName,' replace as ', fileapi[fileName]);
+			fs.readFile(path.resolve(__dirname, '../temp_data', fileapi[fileName]) ,{encoding:'utf-8'}, function(err, data){
+				if(err){
+					console.log(err.message);
+					next();
+				}
+				else{
+					res.json(JSON.parse(data));
+				}
+			});
+		}
+		else{
+			next();
+		}
 	}
-})
+	else{
+		if(fileapi[req.path]){
+			console.log(req.path,' replace as ', fileapi[req.path]);
+			fs.readFile(path.resolve(__dirname, '../temp_data', fileapi[req.path]) ,{encoding:'utf-8'}, function(err, data){
+				if(err){
+					console.log(err.message);
+					next();
+				}
+				else{
+					res.json(JSON.parse(data));
+				}
+			});
+		}
+		else{
+			next();
+		}
+	}
+});
 
 
 module.exports = router;
