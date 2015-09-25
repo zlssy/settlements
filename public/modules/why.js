@@ -46,6 +46,7 @@ define(function(require, exports, module) {
         }
         $.datepicker.setDefaults($.datepicker.regional['zh-CN'])
     }
+    
     //jquery ajax 默认数组传递方式修改
     $.ajaxSetup({traditional:true});
 
@@ -68,6 +69,27 @@ define(function(require, exports, module) {
         } else {
             return test;
         }
+    }
+
+    var getMapdata = exports.getMapdata = function(json,map){
+        var attrs = map.split('.');
+        var obj = json;
+        try{
+            for(var i = 0; i < attrs.length; i++){
+                obj = obj[attrs[i]]
+            }
+        }catch(e){
+            return undefined;
+        }
+        return obj;
+    }
+
+    var guid = exports.guid = function(){
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){
+            var r = Math.random()*16|0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        })
     }
 
     exports.HTML = {
@@ -228,10 +250,10 @@ define(function(require, exports, module) {
             return obj;
         }
         return {
-            Stringify : function(a){
+            stringify : function(a){
                 return Stringify.call(ms,a)
             },
-            Parse: function(a){return Parse.call(ms,a)},
+            parse: function(a){return Parse.call(ms,a)},
         }
     })()
 
@@ -310,4 +332,9 @@ define(function(require, exports, module) {
             textObj.focus();
         }
     }
+
+    exports.pageNav=function(a){var c,d,g,f,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,B,x,y,z,A,C,G,D,F,H,I,b={};if(b=a.values&&a.values.totalCount?{itemTotal:a.values.totalCount,itemPerPage:a.values.pageSize,page:a.values.pageNo}:a,c={itemPerPage:b.itemPerPage||10,sizeArr:b.sizeArr||[10,20,50],maxLinkShow:b.maxLinkShow||5,itemTotal:b.itemTotal||0,page:b.page||1,lang:b.lang||{textmode:"共<em>%Total%</em>条数据 当前 <em>%page%</em>/%maxpage% 页 ",Prev:'<i class="icon-angle-left"></i>上一页',Next:'下一页<i class="icon-angle-right"></i>',more:"..."}},f="",h=[],i=c.itemPerPage-0,j=c.page-0,k=c.itemTotal-0,l=c.maxLinkShow-0,m=k%i,n=Math.floor(k/i),o=m?n+1:n,0>=k?g=0:o>j?g=i:(j=o,g=m?m:i),o>0){if(p=[],c.sizeArr&&c.sizeArr.length){for(q=new RegExp("(\\s|^)"+i+"(\\s|$)"),q.test(c.sizeArr.join(" "))||c.sizeArr.push(i),c.sizeArr.sort(),p.push(' 每页<select name="pagesize">'),r=0;r<c.sizeArr.length;r++)s=c.sizeArr[r],p.push('<option value="'+s+'"'+(i==s?' selected="selected"':"")+">"+c.sizeArr[r]+"</option>");p.push("</select>条 ")}if(f='<span class="pagenav-wrapper'+(1===o?"only-one-page":"")+'"><span class="pagenav-desc">'+c.lang.textmode.replace("%page%",j).replace("%maxpage%",o).replace("%Total%",k)+p.join("")+'</span><span class="pagenav-units">',l>=o)for(d=1;o>=d;d++)j==d?(t="pagenav-current-link pagenav-link",u=!0):(t="pagenav-link",u=!1),v={text:d,index:d,isCurrent:u,cls:t},h.push(v);else if(o>l){for(w=l-3,(j>=o-1||2>=j)&&w++,x=Math.floor(w/2),y=w-x,z=j-1,A=o-j,j-1>x&&h.push({text:c.lang.Prev,index:j-1,isCurrent:!1,cls:"pagenav-link pagenav-link-prev"}),y>=A?(B=w-A,h.push({text:1,index:1,isCurrent:!1,cls:"pagenav-link"})):z>x?(B=x,h.push({text:1,index:1,isCurrent:!1,cls:"pagenav-link"})):B=z,C=w-B,d=0;B>d;d++)v={text:j-B+d,index:j-B+d,isCurrent:!1,cls:"pagenav-link"},h.push(v);for(h.push({text:j,index:j,isCurrent:!0,cls:"pagenav-link pagenav-current-link"}),d=1;C>=d;d++)v={text:j+d,index:j+d,isCurrent:!1,cls:"pagenav-link"},h.push(v);A>C&&h.push({text:o,index:o,isCurrent:j==o?!0:!1,cls:j==o?"pagenav-link pagenav-current-link":"pagenav-link"}),A>y&&h.push({text:c.lang.Next,index:j+1,isCurrent:!1,cls:"pagenav-link pagenav-link-next"})}}else f="";for(D=h.length,F=0,H="",I=!1;D>F;F++)G=h[F],F>0&&(I=h[F-1]),H=(G.isCurrent?"<span ":'<a href="javascript:;" ')+'data-page="'+G.index+'" class="page-'+G.index+" "+G.cls+'">'+G.text+"</"+(G.isCurrent?"span>":"a>"),I&&I.index<G.index-1&&(f+='<span class="pagenav-more">'+c.lang.more+"</span>"),f+=H;return f+="</span></span>"};
+
+
+
 })
