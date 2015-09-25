@@ -275,6 +275,21 @@ define(function(require, exports, module) {
 		return url;
 	}
 
+	/**
+	 * [isDate 检查数据是否是日期类型]
+	 * @param  {[String]}  d [要检查的字符串]
+	 * @return {Boolean}   [返回值]
+	 */
+	function isDate(d) {
+		var r;
+		try {
+			r = !!Date.parse(d);
+		} catch (e) {
+			r = false;
+		}
+		return r;
+	}
+
 	return {
 		object2param: object2param,
 		cookie: {
@@ -293,6 +308,7 @@ define(function(require, exports, module) {
 			replaceParam: replaceParam
 		},
 		formatJson: formatJson,
-		loadJsonp: loadJsonp
+		loadJsonp: loadJsonp,
+		isDate: isDate
 	};
 });
