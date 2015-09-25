@@ -20,13 +20,13 @@ define(function(require, exports, module) {
 			checkbox: false,
 			cols: [{
 				name: '交易流水号',
-				index: 'merchantId'
+				index: 'payOrderId'
 			}, {
 				name: '支付渠道',
-				index: 'accountNumber'
+				index: 'payTool'
 			}, {
 				name: '商户订单编号',
-				index: 'clearingDate'
+				index: 'merchantOrderId'
 			}, {
 				name: '商户编号',
 				index: 'tradeAmount'
@@ -35,25 +35,25 @@ define(function(require, exports, module) {
 				index: 'tradeTrans'
             }, {
                 name: '订单日期',
-                index: 'clearingDate'
+                index: 'orderTime'
             }, {
                 name: '对账日期',
-                index: 'tradeAmount'
+                index: 'checkTime'
             }, {
                 name: '交易类型',
-                index: 'tradeTrans'
+                index: 'transaction'
             }, {
                 name: '货币类型',
-                index: 'clearingDate'
+                index: 'currency'
             }, {
                 name: '订单金额（元）',
-                index: 'tradeAmount'
+                index: 'orderAmount'
             }, {
                 name: '处理状态',
-                index: 'tradeTrans'
+                index: 'orderStatus'
             }, {
                 name: '差异类型',
-                index: 'tradeAmount'
+                index: 'differencesType'
             }, {
                 name: '操作',
                 index: 'tradeTrans'
@@ -104,6 +104,10 @@ define(function(require, exports, module) {
             if (id == 'add-btn') {
                 showPop();
             }
+            //导出
+            if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
+                exportExcel();
+            }
 		};
 
 		$(document.body).on('click', evtListener);
@@ -114,8 +118,21 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/exchangeRate/list?userId=' + Utils.object2param(userParam);
+		return global_config.serverRoot + '/queryWrongRecord?userId=' + Utils.object2param(userParam);
 	}
+
+    function exportExcel() {
+        var a = document.createElement('a');
+        a.href = global_config.serverRoot + '/downloadWrongRecord?userId=' + Utils.object2param(userParam);
+        a.target = '_blank';
+        a.height = 0;
+        a.width = 0;
+        document.body.appendChild(a);
+        var e = document.createEvent('HTMLEvents');
+        e.initEvent('click', true, false);
+        a.dispatchEvent(e);
+        a.remove();
+    }
 
     function showPop(data) {
         data = data || {};

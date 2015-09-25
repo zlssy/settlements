@@ -48,57 +48,57 @@
                                         <div class="col-xs-12 col-sm-4">
                                             <label class="col-sm-3 no-padding lm-5">时间:</label>
                                             <div class="col-sm-9 no-padding">
-                                                <div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="creationDateStart" placeholder="from" data-date-format="dd/mm/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
-                                                <div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="creationDateEnd" placeholder="to" data-date-format="dd/mm/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
+                                                <div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="startDate" placeholder="from" data-date-format="dd/mm/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
+                                                <div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="endDate" placeholder="to" data-date-format="dd/mm/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
                                             <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">支付渠道:</label></div>
                                             <div class="col-sm-9 no-padding">
-                                                <select class="form-control" name="status">
+                                                <select class="form-control" name="payTool">
                                                     <option value="">全部</option>
                                                     <option value="1">CYBS</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5" for="commercialId">产品编号:</label>
+                                            <label class="col-sm-3 no-padding lm-5" >产品编号:</label>
                                             <div class="col-sm-9 no-padding">
-                                                <input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+                                                <input type="text" name="productID" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5" for="commercialId">产品名称:</label>
+                                            <label class="col-sm-3 no-padding lm-5" >产品名称:</label>
                                             <div class="col-sm-9 no-padding">
-                                                <input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+                                                <input type="text" name="productName" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5" for="commercialId">产品类别:</label>
+                                            <label class="col-sm-3 no-padding lm-5" >产品类别:</label>
                                             <div class="col-sm-9 no-padding">
-                                                <input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+                                                <input type="text" name="productCategory" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5" for="commercialId">用户编号:</label>
+                                            <label class="col-sm-3 no-padding lm-5" >用户编号:</label>
                                             <div class="col-sm-9 no-padding">
-                                                <input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+                                                <input type="text" name="userID" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5" for="commercialId">商户编号:</label>
+                                            <label class="col-sm-3 no-padding lm-5">商户编号:</label>
                                             <div class="col-sm-9 no-padding">
-                                                <input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+                                                <input type="text" name="metchantID"  class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5" for="commercialId">订单编号:</label>
+                                            <label class="col-sm-3 no-padding lm-5" >订单编号:</label>
                                             <div class="col-sm-9 no-padding">
-                                                <input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+                                                <input type="text"  class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                     </div>
@@ -196,7 +196,7 @@
 
 <!-- process enter -->
 <script>
-seajs.use('exchange-query', function(m){
+seajs.use('financial-statistics', function(m){
 	m.init();
 });
 </script>

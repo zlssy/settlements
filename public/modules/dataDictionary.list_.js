@@ -1,22 +1,6 @@
 define(function(require, exports, module) {
-	var Utils = require('utils'),
-		Grid = require('gridBootstrap'),
-
-		content = $('#content'),
-		listContainer = $('#grid_list'),
-		userParam = {},
-		doms = {
-			qfstart: $('input[name="qfstart"]'),
-			qfend: $('input[name="qfend"]'),
-			jystart: $('input[name="jystart"]'),
-			jyend: $('input[name="jyend"]'),
-			qfstatus: $('#qfstatus'),
-			commercialId: $('#commercialId'),
-			commercialName: $('#commercialName'),
-			account: $('#account')
-		},
-		_grid;
-
+	var Table = require('whygrid');
+	var D = window.D = require('D');
 	var apis = {
 			list : global_config.serverRoot + '/dataDictionary/list',
 			add : global_config.serverRoot + '/dataDictionary/addOrUpdate',
@@ -24,99 +8,127 @@ define(function(require, exports, module) {
 			show : global_config.serverRoot + '/dataDictionary/detail',
 			dropdownlist : global_config.serverRoot + '/dataDictionary/dropdownlist'
 		}
-	function init() {
-		loadData();
-	}
-
-	function loadData() {
-		_grid = Grid.create({
-			key: 'merchantId',
-			checkbox: false,
+	var T;
+	$(function(){
+		T = Table('#grid_list',apis.list,{
+			checkRow: true,
+			seachForm: '#sform',
 			cols: [{
-				name: '字典类型编码',
-				index: 'type'
-			}, {
-				name: '字典类型名称',
-				index: 'label',
-				sortable: true
-			}, {
-				name: '操作',
-				index: 'clearingDate'
-			}],
-			url: apis.list,
-			pagesize: 10,
-			jsonReader: {
-				root: 'data.pageData',
-				page: 'data.pageNo',
-				records: 'data.totalCount'
-			}
-		});
-
-		listContainer.html(_grid.getHtml());
-		_grid.listen('refreshCallback', function(v) {
-			console.log(v);
-		});
-		_grid.load();
-		//registerEvents();
-	}
-
-	function registerEvents() {
-		var evtListener = function(e) {
-			var $el = $(e.target || e.srcElement),
-				cls = $el.attr('class') || '',
-				id = $el.attr('id') || '',
-				tag = $el.get(0).tagName.toLowerCase();
-			if (cls && cls.indexOf('fa-calendar') > -1) {
-				$el.parent().siblings().focus();
-			}
-			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
-				if (getParams()) {
-					console.log(userParam);
-					_grid.setUrl(getUrl());
-					_grid.loadData();
+					name: '字典类型编码',
+					index: 'type',
+					sortable: true,
+					width: 100
+				}, {
+					name: '字典类型名称',
+					index: 'label'
+				}, {
+					name: '操作',
+					index: 'comm',
+					width: 170
+				}
+			],
+			funFixtd: function(x,y,col,data){
+				if(col.index=='comm'){
+					var html = '';
+					html += '<a data-comm="show" class="btn btn-xs btn-link">' + '查看' + '</a>'; 
+					html += '<a data-comm="edit" class="btn btn-xs btn-link">' + '修改' + '</a>'; 
+					html += '<a data-comm="del" class="btn btn-xs btn-link">' + '删除' + '</a>'; 
+					return html;
 				}
 			}
-			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
-				userParam = {};
-				doms.qfstart.val('');
-				doms.qfend.val('');
-				doms.jystart.val('');
-				doms.jyend.val('');
-				doms.qfstatus.val(0);
-				doms.commercialId.val('');
-				doms.commercialName.val('');
-				doms.account.val('');
-			}
-			if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
-				exportExcel();
-			}
-		};
-
-		$(document.body).on('click', evtListener);
-		$('.datepicker').datepicker({
-			autoclose: true,
-			todayHighlight: true
 		});
+		bin_comm();
+		T.load();
+	})
+
+	//数据操作
+    function datacomm(comm,ids,data){
+        var comms = {
+            'show':{api:tapi.updateStatus}
+            ,'edit':{api:tapi.updateStatus}
+            ,'del':{api:tapi.updateTimeoff}
+        }
+        var obj = comms[comm];
+        if(obj){
+            var ids_data = {'ids':ids};
+            $.post(obj.api,$.extend({},ids_data,obj.data,data),function(data){
+                if(data.executeStatus){
+                    alert(data.errorMsg || '未知错误!','操作出错!')
+                    return;
+                }
+                alert('操作成功!')
+                T.load();
+            })
+        }else alert('未知操作!')
+    }
+	//绑定功能按钮
+	function bin_comm(){
+		T.main.on('click','a[data-comm]',function(){
+			var o = $(this)
+				,comm = o.data('comm')
+			var id = o.parents('tr').data('id')
+
+			alert("comm:"+comm);
+			return;
+			if(comm == 'del'){
+                D.confirm('您确定要删除吗?','提示',function(dalog){
+                    datacomm(comm,id)
+                })
+            }else if(comm == 'show'){
+                location.href = "/xxx?id=" + id;
+                return;
+                //location.href = '/clm/member/list/auto/list/edit?companyId='+companyId+'&id='+id;
+            }else if(comm == 'edit'){
+                D.confirm(openEdit(id),'设置新密码',function(dalog){
+                    var newpwd = $.trim($(dalog).find('[name="password"]').val())
+                    if(newpwd !== ""){
+                        datacomm(comm,id,{password:newpwd});
+                    }else{
+                        qida.D.alert('新密码不能为空!');
+                        return false;
+                    }
+                })
+            }else{
+                datacomm(comm,id)
+            }
+
+		})
 	}
 
-	function exportExcel() {
-		var a = document.createElement('a');
-		a.href = global_config.serverRoot + 'clearing/export?userId=' + Utils.object2param(userParam);
-		a.target = '_blank';
-		a.height = 0;
-		a.width = 0;
-		document.body.appendChild(a);
-		var e = document.createEvent('HTMLEvents');
-		e.initEvent('click', true, false);
-		a.dispatchEvent(e);
-		a.remove();
+	function openEdit(id){
+
 	}
 
-	function getParams() {
-		
-	}
+	var Edit = {}
+	Edit.getDom = function(){
 
-	return {
-		init: init
 	};
+	Edit.showadd = function(){
+		
+	};
+	Edit.showedit = function(id){
+		$.get(apis.show,{id:id},function(){
+
+		})
+
+	}
+	Edit.fillDom = function(dom,data){
+
+	}
+
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -62,7 +62,7 @@ var DATAY = {"code": 0, "msg": 'Success'}
 //处理page
 router.all('/*', function(req, res, next){
 	var _Page = res._Page = {
-		"pageCnt" :100,
+		"totalCount" :100,
 		"pageSize" :req.query.pageSize || req.body.pageSize || 20,
 		"pageNo" :req.query.pageNo || req.body.pageNo || 1
 	}
@@ -224,5 +224,25 @@ router.get('/*', function(req, res, next){
 	}
 });
 
+if(!daili){//代理
+	router.all("/*",function(req,res,next){
+		var callback = req.query.callback;
+		var obj = {
+			"method" : req.method,
+			"uri" : daili_url + req.url,
+			"headers" : {
+				"userId" : userid
+			}
+		};
+		if(req.method === "POST"){
+			obj.form = _.extend({},req.body)
+		}
+		tool.qrequestStr(obj).done(function(data){
+			res.send(data);
+		},function(e){
+			next(e)
+		})
+	})
+}
 
 module.exports = router;
