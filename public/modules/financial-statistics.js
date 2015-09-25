@@ -19,21 +19,110 @@ define(function(require, exports, module) {
 			key: 'merchantId',
 			checkbox: false,
 			cols: [{
-				name: '源币种',
-				index: 'merchantId'
+				name: 'Order Number',
+				index: 'orderNumber',
+                width: 60
 			}, {
-				name: '目标币种',
-				index: 'accountNumber'
+				name: 'Date',
+				index: 'date',
+                width: 60
+            }, {
+                name: 'Material number',
+                index: 'materialNumber'
+            }, {
+                name: 'Product Code',
+                index: 'productCode'
+            }, {
+                name: 'Product Name',
+                index: 'productName'
+            }, {
+                name: 'Product category',
+                index: 'productCategory'
+            }, {
+                name: 'Product line – level 1',
+                index: 'productLineLevel1'
+            }, {
+                name: 'Product line – level 2',
+                index: 'productLineLevel2'
+            }, {
+                name: 'Color code',
+                index: 'colorCode'
+            }, {
+                name: 'Related Projects',
+                index: 'relatedProjects'
+            }, {
+                name: 'Content provider name',
+                index: 'contentProviderName'
+            }, {
+                name: 'Related TCL entity',
+                index: 'relatedTCLEntiry'
+            }, {
+                name: 'Customer name/user ID',
+                index: 'customerName'
+            }, {
+                name: 'Region',
+                index: 'region'
+            }, {
+                name: 'Country',
+                index: 'country'
+            }, {
+                name: 'Ship to country',
+                index: 'shipToCountry'
+            }, {
+                name: 'Year',
+                index: 'year'
+            }, {
+                name: 'Month',
+                index: 'month'
+            }, {
+                name: 'Quarter',
+                index: 'quarter'
+            }, {
+                name: 'MID',
+                index: 'mid'
+            }, {
+                name: 'Payment method',
+                index: 'paymentMethod'
+            }, {
+                name: 'Delivery status',
+                index: 'deliveryStatus'
+            }, {
+                name: 'Delivery note number',
+                index: 'deliveryNoteNumber'
+            }, {
+                name: 'Original currency',
+                index: 'originalCurrency'
 			}, {
-				name: '汇率',
-				index: 'clearingDate'
+				name: 'Gross revenue in original',
+				index: 'grossRevenueInOriginalCurrency'
 			}, {
-				name: '状态',
-				index: 'tradeAmount'
-			}, {
-				name: '创建时间',
-				index: 'tradeTrans'
-			}],
+				name: 'Cost in original currency',
+				index: 'costInOriginalCurrency'
+            }, {
+                name: 'Fixed Charges',
+                index: 'fixedCharges'
+            }, {
+                name: 'Variable Charges',
+                index: 'variableCharges'
+            }, {
+                name: 'Net revenue in original currency',
+                index: 'netRevenueInOriginalCurrency'
+            }, {
+                name: 'Gross revenue in USD',
+                index: 'grossRevenueInUSD'
+            }, {
+                name: 'Cost in USD',
+                index: 'costInUSD'
+            }, {
+                name: 'Fixed Charges in USD',
+                index: 'fixedChargesInUSD'
+            }, {
+                name: 'Variable Charges in USD',
+                index: 'variableChargesInUSD'
+            }, {
+                name: 'Net revenue in USD',
+                index: 'netRevenueInUSD'
+            }],
 			url: getUrl(),
 			pagesize: 10,
 			jsonReader: {
@@ -80,6 +169,10 @@ define(function(require, exports, module) {
             if (id == 'add-btn') {
                 showPop();
             }
+            //导出
+            if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
+                exportExcel();
+            }
 		};
 
 		$(document.body).on('click', evtListener);
@@ -90,8 +183,21 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/exchangeRate/list?userId=' + Utils.object2param(userParam);
+		return global_config.serverRoot + '/queryStatisticalRecord?userId=' + Utils.object2param(userParam);
 	}
+
+    function exportExcel() {
+        var a = document.createElement('a');
+        a.href = global_config.serverRoot + '/downloadStatisticalRecord?userId=' + Utils.object2param(userParam);
+        a.target = '_blank';
+        a.height = 0;
+        a.width = 0;
+        document.body.appendChild(a);
+        var e = document.createEvent('HTMLEvents');
+        e.initEvent('click', true, false);
+        a.dispatchEvent(e);
+        a.remove();
+    }
 
     function showPop(data) {
         data = data || {};
