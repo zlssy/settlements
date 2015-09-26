@@ -32,6 +32,11 @@ router.get('/settle-rule', function(req,res, next){
 		title: 'TCL业务清算平台'
 	});
 });
+router.get('/settle-limit', function(req,res, next){
+	res.render('settle-limit', {
+		title: 'TCL业务清算平台'
+	});
+});
 router.get('/rate', function(req, res, next){
 	res.render('rate', {
 		title: 'TCL业务清算平台'

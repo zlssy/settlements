@@ -5,7 +5,7 @@
 		"pageCnt": "1",
 		"pageSize": 10,
 		"pageNo": 1,
-		"totalCnt": 20,
+		"totalCnt": 10,
 		"pageData": [{
 			"id": "11111111",
 			"accountNumber": "11111111",

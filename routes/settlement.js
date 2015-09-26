@@ -168,9 +168,11 @@ router.all('/dataDictionary/dropdownlist', function(req, res, next){
 var fileapi = {
 	'/clearing/list': "settlement-clearing-list.json",
 	'/settleCard/list': 'settle-card-list.json',
+	'/settleCard/list:1': 'settle-card-list.json',
 	'/settleCard/list:2':'settle-card-list2.json',
 	'/settleCard/history':'settle-card-history.json',
-	'/settleRule/list':'settle-rule-list.json'
+	'/settleRule/list':'settle-rule-list.json',
+	'/settleRule/history':'settle-card-history.json',
 }
 
 //加载文件数据
