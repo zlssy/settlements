@@ -49,7 +49,7 @@ if (daili) {
         }
         tool.qrequestStr(obj).done(function(data) {
             console.log(' send proxy[' + req.url + '] data:', data)
-            res.send(data);
+            res.json('string' == typeof data ? JSON.parse(data) : data);
         }, function(e) {
             next(e)
         })
