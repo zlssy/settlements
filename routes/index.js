@@ -2,6 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
+router.get('/statement-upload', function(req, res, next){
+    res.render('statement-upload', {
+        title: 'TCL业务清算平台'
+    });
+});
 router.get('/financial-statistics', function(req, res, next){
     res.render('financial-statistics', {
         title: 'TCL业务清算平台'
