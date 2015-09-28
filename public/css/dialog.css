@@ -49,7 +49,7 @@
 .dialog-icon {
     width: 400px;
     height: 82px;
-    background: url('../../img/common/icon-dialog-tip.png') center 0 no-repeat;
+    background: url('img/icon-dialog-tip.png') center 0 no-repeat;
 }
 .ui-dialog-success .dialog-icon{
     background-position: center 0;

@@ -125,6 +125,8 @@ define(function(require, exports, module) {
         $.post(global_config.serverRoot + "/exchangeRate/addOrUpdate", data, function(res){
             if(res.code == 0){
                 callback(res);
+            } else {
+                art_dialog.error('错误', res.msg);
             }
         }, 'json');
     }
