@@ -7,6 +7,8 @@ define(function(require, exports, module) {
 		var _opt = $.extend({
 			id: 'grid' + (++guid),
 			height: 400,
+            have_scroll:false,
+            fixed_table_width:4000,
 			checkbox: true,
 			pagesize: 20,
 			page: 1,
@@ -32,11 +34,11 @@ define(function(require, exports, module) {
 		html.push('<div id="' + this.id + '" class="ui-jqgrid ui-widget ui-widget-content ui-corner-all" dir="ltr" style="width: 100%;">');
 		html.push('	<div class="ui-widget-overlay jqgrid-overlay" id="' + this.id + '_layer"></div>');
 		html.push('	<div class="loading ui-state-default ui-state-active" id="' + this.id + '_loading" style="display: none;">读取中...</div>');
-		html.push('	<div class="ui-jqgrid-view" id="' + this.id + '_view" style="width: 100%;">');
+		html.push('	<div class="ui-jqgrid-view" id="' + this.id + '_view" style="width: 100%;' + (this.have_scroll ? "overflow:auto;" : "") + '">');
 		html.push('		<div class="ui-jqgrid-titlebar ui-jqgrid-caption ui-widget-header ui-corner-top ui-helper-clearfix" style="display: none;"><a role="link" class="ui-jqgrid-titlebar-close ui-corner-all HeaderButton" style="right: 0px;"><span class="ui-icon ui-icon-circle-triangle-n"></span></a><span class="ui-jqgrid-title"></span></div>');
-		html.push('		<div class="ui-state-default ui-jqgrid-hdiv" style="width: 100%;">');
-		html.push('			<div class="ui-jqgrid-hbox">');
-		html.push('				<table class="ui-jqgrid-htable" style="width: 100%" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
+		html.push('		<div class="ui-state-default ui-jqgrid-hdiv" style="width: 100%;' + (this.have_scroll ? "overflow:initial;" : "") + '">');
+		html.push('			<div class="ui-jqgrid-hbox" style="padding:0">');
+		html.push('				<table class="ui-jqgrid-htable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '" role="grid" aria-labelledby="gbox_grid" cellspacing="0" cellpadding="0" border="0">');
 		html.push('					<thead>');
 		html.push('						<tr class="ui-jqgrid-labels" role="rowheader">');
 		html.push(getHeader.call(this));
@@ -45,10 +47,10 @@ define(function(require, exports, module) {
 		html.push('				</table>');
 		html.push('			</div>');
 		html.push('		</div>');
-		html.push('		<div class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; width:100%;">');
+		html.push('		<div class="ui-jqgrid-bdiv" style="height: ' + this.height + 'px; width:100%;' + (this.have_scroll ? "overflow:initial;" : "") + '">');
 		html.push('			<div style="position:relative;">');
-		html.push('				<div class="ui-jqgrid-hbox">');
-		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable" style="width: 100%;">');
+		html.push('				<div class="ui-jqgrid-hbox" style="padding: 0">');
+		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '">');
 		html.push('				<tbody id="' + this.id + '_list">');
 		html.push('				</tbody>');
 		html.push(getFirstRow.call(this));
