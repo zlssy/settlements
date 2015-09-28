@@ -20,19 +20,20 @@ define(function(require, exports, module) {
 			checkbox: false,
 			cols: [{
 				name: '源币种',
-				index: 'merchantId'
+				index: 'srcCurrencyCode',
+                width:40
 			}, {
 				name: '目标币种',
-				index: 'accountNumber'
+				index: 'targetCurrencyCode'
 			}, {
 				name: '汇率',
-				index: 'clearingDate'
+				index: 'exchangeRate'
 			}, {
 				name: '状态',
-				index: 'tradeAmount'
+				index: 'status'
 			}, {
 				name: '创建时间',
-				index: 'tradeTrans'
+				index: 'creationDate'
 			}],
 			url: getUrl(),
 			pagesize: 10,

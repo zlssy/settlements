@@ -18,110 +18,144 @@ define(function(require, exports, module) {
 		_grid = Grid.create({
 			key: 'merchantId',
 			checkbox: false,
+            fixed_table_width:5000,
+            have_scroll: true,
 			cols: [{
 				name: 'Order Number',
 				index: 'orderNumber',
-                width: 60
-			}, {
+                width:3
+            }, {
 				name: 'Date',
 				index: 'date',
-                width: 60
+                width:3
             }, {
                 name: 'Material number',
-                index: 'materialNumber'
+                index: 'materialNumber',
+                width:3
             }, {
                 name: 'Product Code',
-                index: 'productCode'
+                index: 'productCode',
+                width:3
             }, {
                 name: 'Product Name',
-                index: 'productName'
+                index: 'productName',
+                width:3
             }, {
                 name: 'Product category',
-                index: 'productCategory'
+                index: 'productCategory',
+                width:3
             }, {
                 name: 'Product line – level 1',
-                index: 'productLineLevel1'
+                index: 'productLineLevel1',
+                width:5
             }, {
                 name: 'Product line – level 2',
-                index: 'productLineLevel2'
+                index: 'productLineLevel2',
+                width:5
             }, {
                 name: 'Color code',
-                index: 'colorCode'
+                index: 'colorCode',
+                width:3
             }, {
                 name: 'Related Projects',
-                index: 'relatedProjects'
+                index: 'relatedProjects',
+                width:3
             }, {
                 name: 'Content provider name',
-                index: 'contentProviderName'
+                index: 'contentProviderName',
+                width:4
             }, {
                 name: 'Related TCL entity',
-                index: 'relatedTCLEntiry'
+                index: 'relatedTCLEntiry',
+                width:4
             }, {
                 name: 'Customer name/user ID',
-                index: 'customerName'
+                index: 'customerName',
+                width:4
             }, {
                 name: 'Region',
-                index: 'region'
+                index: 'region',
+                width:3
             }, {
                 name: 'Country',
-                index: 'country'
+                index: 'country',
+                width:3
             }, {
                 name: 'Ship to country',
-                index: 'shipToCountry'
+                index: 'shipToCountry',
+                width:3
             }, {
                 name: 'Year',
-                index: 'year'
+                index: 'year',
+                width:3
             }, {
                 name: 'Month',
-                index: 'month'
+                index: 'month',
+                width:3
             }, {
                 name: 'Quarter',
-                index: 'quarter'
+                index: 'quarter',
+                width:3
             }, {
                 name: 'MID',
-                index: 'mid'
+                index: 'mid',
+                width:3
             }, {
                 name: 'Payment method',
-                index: 'paymentMethod'
+                index: 'paymentMethod',
+                width:3
             }, {
                 name: 'Delivery status',
-                index: 'deliveryStatus'
+                index: 'deliveryStatus',
+                width:3
             }, {
                 name: 'Delivery note number',
-                index: 'deliveryNoteNumber'
+                index: 'deliveryNoteNumber',
+                width:4
             }, {
                 name: 'Original currency',
-                index: 'originalCurrency'
+                index: 'originalCurrency',
+                width:3
 			}, {
 				name: 'Gross revenue in original',
-				index: 'grossRevenueInOriginalCurrency'
+				index: 'grossRevenueInOriginalCurrency',
+                width:5
 			}, {
 				name: 'Cost in original currency',
-				index: 'costInOriginalCurrency'
+				index: 'costInOriginalCurrency',
+                width:5
             }, {
                 name: 'Fixed Charges',
-                index: 'fixedCharges'
+                index: 'fixedCharges',
+                width:3
             }, {
                 name: 'Variable Charges',
-                index: 'variableCharges'
+                index: 'variableCharges',
+                width:3
             }, {
                 name: 'Net revenue in original currency',
-                index: 'netRevenueInOriginalCurrency'
+                index: 'netRevenueInOriginalCurrency',
+                width:6
             }, {
                 name: 'Gross revenue in USD',
-                index: 'grossRevenueInUSD'
+                index: 'grossRevenueInUSD',
+                width:4
             }, {
                 name: 'Cost in USD',
-                index: 'costInUSD'
+                index: 'costInUSD',
+                width:3
             }, {
                 name: 'Fixed Charges in USD',
-                index: 'fixedChargesInUSD'
+                index: 'fixedChargesInUSD',
+                width:4
             }, {
                 name: 'Variable Charges in USD',
-                index: 'variableChargesInUSD'
+                index: 'variableChargesInUSD',
+                width:5
             }, {
                 name: 'Net revenue in USD',
-                index: 'netRevenueInUSD'
+                index: 'netRevenueInUSD',
+                width:3
             }],
 			url: getUrl(),
 			pagesize: 10,

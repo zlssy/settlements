@@ -29,7 +29,7 @@ define(function(require, exports, module) {
 				name: '商户编号',
 				index: 'accountNumber'
 			}, {
-				name: '结算卡算则方式',
+				name: '结算卡选择方式',
 				index: 'settleCardMethod'
 			}, {
 				name: '结算类型',

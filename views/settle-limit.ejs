@@ -44,34 +44,30 @@
 						<div class="widget-main">
 							<div class="row">
 								<div class="col-xs-12 col-sm-6">
-									<label class="col-sm-3 control-label no-padding lm-5" for="commercialId">商户编号:</label>
+									<label class="col-sm-3 control-label no-padding lm-5" for="merchantIds">商户编号:</label>
 									<div class="col-sm-9">
-										<input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+										<input type="text" id="merchantIds" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-6">
-									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="type">商户名称:</label></div>
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="merchantName">商户名称:</label></div>
 									<div class="col-sm-9">
-										<input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+										<input type="text" id="merchantName" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-xs-12 col-sm-6">
-									<label class="col-sm-3 control-label no-padding lm-5" for="commercialId">所属地区:</label>
+									<label class="col-sm-3 control-label no-padding lm-5" for="district">所属地区:</label>
 									<div class="col-sm-9">
-										<input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+										<input type="text" id="district" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-6">
-									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="cardType">行业类别:</label></div>
+									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="businessTypeInt">行业类别:</label></div>
 									<div class="col-sm-9">
-									  	<select class="form-control" id="cardType">
+									  	<select class="form-control" id="businessTypeInt">
 									  		<option value="0">全部</option>
-											<option value="1">游戏</option>
-											<option value="2">UC</option>
-											<option value="1">电商</option>
-											<option value="2">VR</option>
 										</select>
 									</div>
 								</div>
@@ -81,16 +77,16 @@
 								 <label class="col-sm-3 no-padding lm-5">对公结算限额:</label>
 								 <div class="col-sm-9 no-padding">
 								 	<div class="col-sm-4">
-								 		<input class="form-control input-sm">
+								 		<input id="businessLimitFloor" class="form-control input-sm">
 								 	</div>
 								 	<div class="col-sm-1 align-center lm-5">-</div>
 								 	<div class="col-sm-4">
-								 		<input class="form-control input-sm">
+								 		<input id="businessLimitCeiling" class="form-control input-sm">
 								 	</div>
 								 	<div class="col-sm-3">
 								 		<div class="checkbox">
 											<label>
-												<input name="form-field-checkbox" type="checkbox" class="ace">
+												<input id="businessLimit" name="businessLimit" type="checkbox" class="ace">
 												<span class="lbl">不限额</span>
 											</label>
 										</div>
@@ -101,16 +97,16 @@
 								 <label class="col-sm-3 no-padding lm-5">对法人结算限额:</label>
 								 <div class="col-sm-9 no-padding">
 								 	<div class="col-sm-4">
-								 		<input class="form-control input-sm">
+								 		<input id="legalPersonLimitFloor" class="form-control input-sm">
 								 	</div>
 								 	<div class="col-sm-1 align-center lm-5">-</div>
 								 	<div class="col-sm-4">
-								 		<input class="form-control input-sm">
+								 		<input id="legalPersonLimitCeiling" class="form-control input-sm">
 								 	</div>
 								 	<div class="col-sm-3">
 								 		<div class="checkbox">
 											<label>
-												<input name="form-field-checkbox" type="checkbox" class="ace">
+												<input id="legalPersonLimit" name="legalPersonLimit" type="checkbox" class="ace">
 												<span class="lbl">不限额</span>
 											</label>
 										</div>
@@ -161,129 +157,52 @@
 		</div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5" for="faccountNumber">账户编号:</label>
+		<label class="col-sm-4 control-label no-padding lm-5" for="fmerchantName">商户名称:</label>
 		<div class="col-sm-8">
-			<input type="text" id="faccountNumber" class="form-control col-sm-5 input-sm">
+			<input type="text" id="fmerchantName" class="form-control col-sm-5 input-sm">
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5" for="fruleCardMethod">交易卡类型:</label>
+		<label class="col-sm-4 control-label no-padding lm-5" for="fbusinessTypeInt">行业类别:</label>
 		<div class="col-sm-8">
-			<select class="form-control" id="fruleCardMethod">
-				<option value="1">对公优先</option>
-				<option value="2">对私优先</option>
-				<option value="1">只对公</option>
-				<option value="2">只对私</option>
+			<select class="form-control" id="fbusinessTypeInt">
 			</select>
 		</div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5" for="fminimum">起结金额:</label>
-		<div class="col-sm-8">
-			<input type="text" id="fminimum" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5" for="fserviceCharge">结算手续费:</label>
-		<div class="col-sm-8">
-			<input type="text" id="fserviceCharge" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
-		</div>
-	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5" for="fminimumFree">免手续费金额:</label>
+		<label class="col-sm-6 control-label no-padding lm-5" for="fbusinessLimit">对公结算限额:</label>
 		<div class="col-sm-6">
-			<input type="text" id="fminimumFree" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
+			<input type="text" id="fbusinessLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12 col-sm-6 form-group">
-		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5" for="fruleType">结算类型:</label></div>
-		<div class="col-sm-8">
-		  	<select class="form-control" id="fruleType">
-		  		<option value="1">自助结算</option>
-				<option value="2">定期结算</option>
-				<option value="2">实时结算</option>
-			</select>
-		</div>
-	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5" for="fperiod">结算周期:</label></div>
-		<div class="col-sm-8">
-		  	<input type="text" id="fperiod" class="form-control col-sm-5 input-sm" placeholder="_天" data-int="true">
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5" for="flongestSettle">最长结算天数:</label>
+		<label class="col-sm-6 control-label no-padding lm-5" for="flegalPersonLimit">对法人结算限额:</label>
 		<div class="col-sm-6">
-			<input type="text" id="flongestSettle" class="form-control col-sm-5 input-sm" placeholder="_天" data-int="true">
+			<input type="text" id="flegalPersonLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
 		</div>
 	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5" for="fstatus">状态:</label>
-		<div class="col-sm-8">
-			<div class="control-group">
-				<div class="col-sm-6 no-padding">
-					<label>
-						<input name="fstatus" type="radio" class="ace input-lg">
-						<span class="lbl bigger-100">可用</span>
-					</label>
-				</div>
-				<div class="col-sm-6 no-padding">
-					<label>
-						<input name="fstatus" type="radio" class="ace input-lg">
-						<span class="lbl bigger-100">禁用</span>
-					</label>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5" for="feffectiveDate">生效时间:</label>
-		<div class="col-sm-8 no-padding">
-			<div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" id="feffectiveDate" data-date-format="mm/dd/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
-		</div>
-	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5" for="fexpirationDate">失效时间:</label>
-		<div class="col-sm-8 no-padding">
-			<div class="input-group" style="z-index:1060"><input type="text" class="input-sm form-control datepicker" id="fexpirationDate" data-date-format="mm/dd/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
-		</div>
-	</div>
-</div>
-<div class="row">
 	<div class="col-xs-12 col-sm-6 form-group">
 		<label class="col-sm-6 control-label no-padding lm-5" for="ftZeroLimit">T+0结算额度:</label>
 		<div class="col-sm-6">
 			<input type="text" id="ftZeroLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
 		</div>
 	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5" for="finstantLimit">即时提现额度:</label>
-		<div class="col-sm-6">
-			<input type="text" id="finstantLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
-		</div>
-	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5" for="ftZeroHolidayLimit">T+0假日结算额度:</label>
+		<div class="col-sm-6 no-padding"><label class="align-right control-label no-padding lm-5" for="ftZeroHolidayLimit">T+0假日结算额度:</label></div>
 		<div class="col-sm-6">
-			<input type="text" id="ftZeroHolidayLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
+		  	<input type="text" id="ftZeroHolidayLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
 		</div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5" for="ftOneHolidayLimit">T+1节日结算额度:</label>
+		<div class="col-sm-6 no-padding"><label class="align-right control-label no-padding lm-5" for="ftOneHolidayLimit">T+1假日结算额度:</label></div>
 		<div class="col-sm-6">
-			<input type="text" id="ftOneHolidayLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
+		  	<input type="text" id="ftOneHolidayLimit" class="form-control col-sm-5 input-sm" placeholder="0.00" data-int="true">
 		</div>
 	</div>
 </div>
@@ -292,82 +211,42 @@
 <script id="viewTpl" type="text/html">
 <div class="row">
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5">商户编号:</label>
-		<div class="col-sm-8"><%%= data.merchantId %></div>
+		<label class="col-sm-4 control-label no-padding lm-5" for="fmerchantId">商户编号:</label>
+		<div class="col-sm-8"><%%=data.merchantId %></div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5">账户编号:</label>
-		<div class="col-sm-8"><%%= data.accountNumber %></div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5">交易卡类型:</label>
-		<div class="col-sm-8"><%%= data.ruleCardMethod %></div>
-	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5">起结金额:</label>
-		<div class="col-sm-8"><%%= data.minimum %></div>
+		<label class="col-sm-4 control-label no-padding lm-5" for="fmerchantName">商户名称:</label>
+		<div class="col-sm-8"><%%=data.merchantName %></div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5">结算手续费:</label>
-		<div class="col-sm-8"><%%= data.serviceCharge %></div>
+		<label class="col-sm-4 control-label no-padding lm-5" for="fbusinessTypeInt">行业类别:</label>
+		<div class="col-sm-8"><%%=data.businessTypeInt %></div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5">免手续费金额:</label>
-		<div class="col-sm-6"><%%= data.minimumFree %></div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12 col-sm-6 form-group">
-		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5">结算类型:</label></div>
-		<div class="col-sm-8"><%%= data.ruleType %></div>
-	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5">结算周期:</label></div>
-		<div class="col-sm-8"><%%= data.period %></div>
+		<label class="col-sm-4 control-label no-padding lm-5" for="fbusinessLimit">对公结算限额:</label>
+		<div class="col-sm-8"><%%=data.businessLimit %></div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5">最长结算天数:</label>
-		<div class="col-sm-6"><%%= data.longestSettle %></div>
+		<label class="col-sm-4 control-label no-padding lm-5" for="flegalPersonLimit">对法人结算限额:</label>
+		<div class="col-sm-8"><%%=data.legalPersonLimit %></div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5">状态:</label>
-		<div class="col-sm-8"><%%= data.status %></div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5">生效时间:</label>
-		<div class="col-sm-8 no-padding"><%%= data.effectiveDate %></div>
-	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-4 control-label no-padding lm-5">失效时间:</label>
-		<div class="col-sm-8 no-padding"><%%= data.expirationDate %></div>
+		<label class="col-sm-6 control-label no-padding lm-5" for="ftZeroLimit">T+0结算额度:</label>
+		<div class="col-sm-6"><%%=data.tZeroLimit %></div>
 	</div>
 </div>
 <div class="row">
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5">T+0结算额度:</label>
-		<div class="col-sm-6"><%%= data.tZeroLimit %></div>
+		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5" for="ftZeroHolidayLimit">T+0假日结算额度:</label></div>
+		<div class="col-sm-8"><%%=data.tZeroHolidayLimit %></div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5">即时提现额度:</label>
-		<div class="col-sm-6"><%%= data.instantLimit %></div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5">T+0假日结算额度:</label>
-		<div class="col-sm-6"><%%= data.tZeroHolidayLimit %></div>
-	</div>
-	<div class="col-xs-12 col-sm-6 form-group">
-		<label class="col-sm-6 control-label no-padding lm-5">T+1节日结算额度:</label>
-		<div class="col-sm-6"><%%= data.tOneHolidayLimit %></div>
+		<div class="col-sm-4 no-padding"><label class="align-right control-label no-padding lm-5" for="ftOneHolidayLimit">T+1假日结算额度:</label></div>
+		<div class="col-sm-8"><%%=data.tOneHolidayLimit %></div>
 	</div>
 </div>
 </script>
