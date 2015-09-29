@@ -10,7 +10,6 @@
 
 		<link href='/css/jquery-ui.min.css' rel="stylesheet" />
 		<link href='/css/jquery-ui.custom.min.css' rel="stylesheet" />
-		<link href='/css/datepicker.min.css' rel="stylesheet" />
 		<link href='/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
 		<link href='/css/ui.jqgrid.css' rel="stylesheet" />
 		<link href='/css/art_dialog.css' rel="stylesheet" />
@@ -49,7 +48,7 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4">
                                             <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">源币种:</label></div>
-                                            <div class="col-sm-9">
+                                            <div class="col-sm-9 no-padding">
                                                 <select class="form-control" name="srcCurrencyCode">
                                                     <option value="">全部</option>
                                                     <option value="RMB">人民币</option>
@@ -74,20 +73,32 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">创建开始日期:</label></div>
+                                            <div class="input-group date datepicker col-sm-9 no-padding">
+                                                <input class="form-control" size="16" type="text" value="" name="creationDateStart" readonly="">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">创建开始日期:</label></div>
+                                            <div class="input-group date datepicker col-sm-9 no-padding">
+                                                <input class="form-control" size="16" type="text" value="" readonly="" name="creationDateEnd">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-4">
                                             <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">状态:</label></div>
-                                            <div class="col-sm-9">
+                                            <div class="col-sm-9 no-padding">
                                                 <select class="form-control" name="status">
                                                     <option value="">全部</option>
                                                     <option value="1">可用</option>
                                                     <option value="2">不可用</option>
                                                 </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5">创建日期:</label>
-                                            <div class="col-sm-9 no-padding">
-                                                <div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="creationDateStart" placeholder="from" data-date-format="dd/mm/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
-                                                <div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="creationDateEnd" placeholder="to" data-date-format="dd/mm/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
                                             </div>
                                         </div>
                                     </div>
@@ -184,7 +195,6 @@
 <%- include('public/footscript2') %>
 <script src='/js/jquery-ui.custom.min.js'></script>
 <script src='/js/moment.min.js'></script>
-<script src='/js/bootstrap-datepicker.min.js'></script>
 <script src='/js/bootstrap-datetimepicker.min.js'></script>
 <script src='/js/jquery.jqGrid.min.js'></script>
 <script src='/js/grid.locale-cn.js'></script>
