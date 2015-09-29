@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 		listContainer = $('#grid_list'),
 		exportContainer = $('#export_panel'),
 		userParam = {},
-		statusArr,
+		dictionaryCollection = {},
 		doms = {
 			merchantIds: $("#merchantIds"),
 			merchantName: $("#merchantName"),
@@ -88,26 +88,14 @@ define(function(require, exports, module) {
 		listContainer.html(_grid.getHtml());
 		getDictionaryFromServer('settleStatus', function(json) {
 			if ('0' == json.code) {
-				statusArr = json.data && json.data.dataArray || [];
-				setStatus(doms.status);
+				dictionaryCollection.statusArr = json.data && json.data.dataArray || [];
+				setSelect('statusArr', doms.status);
 			}
 		}, function(e) {
 
 		});
 		_grid.load();
 		registerEvents();
-	}
-
-	function setStatus(dom, selected) {
-		var s = '';
-		for (var i = 0; i < statusArr.length; i++) {
-			if (selected == statusArr[i].id) {
-				s = ' selected = "selected"';
-			} else {
-				s = '';
-			}
-			dom.append('<option value="' + statusArr[i].id + '"' + s + '>' + Xss.inHTMLData(statusArr[i].label) + '</option>');
-		}
 	}
 
 	function exportExcel() {
@@ -149,6 +137,29 @@ define(function(require, exports, module) {
 			success: cb,
 			error: ecb
 		});
+	}
+
+	function setSelect(gArr, dom, selected) {
+		var data = dictionaryCollection[gArr],
+			s = '',
+			context = this,
+			args = Array.prototype.slice.call(arguments, 0),
+			fn = arguments.callee;
+		if (!data) {
+			setTimeout(function() {
+				console.log('retry');
+				fn.apply(context, args);
+			}, 10);
+			return;
+		}
+		for (var i = 0; i < data.length; i++) {
+			if (selected == data[i].innerValue) {
+				s = ' selected = "selected"';
+			} else {
+				s = '';
+			}
+			dom.append('<option value="' + data[i].innerValue + '"' + s + '>' + Xss.inHTMLData(data[i].label) + '</option>');
+		}
 	}
 
 	function registerEvents() {

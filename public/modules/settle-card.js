@@ -7,6 +7,7 @@ define(function(require, exports, module) {
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
 		_grid, doms = {},
+		dictionaryCollection = {},
 		userParam = {};
 
 	function init() {
@@ -73,6 +74,22 @@ define(function(require, exports, module) {
 		});
 		listContainer.html(_grid.getHtml());
 		_grid.load();
+		getDictionaryFromServer('settleCardType', function(json) {
+			if ('0' == json.code) {
+				dictionaryCollection.typeArr = json.data && json.data.dataArray || [];
+				setSelect('typeArr', doms.cardType);
+			}
+		}, function(e) {
+			// report
+		});
+		getDictionaryFromServer('settleCardStatus', function(json) {
+			if ('0' == json.code) {
+				dictionaryCollection.statusArr = json.data && json.data.dataArray || [];
+				setSelect('statusArr', doms.status);
+			}
+		}, function(e) {
+			// report and retry
+		});
 		registerEvents();
 	}
 
@@ -103,9 +120,11 @@ define(function(require, exports, module) {
 			}
 		};
 		showDialog(opt);
+		setSelect('typeArr', $('#lx'));
+		setSelect('statusArr', $('#zt'));
 		data && fillData(data);
-		$('.bootbox .datepicker').datepicker({
-			autoclose: true
+		$('.bootbox .datepicker').datetimepicker({
+			useSeconds: true
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
@@ -314,16 +333,50 @@ define(function(require, exports, module) {
 		return global_config.serverRoot + 'settleCard/list?userId=' + Utils.object2param(userParam);
 	}
 
+	function getDictionaryFromServer(type, callback, errorback) {
+		var emptyFn = function() {},
+			cb = callback || emptyFn,
+			ecb = errorback || emptyFn;
+		$.ajax({
+			url: global_config.serverRoot + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
+			success: cb,
+			error: ecb
+		});
+	}
+
+	function setSelect(gArr, dom, selected) {
+		var data = dictionaryCollection[gArr],
+			s = '',
+			context = this,
+			args = Array.prototype.slice.call(arguments, 0),
+			fn = arguments.callee;
+		if (!data) {
+			setTimeout(function() {
+				console.log('retry');
+				fn.apply(context, args);
+			}, 10);
+			return;
+		}
+		for (var i = 0; i < data.length; i++) {
+			if (selected == data[i].innerValue) {
+				s = ' selected = "selected"';
+			} else {
+				s = '';
+			}
+			dom.append('<option value="' + data[i].innerValue + '"' + s + '>' + Xss.inHTMLData(data[i].label) + '</option>');
+		}
+	}
+
 	/**
 	 * [registerEvents 注册事件]
 	 * @return {[type]} [description]
 	 */
 	function registerEvents() {
-		doms.commercialId = $('#commercialId');
-		doms.bankAccount = $('#bankAccount');
-		doms.bankAccountName = $('#bankAccountName');
-		doms.bank = $('#bank');
-		doms.type = $('#type');
+		doms.commercialIds = $('#commercialIds');
+		doms.issuer = $('#issuer');
+		doms.userName = $('#userName');
+		doms.cardNumber = $('#cardNumber');
+		doms.cardType = $('#cardType');
 		doms.status = $('#status');
 		doms.effectiveDateStart = $('#effectiveDateStart');
 		doms.effectiveDateEnd = $('#effectiveDateEnd');
@@ -333,8 +386,8 @@ define(function(require, exports, module) {
 		$('#add-btn').on('click', function() {
 			_grid.trigger('addCallback');
 		});
-		$('.datepicker').datepicker({
-			autoclose: true
+		$('.datepicker').datetimepicker({
+			useSeconds: true
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
@@ -352,11 +405,11 @@ define(function(require, exports, module) {
 			}
 			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
 				userParam = {};
-				doms.commercialId.val('');
-				doms.bankAccount.val('');
-				doms.bankAccountName.val('');
-				doms.bank.val('');
-				doms.type.val(0);
+				doms.commercialIds.val('');
+				doms.issuer.val('');
+				doms.userName.val('');
+				doms.cardNumber.val('');
+				doms.cardType.val(0);
 				doms.status.val(0);
 				doms.effectiveDateStart.val('');
 				doms.effectiveDateEnd.val('');
@@ -370,11 +423,11 @@ define(function(require, exports, module) {
 	function getParams() {
 		var newchange = false,
 			newParam = {},
-			commercialId = doms.commercialId.val(),
-			bankAccount = doms.bankAccount.val(),
-			bankAccountName = doms.bankAccountName.val(),
-			bank = doms.bank.val(),
-			type = doms.type.val(),
+			commercialId = doms.commercialIds.val(),
+			issuer = doms.issuer.val(),
+			userName = doms.userName.val(),
+			cardNumber = doms.cardNumber.val(),
+			cardType = doms.cardType.val(),
 			status = doms.status.val(),
 			effectiveDateStart = doms.effectiveDateStart.val(),
 			effectiveDateEnd = doms.effectiveDateEnd.val(),
@@ -383,17 +436,17 @@ define(function(require, exports, module) {
 		if (commercialId) {
 			newParam.commercialId = encodeURIComponent(commercialId);
 		}
-		if (bankAccount) {
-			newParam.bankAccount = encodeURIComponent(bankAccount);
+		if (issuer) {
+			newParam.issuer = encodeURIComponent(issuer);
 		}
-		if (bankAccountName) {
-			newParam.bankAccountName = encodeURIComponent(bankAccountName);
+		if (userName) {
+			newParam.userName = encodeURIComponent(userName);
 		}
-		if (bank) {
-			newParam.bank = encodeURIComponent(bank);
+		if (cardNumber) {
+			newParam.cardNumber = encodeURIComponent(cardNumber);
 		}
-		if (type) {
-			newParam.type = type;
+		if (cardType) {
+			newParam.cardType = cardType;
 		}
 		if (status) {
 			newParam.status = status;

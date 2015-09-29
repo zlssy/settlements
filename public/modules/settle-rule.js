@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 			expirationDateStart: $('#expirationDateStart'),
 			expirationDateEnd: $('#expirationDateEnd')
 		},
-		ruleCardTypeArr, ruleTypeArr, statusArr,
+		dictionaryCollection = {},
 		addEditTpl = $('#addEditTpl').html(),
 		viewTpl = $('#viewTpl').html(),
 		listContainer = $('#grid_list'),
@@ -86,24 +86,24 @@ define(function(require, exports, module) {
 		_grid.load();
 		getDictionaryFromServer('settleRuleType', function(json) {
 			if ('0' == json.code) {
-				ruleTypeArr = json.data && json.data.dataArray || [];
-				setSelect(ruleTypeArr, doms.type);
+				dictionaryCollection.ruleTypeArr = json.data && json.data.dataArray || [];
+				setSelect('ruleTypeArr', doms.type);
 			}
 		}, function(e) {
 
 		});
 		getDictionaryFromServer('settleCardMethod', function(json) {
 			if ('0' == json.code) {
-				ruleCardTypeArr = json.data && json.data.dataArray || [];
-				setSelect(ruleCardTypeArr, doms.cardType);
+				dictionaryCollection.ruleCardTypeArr = json.data && json.data.dataArray || [];
+				setSelect('ruleCardTypeArr', doms.cardType);
 			}
 		}, function(e) {
 
 		});
 		getDictionaryFromServer('settleRuleStatus', function(json) {
 			if ('0' == json.code) {
-				statusArr = json.data && json.data.dataArray || [];
-				setSelect(statusArr, doms.status);
+				dictionaryCollection.statusArr = json.data && json.data.dataArray || [];
+				setSelect('statusArr', doms.status);
 			}
 		}, function(e) {
 
@@ -143,11 +143,11 @@ define(function(require, exports, module) {
 			}
 		};
 		Box.dialog(opt);
-		setSelect(ruleCardTypeArr, $('#fruleCardMethod'));
-		setSelect(ruleTypeArr, $('#fruleType'));
-		if (statusArr) {
-			$('input[name="fstatus"]:first').attr('value', statusArr[0].id);
-			$('input[name="fstatus"]:last').attr('value', statusArr[1].id);
+		setSelect('ruleCardTypeArr', $('#fruleCardMethod'));
+		setSelect('ruleTypeArr', $('#fruleType'));
+		if (dictionaryCollection.statusArr) {
+			$('input[name="fstatus"]:first').attr('value', dictionaryCollection.statusArr[0].innerValue);
+			$('input[name="fstatus"]:last').attr('value', dictionaryCollection.statusArr[1].innerValue);
 		}
 		data && getRowDetail(data[0].id);
 		$('.bootbox .datepicker').datetimepicker({
@@ -286,6 +286,15 @@ define(function(require, exports, module) {
 		if (data.longestSettle) {
 			$("#flongestSettle").val(data.longestSettle)
 		}
+		if(data.ruleCardMethod){
+			$('#fruleCardMethod').val(data.ruleCardMethod)
+		}
+		if(data.ruleType){
+			$('#fruleType').val(data.ruleType);
+		}
+		if(data.status){
+			$('input[name="fstatus"][value="'+data.status+'"]').prop('checked', true);
+		}
 		if (data.effectiveDate) {
 			$("#feffectiveDate").val(data.effectiveDate)
 		}
@@ -321,14 +330,25 @@ define(function(require, exports, module) {
 	}
 
 	function setSelect(gArr, dom, selected) {
-		var s = '';
-		for (var i = 0; i < gArr.length; i++) {
-			if (selected == gArr[i].id) {
+		var data = dictionaryCollection[gArr],
+			s = '',
+			context = this,
+			args = Array.prototype.slice.call(arguments, 0),
+			fn = arguments.callee;
+		if (!data) {
+			setTimeout(function() {
+				console.log('retry');
+				fn.apply(context, args);
+			}, 10);
+			return;
+		}
+		for (var i = 0; i < data.length; i++) {
+			if (selected == data[i].innerValue) {
 				s = ' selected = "selected"';
 			} else {
 				s = '';
 			}
-			dom.append('<option value="' + gArr[i].id + '"' + s + '>' + Xss.inHTMLData(gArr[i].label) + '</option>');
+			dom.append('<option value="' + data[i].innerValue + '"' + s + '>' + Xss.inHTMLData(data[i].label) + '</option>');
 		}
 	}
 
