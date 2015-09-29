@@ -100,7 +100,7 @@ define(function(require, exports, module) {
 		html.push('										<td id="' + this.id + '_first_pager" class="ui-pg-button ui-corner-all ui-state-disabled" style="cursor: default;"><span class="ui-icon ace-icon fa fa-angle-double-left bigger-140"></span></td>');
 		html.push('										<td id="' + this.id + '_prev_pager" class="ui-pg-button ui-corner-all ui-state-disabled" style="cursor: default;"><span class="ui-icon ace-icon fa fa-angle-left bigger-140"></span></td>');
 		html.push('										<td class="ui-pg-button ui-state-disabled" style="width: 4px; cursor: default;"><span class="ui-separator"></span></td>');
-		html.push('										<td dir="ltr">第 <input id="' + this.id + '_n_pager" class="ui-pg-input" type="text" size="2" maxlength="7" value="1" role="textbox">页 共 <span id="' + this.id + '_sp_pager">2</span> 页</td><td class="ui-pg-button ui-state-disabled" style="width: 4px; cursor: default;"><span class="ui-separator"></span></td>');
+		html.push('										<td dir="ltr">第 <input id="' + this.id + '_n_pager" class="ui-pg-input" type="text" size="2" maxlength="7" value="1" role="textbox">页 共 <span id="' + this.id + '_sp_pager">1</span> 页</td><td class="ui-pg-button ui-state-disabled" style="width: 4px; cursor: default;"><span class="ui-separator"></span></td>');
 		html.push('										<td id="' + this.id + '_next_pager" class="ui-pg-button ui-corner-all" style="cursor: default;"><span class="ui-icon ace-icon fa fa-angle-right bigger-140"></span></td>');
 		html.push('										<td id="' + this.id + '_last_pager" class="ui-pg-button ui-corner-all" style="cursor: default;"><span class="ui-icon ace-icon fa fa-angle-double-right bigger-140"></span></td>');
 		html.push('									</tr>');

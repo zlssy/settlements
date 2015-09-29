@@ -17,6 +17,7 @@ define(function(require, exports, module) {
 			expirationDateStart: $('#expirationDateStart'),
 			expirationDateEnd: $('#expirationDateEnd')
 		},
+		ruleCardTypeArr, ruleTypeArr, statusArr,
 		addEditTpl = $('#addEditTpl').html(),
 		viewTpl = $('#viewTpl').html(),
 		listContainer = $('#grid_list'),
@@ -83,6 +84,30 @@ define(function(require, exports, module) {
 		});
 		listContainer.html(_grid.getHtml());
 		_grid.load();
+		getDictionaryFromServer('settleRuleType', function(json) {
+			if ('0' == json.code) {
+				ruleTypeArr = json.data && json.data.dataArray || [];
+				setSelect(ruleTypeArr, doms.type);
+			}
+		}, function(e) {
+
+		});
+		getDictionaryFromServer('settleCardMethod', function(json) {
+			if ('0' == json.code) {
+				ruleCardTypeArr = json.data && json.data.dataArray || [];
+				setSelect(ruleCardTypeArr, doms.cardType);
+			}
+		}, function(e) {
+
+		});
+		getDictionaryFromServer('settleRuleStatus', function(json) {
+			if ('0' == json.code) {
+				statusArr = json.data && json.data.dataArray || [];
+				setSelect(statusArr, doms.status);
+			}
+		}, function(e) {
+
+		});
 		registerEvents();
 	}
 
@@ -118,12 +143,32 @@ define(function(require, exports, module) {
 			}
 		};
 		Box.dialog(opt);
-		data && fillData(data);
-		$('.bootbox .datepicker').datepicker({
-			autoclose: true
+		setSelect(ruleCardTypeArr, $('#fruleCardMethod'));
+		setSelect(ruleTypeArr, $('#fruleType'));
+		if (statusArr) {
+			$('input[name="fstatus"]:first').attr('value', statusArr[0].id);
+			$('input[name="fstatus"]:last').attr('value', statusArr[1].id);
+		}
+		data && getRowDetail(data[0].id);
+		$('.bootbox .datepicker').datetimepicker({
+			useSeconds: true
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
+		});
+	}
+
+	function getRowDetail(id) {
+		$.ajax({
+			url: global_config.serverRoot + 'settleRule/detail?userId=' + '&id=' + id,
+			success: function(json) {
+				if ('0' == json.code) {
+					fillData(json.data);
+				}
+			},
+			error: function(e) {
+				// report
+			}
 		});
 	}
 
@@ -142,50 +187,58 @@ define(function(require, exports, module) {
 			finstantLimit = $("#finstantLimit").val(),
 			ftZeroHolidayLimit = $("#ftZeroHolidayLimit").val(),
 			ftOneHolidayLimit = $("#ftOneHolidayLimit").val(),
-			fstatus = $('input[name="fstatus"]').val();
+			fruleCardMethod = $('#fruleCardMethod').val(),
+			fruleType = $('#fruleType').val(),
+			fstatus = $('input[name="fstatus"]:checked').val();
 
 		data.id = row && row[0] && row[0].id || '';
 		if (fmerchantId) {
-			data.fmerchantId = fmerchantId;
+			data.merchantId = fmerchantId;
 		}
 		if (faccountNumber) {
-			data.faccountNumber = faccountNumber;
+			data.accountNumber = faccountNumber;
 		}
 		if (fminimum) {
-			data.fminimum = fminimum;
+			data.minimum = fminimum;
 		}
 		if (fserviceCharge) {
-			data.fserviceCharge = fserviceCharge;
+			data.serviceCharge = fserviceCharge;
 		}
 		if (fminimumFree) {
-			data.fminimumFree = fminimumFree;
+			data.minimumFree = fminimumFree;
 		}
 		if (fperiod) {
-			data.fperiod = fperiod;
+			data.period = fperiod;
 		}
 		if (flongestSettle) {
-			data.flongestSettle = flongestSettle;
+			data.longestSettle = flongestSettle;
 		}
 		if (feffectiveDate) {
-			data.feffectiveDate = feffectiveDate;
+			data.effectiveDate = feffectiveDate;
 		}
 		if (fexpirationDate) {
-			data.fexpirationDate = fexpirationDate;
+			data.expirationDate = fexpirationDate;
+		}
+		if(fruleType){
+			data.ruleType = fruleType;
+		}
+		if(fruleCardMethod){
+			data.ruleCardMethod = fruleCardMethod;
 		}
 		if (ftZeroLimit) {
-			data.ftZeroLimit = ftZeroLimit;
+			data.tranZeroLimit = ftZeroLimit;
 		}
 		if (finstantLimit) {
-			data.finstantLimit = finstantLimit;
+			data.instantLimit = finstantLimit;
 		}
 		if (ftZeroHolidayLimit) {
-			data.ftZeroHolidayLimit = ftZeroHolidayLimit;
+			data.tranZeroHolidayLimit = ftZeroHolidayLimit;
 		}
 		if (ftOneHolidayLimit) {
-			data.ftOneHolidayLimit = ftOneHolidayLimit;
+			data.tranOneHolidayLimit = ftOneHolidayLimit;
 		}
 		if (fstatus) {
-			data.status = status;
+			data.status = fstatus;
 		}
 
 		$.ajax({
@@ -211,7 +264,7 @@ define(function(require, exports, module) {
 	 * @return {[type]}      [description]
 	 */
 	function fillData(data) {
-		data = data[0] || {};
+		data = data || {};
 		if (data.merchantId) {
 			$("#fmerchantId").val(data.merchantId)
 		}
@@ -239,20 +292,43 @@ define(function(require, exports, module) {
 		if (data.expirationDate) {
 			$("#fexpirationDate").val(data.expirationDate)
 		}
-		if (data.tZeroLimit) {
-			$("#ftZeroLimit").val(data.tZeroLimit)
+		if (data.tranZeroLimit) {
+			$("#ftZeroLimit").val(data.tranZeroLimit)
 		}
 		if (data.instantLimit) {
 			$("#finstantLimit").val(data.instantLimit)
 		}
-		if (data.tZeroHolidayLimit) {
-			$("#ftZeroHolidayLimit").val(data.tZeroHolidayLimit)
+		if (data.tranZeroHolidayLimit) {
+			$("#ftZeroHolidayLimit").val(data.tranZeroHolidayLimit)
 		}
-		if (data.tOneHolidayLimit) {
-			$("#ftOneHolidayLimit").val(data.tOneHolidayLimit)
+		if (data.tranOneHolidayLimit) {
+			$("#ftOneHolidayLimit").val(data.tranOneHolidayLimit)
 		}
 		if (data.status) {
 			$('#fstatus').val(data.status);
+		}
+	}
+
+	function getDictionaryFromServer(type, callback, errorback) {
+		var emptyFn = function() {},
+			cb = callback || emptyFn,
+			ecb = errorback || emptyFn;
+		$.ajax({
+			url: global_config.serverRoot + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
+			success: cb,
+			error: ecb
+		});
+	}
+
+	function setSelect(gArr, dom, selected) {
+		var s = '';
+		for (var i = 0; i < gArr.length; i++) {
+			if (selected == gArr[i].id) {
+				s = ' selected = "selected"';
+			} else {
+				s = '';
+			}
+			dom.append('<option value="' + gArr[i].id + '"' + s + '>' + Xss.inHTMLData(gArr[i].label) + '</option>');
 		}
 	}
 
@@ -376,8 +452,8 @@ define(function(require, exports, module) {
 	}
 
 	function registerEvents() {
-		$('.datepicker').datepicker({
-			autoclose: true
+		$('.datepicker').datetimepicker({
+			useSeconds: true
 		});
 		$('#add-btn').on('click', function() {
 			_grid.trigger('addCallback');

@@ -86,6 +86,9 @@ define(function(require, exports, module) {
 		_grid.listen('editCallback', function(row) {
 			addAndUpdate(row);
 		});
+		_grid.listen('viewCallback', function(row) {
+			view(row);
+		})
 		listContainer.html(_grid.getHtml());
 		_grid.load();
 
@@ -194,13 +197,13 @@ define(function(require, exports, module) {
 			data.legalPersonLimit = flegalPersonLimit;
 		}
 		if (ftZeroLimit) {
-			data.tZeroLimit = ftZeroLimit;
+			data.tranZeroLimit = ftZeroLimit;
 		}
 		if (ftZeroHolidayLimit) {
-			data.tZeroHolidayLimit = ftZeroHolidayLimit;
+			data.tranZeroHolidayLimit = ftZeroHolidayLimit;
 		}
 		if (ftOneHolidayLimit) {
-			data.tOneHolidayLimit = ftOneHolidayLimit;
+			data.tranOneHolidayLimit = ftOneHolidayLimit;
 		}
 
 		$.ajax({
@@ -223,12 +226,12 @@ define(function(require, exports, module) {
 	function getRowDetail(id) {
 		$.ajax({
 			url: global_config.serverRoot + 'settleLimit/detail?userId=' + '&id=' + id,
-			success: function(json){
-				if('0' == json.code){
+			success: function(json) {
+				if ('0' == json.code) {
 					fillData(json.data);
 				}
 			},
-			error: function(e){
+			error: function(e) {
 				// report
 			}
 		});
@@ -256,14 +259,14 @@ define(function(require, exports, module) {
 		if (data.legalPersonLimit) {
 			$("#flegalPersonLimit").val(data.legalPersonLimit)
 		}
-		if (data.tZeroLimit) {
-			$("#ftZeroLimit").val(data.tZeroLimit)
+		if (data.tranZeroLimit) {
+			$("#ftZeroLimit").val(data.tranZeroLimit)
 		}
-		if (data.tZeroHolidayLimit) {
-			$("#ftZeroHolidayLimit").val(data.tZeroHolidayLimit)
+		if (data.tranZeroHolidayLimit) {
+			$("#ftZeroHolidayLimit").val(data.tranZeroHolidayLimit)
 		}
-		if (data.tOneHolidayLimit) {
-			$("#ftOneHolidayLimit").val(data.tOneHolidayLimit)
+		if (data.tranOneHolidayLimit) {
+			$("#ftOneHolidayLimit").val(data.tranOneHolidayLimit)
 		}
 	}
 
@@ -331,16 +334,28 @@ define(function(require, exports, module) {
 				title: '<h4><b>查看结算规则</b></h4>',
 				title_html: true
 			};
-		opt.message = Utils.formatJson(viewTpl, {
-			data: d
-		});
 		opt.buttons = {
 			'ok': {
 				label: '确定',
 				className: 'btn-sm btn-success'
 			}
 		};
-		Box.dialog(opt);
+		$.ajax({
+			url: global_config.serverRoot + 'settleLimit/detail?userId=' + '&id=' + d.id,
+			success: function(json) {
+				if ('0' == json.code) {
+					opt.message = Utils.formatJson(viewTpl, {
+						data: json.data
+					});
+					Box.dialog(opt);
+				} else {
+					// report
+				}
+			},
+			error: function(e) {
+				// report
+			}
+		});
 	}
 
 	function viewHistory(row) {
@@ -422,18 +437,38 @@ define(function(require, exports, module) {
 					_grid.loadData();
 				}
 			}
+			if('businessLimit' == id){
+				if($el.prop('checked')){
+					doms.businessLimitFloor.val('').prop('disabled', true);
+					doms.businessLimitCeiling.val('').prop('disabled', true);
+				}
+				else{
+					doms.businessLimitFloor.prop('disabled', false).focus();
+					doms.businessLimitCeiling.prop('disabled', false);
+				}
+			}
+			if('legalPersonLimit' == id){
+				if($el.prop('checked')){
+					doms.legalPersonLimitFloor.val('').prop('disabled', true);
+					doms.legalPersonLimitCeiling.val('').prop('disabled', true);
+				}
+				else{
+					doms.legalPersonLimitFloor.prop('disabled', false).focus();
+					doms.legalPersonLimitCeiling.prop('disabled', false);
+				}
+			}
 			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
 				userParam = {};
 				doms.merchantIds.val('');
 				doms.merchantName.val('');
 				doms.district.val('');
-				doms.businessTypeInt.val(businessTypeDefault);
 				doms.businessLimitFloor.val('');
 				doms.businessLimitCeiling.val('');
 				doms.businessLimit.val('');
 				doms.legalPersonLimitFloor.val('');
 				doms.legalPersonLimitCeiling.val('');
 				doms.legalPersonLimit.val('');
+				doms.businessTypeInt.val(0);
 			}
 		});
 	}
@@ -441,45 +476,42 @@ define(function(require, exports, module) {
 	function getParams() {
 		var newchange = false,
 			newParam = {},
-			commercialId = doms.commercialId.val(),
-			type = doms.type.val(),
-			status = doms.status.val(),
-			cardType = doms.cardType.val(),
-			createTimeStart = doms.createTimeStart.val(),
-			createTimeEnd = doms.createTimeEnd.val(),
-			effectiveDateStart = doms.effectiveDateStart.val(),
-			effectiveDateEnd = doms.effectiveDateEnd.val(),
-			expirationDateStart = doms.expirationDateStart.val(),
-			expirationDateEnd = doms.expirationDateEnd.val();
-		if (commercialId) {
-			newParam.commercialId = encodeURIComponent(commercialId);
+			merchantIds = $("#merchantIds").val(),
+			merchantName = $("#merchantName").val(),
+			district = $("#district").val(),
+			businessLimitFloor = $("#businessLimitFloor").val(),
+			businessLimitCeiling = $("#businessLimitCeiling").val(),
+			businessLimit = $("#businessLimit").val(),
+			legalPersonLimitFloor = $("#legalPersonLimitFloor").val(),
+			legalPersonLimitCeiling = $("#legalPersonLimitCeiling").val(),
+			legalPersonLimit = $("#legalPersonLimit").val();
+
+		if (merchantIds) {
+			newParam.merchantIds = merchantIds;
 		}
-		if (type) {
-			newParam.type = type;
+		if (merchantName) {
+			newParam.merchantName = merchantName;
 		}
-		if (status) {
-			newParam.status = status;
+		if (district) {
+			newParam.district = district;
 		}
-		if (cardType) {
-			newParam.cardType = encodeURIComponent(cardType);
+		if (businessLimitFloor) {
+			newParam.businessLimitFloor = businessLimitFloor;
 		}
-		if (Utils.isDate(createTimeStart)) {
-			newParam.createTimeStart = createTimeStart;
+		if (businessLimitCeiling) {
+			newParam.businessLimitCeiling = businessLimitCeiling;
 		}
-		if (Utils.isDate(createTimeEnd)) {
-			newParam.createTimeEnd = createTimeEnd;
+		if (businessLimit) {
+			newParam.businessLimit = businessLimit;
 		}
-		if (Utils.isDate(effectiveDateStart)) {
-			newParam.effectiveDateStart = effectiveDateStart;
+		if (legalPersonLimitFloor) {
+			newParam.legalPersonLimitFloor = legalPersonLimitFloor;
 		}
-		if (Utils.isDate(effectiveDateEnd)) {
-			newParam.effectiveDateEnd = effectiveDateEnd;
+		if (legalPersonLimitCeiling) {
+			newParam.legalPersonLimitCeiling = legalPersonLimitCeiling;
 		}
-		if (Utils.isDate(expirationDateStart)) {
-			newParam.expirationDateStart = expirationDateStart;
-		}
-		if (Utils.isDate(expirationDateEnd)) {
-			newParam.expirationDateEnd = expirationDateEnd;
+		if (legalPersonLimit) {
+			newParam.legalPersonLimit = legalPersonLimit;
 		}
 
 		for (var k in newParam) {
