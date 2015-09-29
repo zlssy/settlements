@@ -84,9 +84,11 @@ define(function(require, exports, module) {
 		};
 
 		$(document.body).on('click', evtListener);
-		$('.datepicker').datepicker({
+		$('.datepicker').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii:ss',
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+            minuteStep:1
 		});
 	}
 
