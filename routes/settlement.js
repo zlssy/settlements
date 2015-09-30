@@ -182,7 +182,8 @@ var fileapi = {
     '/queryStatisticalRecord':'queryStatisticalRecord.json',
     '/exchangeRate/list':'exchange-list.json',
     '/settleLimit/list': 'settle-limit-list.json',
-    '/queryWrongRecord': 'statement-list.json',
+    '/queryWrongRecord': 'queryWrongRecord.json',
+    '/reconciliation': 'reconciliation.json',
     '/settleLimit/history': 'settle-card-history.json'
 };
 
