@@ -46,10 +46,20 @@
                                 <div class="widget-main">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5">时间:</label>
-                                            <div class="col-sm-9 no-padding">
-                                                <div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="startDate" placeholder="from" data-date-format="dd/mm/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
-                                                <div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="endDate" placeholder="to" data-date-format="dd/mm/yyyy" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">开始日期:</label></div>
+                                            <div class="input-group date datepicker col-sm-9 no-padding">
+                                                <input class="form-control" size="16" type="text" value="" name="startDate" readonly="">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-xs-12 col-sm-4">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">结束日期:</label></div>
+                                            <div class="input-group date datepicker col-sm-9 no-padding">
+                                                <input class="form-control" size="16" type="text" value="" readonly="" name="endDate">
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
@@ -59,12 +69,6 @@
                                                     <option value="">全部</option>
                                                     <option value="1">CYBS</option>
                                                 </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-4">
-                                            <label class="col-sm-3 no-padding lm-5" >产品编号:</label>
-                                            <div class="col-sm-9 no-padding">
-                                                <input type="text" name="productID" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
                                     </div>
