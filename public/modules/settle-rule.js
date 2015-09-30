@@ -151,7 +151,8 @@ define(function(require, exports, module) {
 		}
 		data && getRowDetail(data[0].id);
 		$('.bootbox .datepicker').datetimepicker({
-			useSeconds: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
@@ -473,7 +474,8 @@ define(function(require, exports, module) {
 
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
-			useSeconds: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('#add-btn').on('click', function() {
 			_grid.trigger('addCallback');

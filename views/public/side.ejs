@@ -1,14 +1,25 @@
 <script type="text/javascript">
 	try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 </script>
-
+<%
+	function checkReqUrl(req, a){
+		var arr = 'string' == typeof a ? [a]:a, r = false;
+		for(var i=0;i<arr.length;i++){
+			if(req.url.indexOf(arr[i])>-1){
+				r = true;
+				break;
+			}
+		}
+		return r;
+	}
+%>
 <div id="sidebar" class="sidebar responsive">
 	<script type="text/javascript">
 		try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 	</script>
 
 	<ul class="nav nav-list">
-		<li class="active">
+		<li>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-desktop"></i>
 				<span class="menu-text"> 交易管理 </span>
@@ -30,7 +41,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li<%if(checkReqUrl(req, 'qingfen-list-query')){%> class="active"<%}%>>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list-alt"></i>
 				<span class="menu-text"> 清分管理 </span>
@@ -52,7 +63,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li<%if(checkReqUrl(req, ['settle-card', 'settle-rule', 'settle-limit', 'settle-query'])){%> class="active"<%}%>>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list-alt"></i>
 				<span class="menu-text"> 结算管理 </span>

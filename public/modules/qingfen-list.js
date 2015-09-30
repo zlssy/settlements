@@ -2,6 +2,7 @@ define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Grid = require('gridBootstrap'),
 		Box = require('boxBootstrap'),
+		Xss = require('xss'),
 
 		content = $('#content'),
 		listContainer = $('#grid_list'),
@@ -16,6 +17,7 @@ define(function(require, exports, module) {
 			commercialName: $('#commercialName'),
 			account: $('#account')
 		},
+		dictionaryCollection = {},
 		_grid;
 
 	function init() {
@@ -77,6 +79,14 @@ define(function(require, exports, module) {
 			console.log(v);
 		});
 		_grid.load();
+		getDictionaryFromServer('clearingStatus', function(json){
+			if('0' == json.code){
+				dictionaryCollection.statusArr = json.data && json.data.dataArray || [];
+				setSelect('statusArr', doms.qfstatus);
+			}
+		}, function(e){
+			// report
+		});
 		registerEvents();
 	}
 
@@ -113,7 +123,7 @@ define(function(require, exports, module) {
 		};
 
 		$(document.body).on('click', evtListener);
-		$('.datepicker').datepicker({
+		$('.datepicker').datetimepicker({
 			autoclose: true,
 			todayHighlight: true
 		});
@@ -130,6 +140,40 @@ define(function(require, exports, module) {
 		e.initEvent('click', true, false);
 		a.dispatchEvent(e);
 		a.remove();
+	}
+
+	function getDictionaryFromServer(type, callback, errorback) {
+		var emptyFn = function() {},
+			cb = callback || emptyFn,
+			ecb = errorback || emptyFn;
+		$.ajax({
+			url: global_config.serverRoot + 'dataDictionary/dropdownlist?userId=' + '&type=' + type,
+			success: cb,
+			error: ecb
+		});
+	}
+
+	function setSelect(gArr, dom, selected) {
+		var data = dictionaryCollection[gArr],
+			s = '',
+			context = this,
+			args = Array.prototype.slice.call(arguments, 0),
+			fn = arguments.callee;
+		if (!data) {
+			setTimeout(function() {
+				console.log('retry');
+				fn.apply(context, args);
+			}, 10);
+			return;
+		}
+		for (var i = 0; i < data.length; i++) {
+			if (selected == data[i].innerValue) {
+				s = ' selected = "selected"';
+			} else {
+				s = '';
+			}
+			dom.append('<option value="' + data[i].innerValue + '"' + s + '>' + Xss.inHTMLData(data[i].label) + '</option>');
+		}
 	}
 
 	function getParams() {

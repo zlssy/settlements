@@ -163,8 +163,9 @@ define(function(require, exports, module) {
 	}
 
 	function registerEvents() {
-		$('.datepicker').datepicker({
-			autoclose: true
+		$('.datepicker').datetimepicker({
+			autoclose: true,
+			todayHighlight: true
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),

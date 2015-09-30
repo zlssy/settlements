@@ -124,7 +124,8 @@ define(function(require, exports, module) {
 		setSelect('statusArr', $('#zt'));
 		data && fillData(data);
 		$('.bootbox .datepicker').datetimepicker({
-			useSeconds: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
@@ -387,7 +388,8 @@ define(function(require, exports, module) {
 			_grid.trigger('addCallback');
 		});
 		$('.datepicker').datetimepicker({
-			useSeconds: true
+			autoclose: true,
+			todayHighlight: true
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),

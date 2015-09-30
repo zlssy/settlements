@@ -8,6 +8,7 @@ define(function(require, exports, module) {
 		addEditTpl = $('#addEditTpl').html(),
 		viewTpl = $('#viewTpl').html(),
 		userParam = {},
+		dictionaryCollection = {},
 		doms = {
 			merchantIds: $("#merchantIds"),
 			merchantName: $("#merchantName"),
@@ -93,8 +94,8 @@ define(function(require, exports, module) {
 		_grid.load();
 
 		// load business type data
-		if (businessTypeArr) {
-			setBusinessType(doms.businessTypeInt);
+		if (dictionaryCollection.businessTypeArr) {
+			setSelect('businessTypeArr', doms.businessTypeInt);
 		} else {
 			getDictionaryFromServer('businessType', getBusinessTypeSuccess, getBusinessTypeError);
 		}
@@ -103,10 +104,10 @@ define(function(require, exports, module) {
 
 	function getBusinessTypeSuccess(json) {
 		if ('0' == json.code) {
-			businessTypeArr = json.data && json.data.dataArray || [];
-			if (businessTypeArr.length) {
+			dictionaryCollection.businessTypeArr = json.data && json.data.dataArray || [];
+			if (dictionaryCollection.businessTypeArr.length) {
 				businessTypeDefault = businessTypeArr[0].id;
-				setBusinessType(doms.businessTypeInt);
+				setSelect('businessTypeArr', doms.businessTypeInt);
 			}
 		}
 	}
@@ -115,15 +116,26 @@ define(function(require, exports, module) {
 		// report and retry
 	}
 
-	function setBusinessType(dom, selected) {
-		var s = '';
-		for (var i = 0; i < businessTypeArr.length; i++) {
-			if (selected == businessTypeArr[i].id) {
+	function setSelect(gArr, dom, selected) {
+		var data = dictionaryCollection[gArr],
+			s = '',
+			context = this,
+			args = Array.prototype.slice.call(arguments, 0),
+			fn = arguments.callee;
+		if (!data) {
+			setTimeout(function() {
+				console.log('retry');
+				fn.apply(context, args);
+			}, 10);
+			return;
+		}
+		for (var i = 0; i < data.length; i++) {
+			if (selected == data[i].innerValue) {
 				s = ' selected = "selected"';
 			} else {
 				s = '';
 			}
-			dom.append('<option value="' + businessTypeArr[i].id + '"' + s + '>' + Xss.inHTMLData(businessTypeArr[i].label) + '</option>');
+			dom.append('<option value="' + data[i].innerValue + '"' + s + '>' + Xss.inHTMLData(data[i].label) + '</option>');
 		}
 	}
 
@@ -159,7 +171,7 @@ define(function(require, exports, module) {
 			}
 		};
 		Box.dialog(opt);
-		setBusinessType($('#fbusinessTypeInt'));
+		setSelect('businessTypeArr', $('#fbusinessTypeInt'));
 		data && getRowDetail(data[0].id);
 		$('.bootbox .datepicker').datepicker({
 			autoclose: true
@@ -437,22 +449,20 @@ define(function(require, exports, module) {
 					_grid.loadData();
 				}
 			}
-			if('businessLimit' == id){
-				if($el.prop('checked')){
+			if ('businessLimit' == id) {
+				if ($el.prop('checked')) {
 					doms.businessLimitFloor.val('').prop('disabled', true);
 					doms.businessLimitCeiling.val('').prop('disabled', true);
-				}
-				else{
+				} else {
 					doms.businessLimitFloor.prop('disabled', false).focus();
 					doms.businessLimitCeiling.prop('disabled', false);
 				}
 			}
-			if('legalPersonLimit' == id){
-				if($el.prop('checked')){
+			if ('legalPersonLimit' == id) {
+				if ($el.prop('checked')) {
 					doms.legalPersonLimitFloor.val('').prop('disabled', true);
 					doms.legalPersonLimitCeiling.val('').prop('disabled', true);
-				}
-				else{
+				} else {
 					doms.legalPersonLimitFloor.prop('disabled', false).focus();
 					doms.legalPersonLimitCeiling.prop('disabled', false);
 				}
