@@ -100,7 +100,8 @@ define(function(require, exports, module) {
 
 	function exportExcel() {
 		var a = document.createElement('a');
-		a.href = global_config.serverRoot + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
+		var url = 'http://testtclpay.tclclouds.com/settlement/settleStatement/export?userId=&' + Utils.object2param(userParam);
+		a.href = url;//global_config.serverRoot + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
 		a.target = '_blank';
 		a.height = 0;
 		a.width = 0;
