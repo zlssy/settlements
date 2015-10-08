@@ -8,7 +8,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/list', function(req, res, next) {
- 	res.render('dataDictionary_list_', {
+ 	res.render('dataDictionary_list', {
 		title: '数据字典列表'
 		,req: req
 	});

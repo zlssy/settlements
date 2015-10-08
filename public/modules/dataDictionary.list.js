@@ -2,14 +2,20 @@ define(function(require, exports, module) {
 	var Table = require('whygrid');
 	var D = window.D = require('D');
 	var Box = require('boxBootstrap');
+	var tool = require("why");
+	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
 	var apis = {
-			list : global_config.serverRoot + '/dataDictionary/list',
-			add : global_config.serverRoot + '/dataDictionary/addOrUpdate',
-			update : global_config.serverRoot + '/dataDictionary/addOrUpdate',
-			show : global_config.serverRoot + '/dataDictionary/detail',
-			dropdownlist : global_config.serverRoot + '/dataDictionary/dropdownlist'
+			list : rooturl + '/dataDictionary/list',
+			add : rooturl + '/dataDictionary/addOrUpdate',
+			update : rooturl + '/dataDictionary/addOrUpdate',
+			show : rooturl + '/dataDictionary/detail',
+			dropdownlist : rooturl + '/dataDictionary/dropdownlist'
 		}
 	var T;
+	var errfun = function(e){
+		var msg = typeof e == 'object' ? e.statusText || e.msg || "未知错误!" : e;
+		Box.alert(msg);
+	}
 	$(function(){
 		T = Table('#grid_list',apis.list,{
 			checkRow: true,
@@ -32,7 +38,7 @@ define(function(require, exports, module) {
 			funFixtd: function(x,y,col,data){
 				if(col.index == 'comm'){
 					var html = '';
-					html += '<a data-comm="edit" class="btn btn-xs btn-link">' + '查看 / 修改' + '</a>'; 
+					html += '<a data-comm="edit" class="btn btn-xs btn-link">' + '查看/修改' + '</a>'; 
 					//html += '<a data-comm="edit" class="btn btn-xs btn-link">' + '' + '</a>'; 
 					//html += '<a data-comm="del" class="btn btn-xs btn-link">' + '删除' + '</a>'; 
 					return html;
@@ -41,6 +47,8 @@ define(function(require, exports, module) {
 		});
 		bin_comm();
 		T.load();
+		//菜单自动定位
+		tool.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
 	})
 
 	//数据操作
@@ -52,14 +60,11 @@ define(function(require, exports, module) {
         var obj = comms[comm];
         if(obj){
             var ids_data = {'ids':ids};
-            $.post(obj.api,$.extend({},ids_data,obj.data,data),function(data){
-                if(data.executeStatus){
-                    Box.alert(data.errorMsg || '未知错误!','操作出错!')
-                    return;
-                }
+            $.post(obj.api,$.extend({},ids_data,obj.data,data),null,'json').then(function(data){
+            	if(data.code != 0){throw data.message}
                 Box.alert('操作成功!')
                 T.load();
-            })
+            }).then(null,errfun)
         }else Box.alert('未知操作!')
     }
 
@@ -108,9 +113,12 @@ define(function(require, exports, module) {
 		data && o.fillDom(dom,data);
 		this.dom = dom;
 		this.events();
+		this.fix();
 	};
+	//增加数据项
 	Edit.addItem = function(){
 		this.dom.find(".panel-body").append($('#itemTpl').html());
+		this.fix()
 	}
 	Edit.events = function(){
 		var o = this;
@@ -121,6 +129,7 @@ define(function(require, exports, module) {
 		.on('click','[data-comm]',function(){
 			var but = $(this);
 			var comm = but.data("comm");
+			if(but.hasClass('disabled')) return;
 			if(comm == 'onoff'){
 				but.attr('class', !but.hasClass('btn-danger') ? 'btn btn-danger' : 'btn btn-default') 
 			}else if(comm == "goup"){
@@ -132,19 +141,21 @@ define(function(require, exports, module) {
 			}else if(comm == "del"){
 				but.closest(".row").remove();
 			}
+			o.fix()
 		})
 	}
+	//添加
 	Edit.showadd = function(){
 		this.showDom();
 		this.addItem();
 	};
+	//修改
 	Edit.showedit = function(id){
 		var o = this;
-		$.get(apis.show,{id:id},function(data){
-			if(data.code == 0){
-				o.showDom(data.data)
-			}
-		})
+		$.get(apis.show,{id:id},null,'json').then(function(data){
+			if(data.code != 0){throw data.message}
+			o.showDom(data.data)
+		}).then(null,errfun)
 	}
 	Edit.fillDom = function(dom,data){
 		dom.find('input[name="id"]').val(data.id)
@@ -195,14 +206,22 @@ define(function(require, exports, module) {
 		obj.dataArray = JSON.stringify(dataArray);
 		return obj;
 	}
-
+	Edit.fix = function(){
+		var rows = this.dom.find('.panel-body>.row');
+		rows.find('[data-comm]').removeClass('disabled')
+		rows.first().find('[data-comm="goup"]').addClass('disabled')
+		rows.last().find('[data-comm="godown"]').addClass('disabled')
+		if(rows.length <= 1) rows.first().find('[data-comm="del"]').addClass('disabled')
+	}
+	//保存
 	Edit.save = function(){
 		var saveData = this.getData();
-		$.post(apis.update,saveData,function(data){
-			if(data.code == 0){
-				Box.alert("成功!")
-			}
-		})
+		$.post(apis.update,saveData,null,'json').then(function(data){
+			if(data.code != 0){throw data.message}
+			Box.alert("操作成功!");
+			T.load();
+			Edit.Box && Edit.Box.remove();
+		}).then(null,errfun)
 	}
 
 });

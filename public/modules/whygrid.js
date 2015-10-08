@@ -241,6 +241,14 @@ define(function(require, exports, module) {
 			}).then(null,function(err){
 				o.main.find('table.g-table').trigger('errdata',[err])
 			})
+		},
+		loadC:function(){
+			var url = tool.urlComm.apply(tool.urlComm.setHash,Array.prototype.slice.call(arguments,0))
+			if(url == document.location.href){
+				o.load();
+			}else{
+				document.location.href = url;
+			}
 		}
 	}
 
