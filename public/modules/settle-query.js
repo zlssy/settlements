@@ -20,6 +20,7 @@ define(function(require, exports, module) {
 
 	function init() {
 		_grid = Grid.create({
+			key: 'id',
 			checkbox: false,
 			cols: [{
 				name: '结算单号',
@@ -101,7 +102,7 @@ define(function(require, exports, module) {
 	function exportExcel() {
 		var a = document.createElement('a');
 		var url = 'http://testtclpay.tclclouds.com/settlement/settleStatement/export?userId=&' + Utils.object2param(userParam);
-		a.href = url;//global_config.serverRoot + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
+		a.href = url; //global_config.serverRoot + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
 		a.target = '_blank';
 		a.height = 0;
 		a.width = 0;
@@ -126,7 +127,29 @@ define(function(require, exports, module) {
 	}
 
 	function confirmPay(row) {
-		console.log(row);
+		var needPayRow = row[0] || {};
+		var req = {
+			userId: '',
+			settleStatementId: needPayRow.id
+		};
+		$.ajax({
+			url: global_config.serverRoot + '/settleStatement/paid',
+			method: 'post',
+			data: req,
+			success: function(json) {
+				if('0' == json.code){
+					_grid.loadData();
+				}
+				else{
+					// report
+					console.log(json)
+				}
+			},
+			error: function(e) {
+				// report
+				console.log(e);
+			}
+		})
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
