@@ -13,6 +13,40 @@ var daili_url = "http://testtclpay.tclclouds.com/settlement";
 var userid = 12345;
 
 if (daili) {
+    var downFiles = [
+        '/clearing/export'
+        ,'/settleStatement/export'
+        ,'/downloadStatisticalRecord'
+        ,'/downloadTradeRecord'
+        ,'/downloadWrongRecord'
+        ,'/settleCard/template'
+        ,'/settleCard/import'
+    ]
+
+    //文件流代理
+    router.all(downFiles,function(req,res,next){
+        var obj = {
+            "method": req.method,
+            "uri": daili_url + req.url,
+            "headers": {
+                "userId": userid
+            }
+        }
+        if (req.method === "POST") {
+            obj.form = _.extend({}, req.body)
+        }
+        var r = request(obj);
+        r.on('error',function(e){
+            res.json({
+                'msg' : e.message
+                ,'code' : 1
+            })
+            return;
+        })
+        req.pipe(r).pipe(res);
+    })
+
+    //普通 get set 代理
     router.all("/*", function(req, res, next) {
         var callback = req.query.callback;
         var obj = {
@@ -26,16 +60,19 @@ if (daili) {
             obj.form = _.extend({}, req.body)
         }
         tool.qrequestStr(obj).done(function(data) {
-            // try{
-            //     var json = JSON.parse(data);
-            //     res.json(json);
-            // }catch(e){
+            try{
+                var json = JSON.parse(data);
+                res.json(json);
+            }catch(e){
+                //res.set('Content-Type','application/json; charset=utf-8');
                 res.send(data);
-            //}
+            }
         }, function(e) {
             next(e)
         })
     })
+
+    //上传文件
 }
 
 
