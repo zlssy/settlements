@@ -7,8 +7,8 @@ define(function(require, exports, module) {
 		var _opt = $.extend({
 			id: 'grid' + (++guid),
 			height: 400,
-            have_scroll:false,
-            fixed_table_width:4000,
+			have_scroll: false,
+			fixed_table_width: 4000,
 			checkbox: true,
 			pagesize: 20,
 			page: 1,
@@ -172,13 +172,18 @@ define(function(require, exports, module) {
 	}
 
 	function render(data) {
-		var d, col, colfn, colval, wstr, xsscheck,
+		var d, col, colfn, colval, atr, wstr, xsscheck,
 			html = [];
 		if (data) {
 			this.data = data;
 			for (var i = 0; i < data.length; i++) {
-				html.push('<tr role="row" id="1" tabindex="-1" class="ui-widget-content jqgrow ui-row-ltr" aria-selected="false">');
 				d = data[i];
+				if (this.key) {
+					atr = ' data-id="' + Xss.inDoubleQuotedAttr(d[this.key]) + '"';
+				} else {
+					atr = '';
+				}
+				html.push('<tr role="row" tabindex="-1" class="ui-widget-content jqgrow ui-row-ltr" aria-selected="false"' + atr + '>');
 				if (this.checkbox) {
 					html.push('<td role="gridcell" style="text-align:center;width: 25px;" aria-describedby="' + this.id + '_cb"><input role="checkbox" type="checkbox" id="' + this.id + '_cb_' + ((this.page - 1) * this.pagesize + i + 1) + '" class="cbox" name="' + this.id + '_cbn_' + ((this.page - 1) * this.pagesize + i + 1) + '" value="' + Xss.inDoubleQuotedAttr(d[this.key]) + '"></td>')
 				}
@@ -275,17 +280,30 @@ define(function(require, exports, module) {
 	function getSelectedRow() {
 		var ret = [],
 			self = this;
-		this.controls.list.find('.cbox').each(function() {
-			var $this = $(this);
-			if ($this.is(':checked')) {
+		if (this.checkbox) {
+			this.controls.list.find('.cbox').each(function() {
+				var $this = $(this);
+				if ($this.is(':checked')) {
+					for (var i = 0; i < self.data.length; i++) {
+						if ($this.val() == self.data[i][self.key]) {
+							ret.push(self.data[i]);
+							break;
+						}
+					}
+				}
+			});
+		} else {
+			this.key && this.controls.list.find('tr.ui-state-highlight[data-id]').each(function() {
+				var $this = $(this),
+					id = $this.data('id');
 				for (var i = 0; i < self.data.length; i++) {
-					if ($this.val() == self.data[i][self.key]) {
+					if (id == self.data[i][self.key]) {
 						ret.push(self.data[i]);
 						break;
 					}
 				}
-			}
-		});
+			});
+		}
 		return ret;
 	}
 

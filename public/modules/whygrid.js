@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 		,qs = tool.QueryString;
 
 	//表头模版
-	var template_hide = '<th<%=col.width ? \' style="width:\' + (col.width+"").replace(/^(\\d*)$/,"$1px") + \'"\' : \'\' %>><div<%=col.index ? \' data-index="\' + _.escape(col.index) + \'"\' : \'\' %><%=col.sortable?\' class="ui-jqgrid-sortable"\':""%>><%-col.name%><%if(col.sortable){%><span class="s-ico" style=""><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-icon ui-icon-triangle-1-n ui-sort-ltr ui-state-disabled"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-icon ui-icon-triangle-1-s ui-sort-ltr ui-state-disabled"></span></span><%}%></div></th>';
+	var template_hide = '<th<%=col.width ? \' style="width:\' + (col.width+"").replace(/^(\\d*)$/,"$1px") + \'"\' : \'\' %>><div<%=col.index ? \' data-index="\' + _.escape(col.index) + \'"\' : \'\' %><%=col.sortable?\' class="ui-jqgrid-sortable"\':""%>><%-col.name%><%if(col.sortable){%><span class="s-ico" style=""><span oder="asc" class="ui-grid-ico-sort ui-icon-asc ui-icon ui-icon-triangle-1-n ui-sort-ltr ui-state-disabled"></span><span oder="desc" class="ui-grid-ico-sort ui-icon-desc ui-icon ui-icon-triangle-1-s ui-sort-ltr ui-state-disabled"></span></span><%}%></div></th>';
 	//表头全选模板
 	var hdie_check = '<th width="30" class="ui-state-default ui-th-column ui-th-ltr"><div style="text-align:center;"><input type="checkbox" data-checkname="<%-key%>"></div></th>'
 	//默认行模板
@@ -102,16 +102,16 @@ define(function(require, exports, module) {
             if(o[0].tagName.toLowerCase() == 'ul'){
                 o.html('<li class="nodata">'+msg+'</li>');
             }else{
-                o.find('>tbody').html('<tr><td colspan="' + tds + '" class="nodata">' + msg + '</td></tr>')
+                o.find('>tbody').html('<tr class="ui-widget-content jqgrow ui-row-ltr ui-priority-secondary"><td colspan="' + tds + '" class="nodata">' + msg + '</td></tr>')
             }
             return false;
         })
         .on('loading','table,ul.tree',function(){
-                $(this).trigger('colspanMsg',['<div class="g-tc"><i class="g-inlb g-icon-load"></i> 正在加载数据！</div>']).find(':checkbox[data-checkname]').prop('checked',false)
+                $(this).trigger('colspanMsg',['<div class="g-tc" style="text-align:center;"><i class="g-inlb g-icon-load"></i> 正在加载数据！</div>']).find(':checkbox[data-checkname]').prop('checked',false)
                 return false;
             })
         .on('nodata','table,ul.tree',function(){
-                $(this).trigger('colspanMsg',['<div class="g-tc">暂无数据！</div>'])
+                $(this).trigger('colspanMsg',['<div class="g-tc" style="text-align:center;">暂无数据！</div>'])
                 return false;
             })
         .on('errdata','table,ul.tree',function(e,errmsg){
@@ -145,11 +145,11 @@ define(function(require, exports, module) {
     	this.main.on('click','table thead div.ui-jqgrid-sortable',function(){
     		var obj = $(this);
     		var s = obj.find('.s-ico span:not(".ui-state-disabled")')
-    		var oder = obj.data('index'),sort;
-    		if(s.length && s.attr('sort') == 'asc'){
-    			sort = "desc";
+    		var sort = obj.data('index'),oder;
+    		if(s.length && s.attr('oder') == 'asc'){
+    			oder = "desc";
     		}else{
-    			sort = "asc";
+    			oder = "asc";
     		}
     		o.main.find('thead span.s-ico span').addClass('ui-state-disabled');
 
@@ -206,14 +206,18 @@ define(function(require, exports, module) {
 			oder = search[prmNames.order]
 			sort = search[prmNames.sort]
 			this.main.find('thead span.s-ico span').addClass('ui-state-disabled')
-			if(oder){
-				this.main.find('thead th div.ui-jqgrid-sortable[data-index='+oder+'] span.s-ico span[sort='+sort+']').removeClass('ui-state-disabled')
+			if(sort){
+				this.main.find('thead th div.ui-jqgrid-sortable[data-index='+sort+'] span.s-ico span[oder='+oder+']').removeClass('ui-state-disabled')
 			}
 		},
 		fillTabel:function(data){
 			var jsonReader = _.extend({},_defObj.jsonReader,this.option.jsonReader);
 			var arr = tool.getMapdata(data,jsonReader.root);
-			this.main.find('table.g-table tbody').html(getBodyHtml.call(this,arr))
+			if(arr.length > 0){
+				this.main.find('table.g-table tbody').html(getBodyHtml.call(this,arr))
+			}else{
+				this.main.find('table.g-table').trigger('nodata');
+			}
 		},
 		fillPage:function(data){
 			var jsonReader = _.extend({},_defObj.jsonReader,this.option.jsonReader);
@@ -227,15 +231,24 @@ define(function(require, exports, module) {
 		load:function(){
 			var o = this;
 			var s = JSON.parse(JSON.stringify(this.getSearch()));
-			$.get(this.apiUrl,s,'json').then(function(data){
+			o.main.find('table.g-table').trigger('loading');
+			$.get(this.apiUrl,s,null,'json').then(function(data){
 				if(data.code != 0){throw data.message}
 				o.thieSearch = s; 
 				o.fillTabel(data);
 				o.option.pagenav && o.fillPage(data);
 				o.fix_oder();
 			}).then(null,function(err){
-				his.main.find('table.g-table').trigger('errdata',[err])
+				o.main.find('table.g-table').trigger('errdata',[err])
 			})
+		},
+		loadC:function(){
+			var url = tool.urlComm.apply(tool.urlComm.setHash,Array.prototype.slice.call(arguments,0))
+			if(url == document.location.href){
+				o.load();
+			}else{
+				document.location.href = url;
+			}
 		}
 	}
 

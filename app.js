@@ -31,6 +31,8 @@ app.use('/test', test_route);
 
 //数据字功能路由
 app.use('/dataDictionary',require('./routes/dataDictionary'))
+//系统功能
+app.use('/system',require('./routes/system'));
 
 //接口模拟
 app.use('/settlement',require('./routes/settlement'))

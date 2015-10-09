@@ -9,37 +9,15 @@ global._ = require('underscore');
 
 //代理
 var daili = true; //是否启用代理
-var daili_url = "http://www.hao123.com/";
+var daili_url = "http://testtclpay.tclclouds.com/settlement";
 var userid = 12345;
 
-// if (daili) { //代理
-// 	router.all("/*", function(req, res, next) {
-// 		var callback = req.query.callback;
-// 		var obj = {
-// 			"method": req.method,
-// 			"uri": daili_url + req.url,
-// 			"headers": {
-// 				"userId": userid
-// 			}
-// 		};
-// 		if (req.method === "POST") {
-// 			obj.form = _.extend({}, req.body)
-// 		}
-// 		tool.qrequestStr(obj).done(function(data) {
-// 			res.send(data);
-// 		}, function(e) {
-// 			next(e)
-// 		})
-// 	})
-// }
-
 if (daili) {
-    router.all('/*', function(req, res, next) {
-        console.log(' proxy: ' + req.url);
+    router.all("/*", function(req, res, next) {
         var callback = req.query.callback;
         var obj = {
             "method": req.method,
-            "uri": 'http://testtclpay.tclclouds.com/settlement' + req.url,
+            "uri": daili_url + req.url,
             "headers": {
                 "userId": userid
             }
@@ -48,14 +26,17 @@ if (daili) {
             obj.form = _.extend({}, req.body)
         }
         tool.qrequestStr(obj).done(function(data) {
-            console.log(' send proxy[' + req.url + '] data:', data)
-            res.json('string' == typeof data ? JSON.parse(data) : data);
+            // try{
+            //     var json = JSON.parse(data);
+            //     res.json(json);
+            // }catch(e){
+                res.send(data);
+            //}
         }, function(e) {
             next(e)
         })
-    });
+    })
 }
-
 
 
 //以下为模拟数据
@@ -125,22 +106,9 @@ router.all('/dataDictionary/addOrUpdate', function(req, res, next) {
 // 参数：
 // id	Integer	是	数据字典类型ID
 router.all('/dataDictionary/detail', function(req, res, next) {
-    var data = _.extend({}, DATAY, {
-        "data": {
-            "id": 1,
-            "type": 'clearingStatus',
-            "typeLabel": '清分状态',
-            "dataArray": [{ //1,待结算;2,结算中;3,已结算
-                "id": 1, //字典编码ID
-                "code": 4, //字典编码
-                "label": "已存档", //字典名称
-                "dataDictionaryStatus": 1, //字典状态:1可用; 2禁用
-                "displayOrder": 1 //字典顺序 数值越低，在下拉框中显示最靠前
-            }]
-        }
-    })
-    res.json(data);
+    res.send({"code":"0","data":{"creationDate":"2015-09-25 18:50:39","creationUser":"init","dataArray":[{"code":"ToCorporation","creationDate":"2015-09-25 18:50:39","creationUser":"init","dataDictionaryStatus":"可用","dataInfoId":4,"displayOrder":1,"innerValue":1,"isHidden":0,"label":"对公","label_en":"To Corporation","label_zh":"对公","modifyDate":"2015-09-25 18:50:39","modifyUser":"init","status":2,"type":"settleCardType"},{"code":"ToPersonal","creationDate":"2015-09-25 18:50:39","creationUser":"init","dataDictionaryStatus":"可用","dataInfoId":5,"displayOrder":2,"innerValue":2,"isHidden":0,"label":"对私","label_en":"To Personal","label_zh":"对私","modifyDate":"2015-09-25 18:50:39","modifyUser":"init","status":1,"type":"settleCardType"}],"id":2,"isHidden":0,"label":"结算卡类型","modifyDate":"2015-09-25 18:50:39","modifyUser":"init","type":"settleCardType","typeLabel_en":"Settle Card Type","typeLabel_zh":"结算卡类型"},"msg":"Success"});
 });
+
 
 // 功能：获取数据字典显示列表
 // URL：/dataDictionary/dropdownlist
