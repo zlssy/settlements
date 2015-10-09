@@ -10,4 +10,8 @@ $('.nav-list').on('click', 'a', function(e) {
 		$el.parent().addClass('active').parent('ul').parent('li').addClass('active');
 	}
 });
+//左侧菜单自动定位
+seajs.use('why',function(a){
+	a.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
+})
 </script>
