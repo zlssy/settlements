@@ -12,7 +12,7 @@ define(function(require, exports, module) {
 	var template_hide_fun,template_tr_fun;
 	var _defObj = {
 		prmNames:{page:"pageNo",rows:"pageSize",sort:"sort",order:"order"},
-		jsonReader:{root:'data.pageData',page:'data.pageNo',size:'data.pageSize',records:'data.totalCount'}
+		jsonReader:{root:'data.pageData',page:'data.pageNo',size:'data.pageSize',records:'data.totalCnt'}// totalCnt totalCount
 	}
 	var defOption = {
 		id: 'grid', //容器ID

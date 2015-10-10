@@ -58,6 +58,14 @@ if (daili) {
         };
         if (req.method === "POST") {
             obj.form = _.extend({}, req.body)
+            if(req.body.dataArray){
+                obj.json = JSON.parse(req.body.dataArray);
+                //delete obj.form.dataArray;
+                //console.log(obj.form)
+                obj.qs = _.extend({},req.query,req.body);
+                delete obj.qs.dataArray;
+                delete obj.form;
+            }
         }
         tool.qrequestStr(obj).done(function(data) {
             try{

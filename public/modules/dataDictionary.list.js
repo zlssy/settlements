@@ -1,6 +1,5 @@
 define(function(require, exports, module) {
 	var Table = require('whygrid');
-	var D = window.D = require('D');
 	var Box = require('boxBootstrap');
 	var tool = require("why");
 	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
@@ -18,9 +17,9 @@ define(function(require, exports, module) {
 	}
 	$(function(){
 		T = Table('#grid_list',apis.list,{
-			checkRow: true,
+			checkRow: false,
 			seachForm: '#sform',
-			pagenav:false,
+			pagenav:true,
 			cols: [{
 					name: '字典类型编码',
 					index: 'type',
@@ -48,7 +47,7 @@ define(function(require, exports, module) {
 		bin_comm();
 		T.load();
 		//菜单自动定位
-		tool.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
+		//tool.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
 	})
 
 	//数据操作
@@ -164,7 +163,7 @@ define(function(require, exports, module) {
 		dom.find('input[name="typeLabel_en"]').val(data.typeLabel_en)
 		if(data.dataArray && data.dataArray.length>0){
 			var dataArray = data.dataArray
-			dom.find(".panel-body").html('')
+			//dom.find(".panel-body").html('')
 			for(var i = 0; i<dataArray.length; i++){
 				var _dom = $($('#itemTpl').html()),
 					item = dataArray[i];
