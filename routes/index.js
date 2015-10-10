@@ -62,6 +62,12 @@ router.get('/rate', function(req, res, next){
         req: req
 	});
 });
+router.all('/upload', function(req, res, next){
+	res.render('upload', {
+		title: 'TCL业务清算平台',
+		req: req
+	})
+});
 
 /** get root 放到最后 */
 router.get('/', function(req, res, next) {

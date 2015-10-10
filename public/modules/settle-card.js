@@ -6,6 +6,7 @@ define(function(require, exports, module) {
 
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
+		importTpl = $('#importTpl').html(),
 		_grid, doms = {},
 		dictionaryCollection = {},
 		userParam = {};
@@ -368,6 +369,47 @@ define(function(require, exports, module) {
 		}
 	}
 
+	function download() {
+		var a = document.createElement('a');
+		var url = global_config.serverRoot + '/settleCard/template?userId=';
+		a.href = url;
+		a.target = '_blank';
+		a.height = 0;
+		a.width = 0;
+		document.body.appendChild(a);
+		var e = document.createEvent('HTMLEvents');
+		e.initEvent('click', true, false);
+		a.dispatchEvent(e);
+		a.remove();
+	}
+
+	function importExcel() {
+		var opt = {};
+		opt.message = importTpl;
+		opt.buttons = {
+			"save": {
+				label: '<i class="ace-icon fa fa-check"></i> 上传',
+				className: 'btn-sm btn-success',
+				callback: function() {
+					var ctx = $('#importFrm').contents(),
+						fd = ctx.find('#file'),
+						fdv = fd.val();
+					if (fdv) {
+						ctx.find('#form').submit();
+					} else {
+						Box.alert('请先选择要上传的文件~')
+						return false;
+					}
+				}
+			},
+			"cancel": {
+				label: '取消',
+				className: 'btn-sm'
+			}
+		};
+		showDialog(opt);
+	}
+
 	/**
 	 * [registerEvents 注册事件]
 	 * @return {[type]} [description]
@@ -419,7 +461,12 @@ define(function(require, exports, module) {
 				doms.expirationDateEnd.val('');
 			}
 		});
-
+		$('#downtemplate-btn').on('click', function() {
+			download();
+		});
+		$('#import-btn').on('click', function() {
+			importExcel();
+		});
 	}
 
 	function getParams() {
