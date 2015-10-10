@@ -77,10 +77,10 @@
 								 <label class="col-sm-3 no-padding lm-5">结算日期:</label>
 								 <div class="col-sm-9 no-padding">
 								 	<div class="col-sm-6">
-								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="settleDateStart" data-date-format="mm/dd/yyyy" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="settleDateStart" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
 								 	</div>
 								 	<div class="col-sm-6">
-								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="settleDateEnd" data-date-format="mm/dd/yyyy" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="settleDateEnd" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
 								 	</div>
 								 </div>
 								</div>
@@ -130,28 +130,28 @@
 				<label class="pos-rel">&nbsp;</label>
 			</th>
 			<th>款项类型</th>
-			<th>币种</th>
+			<th>币种（USD）</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-			<td class="center" rowspan="3" valign="middle">合计</td>
+			<td class="center" rowspan="3" valign="bottom">合计</td>
 			<td>
 				结算金额
 			</td>
-			<td>0</td>
+			<td><%%=settleAmount%></td>
 		</tr>
 		<tr>
 			<td>
 				付款金额
 			</td>
-			<td>0</td>
+			<td><%%=payAmount%></td>
 		</tr>
 		<tr>
 			<td>
 				付款手续费
 			</td>
-			<td>0</td>
+			<td><%%=serviceCharge%></td>
 		</tr>
 	</tbody>
 </table>

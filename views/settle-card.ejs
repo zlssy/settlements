@@ -126,7 +126,7 @@
 										<i class="ace-icon fa fa-plus bigger-110 white"></i>
 										添加
 									</button>
-									<button id="export-btn" class="btn btn-info btn-sm" type="button">
+									<button id="import-btn" class="btn btn-info btn-sm" type="button">
 										<i class="ace-icon fa fa-file-excel-o bigger-110 white"></i>
 										批量导入
 									</button>
@@ -213,6 +213,9 @@
 </div>
 </script>
 
+<script id="importTpl" type="text/html">
+<iframe id="importFrm" src="/upload" style="width:100%; height:100; overflow:hidden; border:none; padding:0; margin:0;"></iframe>
+</script>
 <%- include('public/footscript1') %>
 <%- include('public/footscript2') %>
 

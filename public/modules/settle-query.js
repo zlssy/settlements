@@ -118,7 +118,11 @@ define(function(require, exports, module) {
 		$.ajax({
 			url: global_config.serverRoot + 'settleStatement/total?userId=&' + Utils.object2param(userParam),
 			success: function(json) {
-				exportContainer.html($('#totalTpl').html());
+				if ('0' == json.code) {
+					exportContainer.html(Utils.formatJson($('#totalTpl').html(), json.data));
+				} else {
+					// report get concat fail
+				}
 			},
 			error: function(e) {
 				// report
@@ -137,10 +141,9 @@ define(function(require, exports, module) {
 			method: 'post',
 			data: req,
 			success: function(json) {
-				if('0' == json.code){
+				if ('0' == json.code) {
 					_grid.loadData();
-				}
-				else{
+				} else {
 					// report
 					console.log(json)
 				}
