@@ -11,7 +11,7 @@ define(function(require, exports, module) {
 	}
 	$(function(){
 		//菜单自动定位
-		tool.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
+		//tool.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
 		$('#form1').on('submit',function(){
 			var form = $(this);
 			if($.trim(form.find('#form-field-1').val()) == ""){
