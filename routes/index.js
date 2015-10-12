@@ -69,6 +69,13 @@ router.all('/upload', function(req, res, next){
 	})
 });
 
+router.all('/tradeRecord/list', function(req, res, next){
+	res.render('tradeRecord_list', {
+		title: '交易记录',
+		req: req
+	})
+});
+
 /** get root 放到最后 */
 router.get('/', function(req, res, next) {
 	res.render('index', {

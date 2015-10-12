@@ -1,7 +1,8 @@
 define(function(require, exports, module) {
 	var Table = require('whygrid');
-	var Box = require('boxBootstrap');
+	var Box = window.Box = require('boxBootstrap');
 	var tool = require("why");
+	var D = window.D = require("dialog");
 	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
 	var apis = {
 			list : rooturl + '/dataDictionary/list',

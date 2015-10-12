@@ -221,10 +221,16 @@ define(function(require, exports, module) {
 		},
 		fillPage:function(data){
 			var jsonReader = _.extend({},_defObj.jsonReader,this.option.jsonReader);
+			var prmNames = _.extend({},_defObj.prmNames,this.option.prmNames);
+			var search = this.getSearch();
+			var oder,sort;
+			if(typeof search !== "object"){
+				search = qs.parse(search);
+			}
 			var pd = {
 				itemTotal:tool.getMapdata(data,jsonReader.records)
 			    ,itemPerPage:tool.getMapdata(data,jsonReader.size)
-			    ,page: tool.getMapdata(data,jsonReader.page) //页码
+			    ,page: tool.getMapdata(data,jsonReader.page) || tool.getMapdata(search,prmNames.page) || 1 //页码
 			}
 			this.main.find('.pagenav').html(tool.pageNav(pd))
 		},
