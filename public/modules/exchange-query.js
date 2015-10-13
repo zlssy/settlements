@@ -31,7 +31,7 @@ define(function(require, exports, module) {
 				index: 'exchangeRate'
 			}, {
 				name: '状态',
-				index: 'status'
+				index: 'statusName'
 			}, {
 				name: '创建时间',
 				index: 'creationDate'
@@ -49,7 +49,11 @@ define(function(require, exports, module) {
 			console.log(v);
 		});
 		_grid.load();
-        renderSelect($form);
+        renderSelect($form.find("[dict-name=currencyCode]"), {
+            "value": "code",
+            "label": "label"
+        });
+        renderSelect($form.find("[dict-name=exchangeStatus]"));
 		registerEvents();
 	}
 
@@ -57,8 +61,7 @@ define(function(require, exports, module) {
 		var evtListener = function(e) {
 			var $el = $(e.target || e.srcElement),
 				cls = $el.attr('class') || '',
-				id = $el.attr('id') || '',
-				tag = $el.get(0).tagName.toLowerCase();
+				id = $el.attr('id') || '';
 			if (cls && cls.indexOf('fa-calendar') > -1) {
 				$el.parent().siblings().focus();
 			}
@@ -87,7 +90,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + '/exchangeRate/list?userId=' + Utils.object2param(userParam);
+		return global_config.serverRoot + '/exchangeRate/list?userId=&' +  Utils.object2param(userParam);
 	}
 
     function showPop(data) {
@@ -114,7 +117,11 @@ define(function(require, exports, module) {
             }
         });
         var $el = $(pop.node);
-        renderSelect($el);
+        renderSelect($el.find("[dict-name=currencyCode]"), {
+            "value": "code",
+            "label": "label"
+        });
+        renderSelect($el.find("[dict-name=exchangeStatus]"));
         pop.show();
     }
 

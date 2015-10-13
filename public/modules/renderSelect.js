@@ -7,26 +7,40 @@ define(function(require, exports, module) {
         art_dialog = require('dialog');
 
     function renderSelect(el, options) {
-        var selctArray = $(el).find("[dict-name]"),
-            dataArray,
-            dictName,
-            l = arguments.length;
-        if (selctArray.length) {
-            $.each(selctArray, function (i, k) {
-                dictName = $(k).attr("dict-name");
-                getData(dictName, function (res) {
-                    dataArray = res.dataArray || [];
-                    if (dataArray.length) {
-                        for (var i = 0; i < dataArray.length; i++) {
-                            $(k).append('<option value="' +
-                                ((l === 2) ? dataArray[i][options.value] : dataArray[i].innerValue) + '">' +
-                                ((l === 2) ? Xss.inHTMLData(dataArray[i][options.label]) : dataArray[i].label)
-                                + '</option>');
-                        }
-                    }
-                });
-            });
-        }
+        var l = arguments.length, dataArray, type = el.attr("dict-name");
+        getData(type, function (res) {
+            dataArray = res.dataArray || [];
+            if (dataArray.length) {
+                for (var i = 0; i < dataArray.length; i++) {
+                    el.append('<option value="' +
+                        ((l === 2) ? dataArray[i][options.value] : dataArray[i].innerValue) + '">' +
+                        ((l === 2) ? Xss.inHTMLData(dataArray[i][options.label]) : dataArray[i].label)
+                        + '</option>');
+                }
+            }
+        });
+//        var selctArray = $(el).find("[dict-name]"),
+//            dataArray,
+//            dictName,
+//            flag,
+//            l = arguments.length;
+//        if (selctArray.length) {
+//            $.each(selctArray, function (i, k) {
+//                dictName = $(k).attr("dict-name");
+//                flag = $(k).attr("dict-custom");
+//                getData(dictName, function (res) {
+//                    dataArray = res.dataArray || [];
+//                    if (dataArray.length) {
+//                        for (var i = 0; i < dataArray.length; i++) {
+//                            $(k).append('<option value="' +
+//                                ((l === 2) ? dataArray[i][options.value] : dataArray[i].innerValue) + '">' +
+//                                ((l === 2) ? Xss.inHTMLData(dataArray[i][options.label]) : dataArray[i].label)
+//                                + '</option>');
+//                        }
+//                    }
+//                });
+//            });
+//        }
     }
 
     function getData(type, callback) {

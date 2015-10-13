@@ -6,7 +6,7 @@ define(function(require, exports, module) {
         renderSelect = require("renderSelect");
 
     function init() {
-        renderSelect($form, {
+        renderSelect($form.find("[dict-name=payChannel]"), {
             "value" : "code",
             "label" : "label_en"
         });

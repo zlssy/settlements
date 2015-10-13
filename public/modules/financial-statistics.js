@@ -461,7 +461,10 @@ define(function(require, exports, module) {
             }
         });
         T.load();
-        renderSelect($form);
+        renderSelect($form.find("[dict-name=payChannel]"), {
+            "value" : "code",
+            "label" : "label_en"
+        });
         registerEvents();
     }
 

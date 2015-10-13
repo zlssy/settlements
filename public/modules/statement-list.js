@@ -3,8 +3,6 @@ define(function(require, exports, module) {
         form2json = require('form2json'),
         template = require('template'),
 		content = $('#content'),
-        $form = $("#dataForm"),
-        userParam = {},
         Table = require('whygrid'),
         tool = require("why"),
         rooturl = global_config.serverRoot.replace(/\/+$/,''),
@@ -85,8 +83,7 @@ define(function(require, exports, module) {
 		var evtListener = function(e) {
 			var $el = $(e.target || e.srcElement),
 				cls = $el.attr('class') || '',
-				id = $el.attr('id') || '',
-				tag = $el.get(0).tagName.toLowerCase();
+				id = $el.attr('id') || '';
 			if (cls && cls.indexOf('fa-calendar') > -1) {
 				$el.parent().siblings().focus();
 			}
@@ -95,7 +92,7 @@ define(function(require, exports, module) {
                 showPop();
             }
             //导出
-            if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
+            if ('export-btn' == id) {
                 exportExcel();
             }
 		};

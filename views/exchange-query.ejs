@@ -86,7 +86,7 @@
                                         <div class="col-xs-12 col-sm-4">
                                             <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">状态:</label></div>
                                             <div class="col-sm-9 no-padding">
-                                                <select class="form-control" dict-name="exchangeStatus">
+                                                <select class="form-control" dict-name="exchangeStatus" name="status">
                                                     <option value="">全部</option>
                                                 </select>
                                             </div>
@@ -156,7 +156,7 @@
 
             <div class="col-md-7">
                 <select data-select="language" class="form-control" dict-name="exchangeStatus"  required="required"
-                        data-def-value="{{= status }}">
+                        name="status" data-def-value="{{= status }}">
                 </select>
             </div>
         </div>
