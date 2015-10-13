@@ -232,6 +232,9 @@ define(function(require, exports, module) {
 			    ,itemPerPage:tool.getMapdata(data,jsonReader.size)
 			    ,page: tool.getMapdata(data,jsonReader.page) || tool.getMapdata(search,prmNames.page) || 1 //页码
 			}
+			if(jsonReader.totalPage){
+				pd.totalPage = tool.getMapdata(data,jsonReader.totalPage)
+			}
 			this.main.find('.pagenav').html(tool.pageNav(pd))
 		},
 		load:function(){

@@ -21,7 +21,7 @@ define(function(require, exports, module) {
 			checkRow: false,
 			seachForm: '#sform',
 			prmNames:{page:"pageNumber",rows:"PerPageItemsCount",sort:"sort",order:"order"},
-			jsonReader:{root:'records',page:'data.pageNo',size:'currentItemsCount',records:'totalPage'},// totalCnt totalCount
+			jsonReader:{root:'records',page:'data.pageNo',size:'currentItemsCount',records:'',totalPage:'totalPage'},// totalCnt totalCount
 			pagenav:true,
 			cols: [{
 					name: '商户订单编号',index: 'merchantOrderId'
