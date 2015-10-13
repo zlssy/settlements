@@ -336,7 +336,188 @@ define(function(require, exports, module) {
     }
 
     //简单翻页模版
-    exports.pageNav=function(a){var c,d,g,f,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,B,x,y,z,A,C,G,D,F,H,I,b={};if(b=a.values&&a.values.totalCount?{itemTotal:a.values.totalCount,itemPerPage:a.values.pageSize,page:a.values.pageNo}:a,c={itemPerPage:b.itemPerPage||10,sizeArr:b.sizeArr||[10,20,50],maxLinkShow:b.maxLinkShow||5,itemTotal:b.itemTotal||0,page:b.page||1,lang:b.lang||{textmode:"共<em>%Total%</em>条数据 当前 <em>%page%</em>/%maxpage% 页 ",Prev:'<i class="icon-angle-left"></i>上一页',Next:'下一页<i class="icon-angle-right"></i>',more:"..."}},f="",h=[],i=c.itemPerPage-0,j=c.page-0,k=c.itemTotal-0,l=c.maxLinkShow-0,m=k%i,n=Math.floor(k/i),o=m?n+1:n,0>=k?g=0:o>j?g=i:(j=o,g=m?m:i),o>0){if(p=[],c.sizeArr&&c.sizeArr.length){for(q=new RegExp("(\\s|^)"+i+"(\\s|$)"),q.test(c.sizeArr.join(" "))||c.sizeArr.push(i),c.sizeArr.sort(),p.push(' 每页<select name="pagesize">'),r=0;r<c.sizeArr.length;r++)s=c.sizeArr[r],p.push('<option value="'+s+'"'+(i==s?' selected="selected"':"")+">"+c.sizeArr[r]+"</option>");p.push("</select>条 ")}if(f='<span class="pagenav-wrapper'+(1===o?"only-one-page":"")+'"><span class="pagenav-desc">'+c.lang.textmode.replace("%page%",j).replace("%maxpage%",o).replace("%Total%",k)+p.join("")+'</span><span class="pagenav-units">',l>=o)for(d=1;o>=d;d++)j==d?(t="pagenav-current-link pagenav-link",u=!0):(t="pagenav-link",u=!1),v={text:d,index:d,isCurrent:u,cls:t},h.push(v);else if(o>l){for(w=l-3,(j>=o-1||2>=j)&&w++,x=Math.floor(w/2),y=w-x,z=j-1,A=o-j,j-1>x&&h.push({text:c.lang.Prev,index:j-1,isCurrent:!1,cls:"pagenav-link pagenav-link-prev"}),y>=A?(B=w-A,h.push({text:1,index:1,isCurrent:!1,cls:"pagenav-link"})):z>x?(B=x,h.push({text:1,index:1,isCurrent:!1,cls:"pagenav-link"})):B=z,C=w-B,d=0;B>d;d++)v={text:j-B+d,index:j-B+d,isCurrent:!1,cls:"pagenav-link"},h.push(v);for(h.push({text:j,index:j,isCurrent:!0,cls:"pagenav-link pagenav-current-link"}),d=1;C>=d;d++)v={text:j+d,index:j+d,isCurrent:!1,cls:"pagenav-link"},h.push(v);A>C&&h.push({text:o,index:o,isCurrent:j==o?!0:!1,cls:j==o?"pagenav-link pagenav-current-link":"pagenav-link"}),A>y&&h.push({text:c.lang.Next,index:j+1,isCurrent:!1,cls:"pagenav-link pagenav-link-next"})}}else f="";for(D=h.length,F=0,H="",I=!1;D>F;F++)G=h[F],F>0&&(I=h[F-1]),H=(G.isCurrent?"<span ":'<a href="javascript:;" ')+'data-page="'+G.index+'" class="page-'+G.index+" "+G.cls+'">'+G.text+"</"+(G.isCurrent?"span>":"a>"),I&&I.index<G.index-1&&(f+='<span class="pagenav-more">'+c.lang.more+"</span>"),f+=H;return f+="</span></span>"};
+    exports.pageNav=function (p) {
+    var ds = {}
+    if(p.values && p.values.totalCount){
+        ds = {
+                itemTotal:p.values.totalCount
+                ,itemPerPage:p.values.pageSize
+                ,page: p.values.pageNo //页码
+            }
+    }else{
+       ds = p;  
+    }
+    var q = {
+        itemPerPage : ds.itemPerPage || 10, //每页的条数
+        sizeArr : ds.sizeArr ||  [10,20,50],
+        maxLinkShow : ds.maxLinkShow || 5,  //显示的页数
+        itemTotal : ds.itemTotal,      //记录总数
+        page : ds.page || 1,                    //当前页码
+        lang : ds.lang || {
+            allcount : '共<em>%Total%</em>条数据',
+            textmode : '当前 <em>%page%</em>/%maxpage% 页 ', //其他信息模版
+            Prev : '<i class="icon-angle-left"></i>上一页',
+            Next : '下一页<i class="icon-angle-right"></i>',
+            more : "..."
+        },
+        totalPage: ds.totalPage || Math.ceil(ds.itemTotal/ds.itemPerPage)
+    }
+
+    var v,  r,  H = "", k,  B = [],
+        E = q.itemPerPage-0, //每页条数
+        g = q.page-0,        //当前页码
+        G = q.itemTotal,   //总记录数
+        C = q.maxLinkShow-0, //[翻页按钮数]
+        h = q.totalPage;
+
+    if(g>h){
+        g = h;
+    }
+
+    if (h > 0) {
+        var pagesizeHTML = [];
+        if(q.sizeArr && q.sizeArr.length){
+            var reg = new RegExp('(\\s|^)' + E + '(\\s|$)');
+            if(!reg.test(q.sizeArr.join(" "))) q.sizeArr.push(E);
+            q.sizeArr.sort()
+            pagesizeHTML.push(' 每页<select name="pagesize">')
+            for(var xs=0; xs< q.sizeArr.length; xs++) {
+                var _size = q.sizeArr[xs];
+                pagesizeHTML.push('<option value="' + _size + '"' + (E == _size ? ' selected="selected"' : '') +  '>' + q.sizeArr[xs] + '</option>')
+            }
+            pagesizeHTML.push('</select>条 ');
+        }
+        H = '<span class="pagenav-wrapper' + (h === 1 ? "only-one-page" : "") + '"><span class="pagenav-desc">' + 
+            (typeof G !== 'undefined'? q.lang.allcount.replace('%Total%',G):'') + 
+            q.lang.textmode.replace('%page%',g).replace('%maxpage%',h) + pagesizeHTML.join("") +'</span><span class="pagenav-units">';
+        
+        if (h <= C) {
+            for (v = 1; v <= h; v++) {
+                var a,
+                y,
+                j;
+                if (g == v) {
+                    a = "pagenav-current-link pagenav-link";
+                    y = true
+                } else {
+                    a = "pagenav-link";
+                    y = false
+                }
+                j = {
+                    text : v,
+                    index : v,
+                    isCurrent : y,
+                    cls : a
+                };
+                B.push(j)
+            }
+        } else {
+            if (h > C) {
+                var z = C - 3;
+                if (g >= h - 1 || g <= 2) {
+                    z++
+                }
+                var x = Math.floor(z / 2),
+                w = z - x,
+                u = g - 1,
+                t = h - g,
+                m;
+                if (g - 1 > x) {
+                    B.push({
+                        text : q.lang.Prev,
+                        index : g - 1,
+                        isCurrent : false,
+                        cls : "pagenav-link pagenav-link-prev"
+                    })
+                }
+                if (t <= w) {
+                    m = z - t;
+                    B.push({
+                        text : 1,
+                        index : 1,
+                        isCurrent : false,
+                        cls : "pagenav-link"
+                    })
+                } else {
+                    if (u > x) {
+                        m = x;
+                        B.push({
+                            text : 1,
+                            index : 1,
+                            isCurrent : false,
+                            cls : "pagenav-link"
+                        })
+                    } else {
+                        m = u
+                    }
+                }
+                var e = z - m;
+                for (v = 0; v < m; v++) {
+                    var j = {
+                        text : g - m + v,
+                        index : g - m + v,
+                        isCurrent : false,
+                        cls : "pagenav-link"
+                    };
+                    B.push(j)
+                }
+                B.push({
+                    text : g,
+                    index : g,
+                    isCurrent : true,
+                    cls : "pagenav-link pagenav-current-link"
+                });
+                for (v = 1; v <= e; v++) {
+                    var j = {
+                        text : g + v,
+                        index : g + v,
+                        isCurrent : false,
+                        cls : "pagenav-link"
+                    };
+                    B.push(j)
+                }
+                if (t > e) {
+                    B.push({
+                        text : h,
+                        index : h,
+                        isCurrent : g == h ? true : false,
+                        cls : g == h ? "pagenav-link pagenav-current-link" : "pagenav-link"
+                    })
+                }
+                if (t > w) {
+                    B.push({
+                        text : q.lang.Next,
+                        index : g + 1,
+                        isCurrent : false,
+                        cls : "pagenav-link pagenav-link-next"
+                    })
+                }
+            }
+        }
+    } else {
+        H = ""
+    }
+    var l = B.length,
+    A,
+    s = 0,
+    f,
+    F = "",
+    d = false,
+    D = "";
+    for (; s < l; s++) {
+        f = B[s];
+        if (s > 0) {
+            d = B[s - 1]
+        }
+        F = (f.isCurrent ? "<span " : '<a href="javascript:;" ') + 'data-page="' + f.index + '" class="page-' + f.index + " " + f.cls + '">' + f.text + "</" + (f.isCurrent ? "span>" : "a>");
+        if (d && (d.index < f.index - 1)) {
+            H += '<span class="pagenav-more">' + q.lang.more + "</span>"
+        }
+        H += F
+    }
+    H += "</span></span>";
+    return H
+};
 
     //自动定位导航
     exports.autonav = function(arr,classname,defaultnumb){
