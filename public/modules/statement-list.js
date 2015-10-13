@@ -1,13 +1,17 @@
 define(function(require, exports, module) {
 	var Utils = require('utils'),
-		Grid = require('gridBootstrap'),
         form2json = require('form2json'),
         template = require('template'),
-        dialog = require('boxBootstrap'),
 		content = $('#content'),
-		listContainer = $('#grid_list'),
         $form = $("#dataForm"),
-		userParam = {},
+        userParam = {},
+        Table = require('whygrid'),
+        tool = require("why"),
+        rooturl = global_config.serverRoot.replace(/\/+$/,''),
+        apis = {
+            list : rooturl + '/queryWrongRecord',
+            down : rooturl + '/downloadWrongRecord'
+        },
 		_grid;
 
 	function init() {
@@ -15,63 +19,65 @@ define(function(require, exports, module) {
 	}
 
 	function loadData() {
-		_grid = Grid.create({
-			key: 'merchantId',
-			checkbox: false,
-			cols: [{
-				name: '交易流水号',
-				index: 'payOrderId'
-			}, {
-				name: '支付渠道',
-				index: 'payTool'
-			}, {
-				name: '商户订单编号',
-				index: 'merchantOrderId'
-			}, {
-				name: '商户编号',
-				index: 'tradeAmount'
-			}, {
-				name: '商户名称',
-				index: 'tradeTrans'
-            }, {
-                name: '订单日期',
-                index: 'orderTime'
-            }, {
-                name: '对账日期',
-                index: 'checkTime'
-            }, {
-                name: '交易类型',
-                index: 'transaction'
-            }, {
-                name: '货币类型',
-                index: 'currency'
-            }, {
-                name: '订单金额（元）',
-                index: 'orderAmount'
-            }, {
-                name: '处理状态',
-                index: 'orderStatus'
-            }, {
-                name: '差异类型',
-                index: 'differencesType'
-            }, {
-                name: '操作',
-                index: 'tradeTrans'
-			}],
-			url: getUrl(),
-			pagesize: 10,
-			jsonReader: {
-				root: 'data.pageData',
-				page: 'data.pageNo',
-				records: 'data.totalCount'
-			}
-		});
-
-		listContainer.html(_grid.getHtml());
-		_grid.listen('refreshCallback', function(v) {
-			console.log(v);
-		});
-		_grid.load();
+        T = Table('#grid_list',apis.list,{
+            checkRow: false,
+            seachForm: '#dataForm',
+            oldApi:true,
+            pagenav:true,
+            cols: [{
+                    name: '交易流水号',
+                    index: 'payOrderId'
+                }, {
+                    name: '支付渠道',
+                    index: 'payTool'
+                }, {
+                    name: '商户订单编号',
+                    index: 'merchantOrderId'
+                }, {
+                    name: '商户编号',
+                    index: 'tradeAmount'
+                }, {
+                    name: '商户名称',
+                    index: 'tradeTrans'
+                }, {
+                    name: '订单日期',
+                    index: 'orderTime'
+                }, {
+                    name: '对账日期',
+                    index: 'checkTime'
+                }, {
+                    name: '交易类型',
+                    index: 'transaction'
+                }, {
+                    name: '货币类型',
+                    index: 'currency'
+                }, {
+                    name: '订单金额（元）',
+                    index: 'orderAmount'
+                }, {
+                    name: '处理状态',
+                    index: 'orderStatus'
+                }, {
+                    name: '差异类型',
+                    index: 'differencesType'
+                }, {
+                    name: '操作',
+                    index: 'tradeTrans'
+            }],
+            getBaseSearch: function(){
+                var s = tool.QueryString.parse(location.hash.replace(/^\#/g,''));
+                if(typeof s.startDate  == 'undefined' && typeof s.endDate == "undefined"){
+                    s.startDate = tool.dateFormat(new Date(new Date() - (1000*60*60*24*30)),"yyyy-MM-dd 00:00")
+                    s.endDate = tool.dateFormat(new Date(),"yyyy-MM-dd 00:00");
+                    if($("#startDate").val() == "" && $("#endDate").val() == ""){
+                        $("#startDate").val(s.startDate);
+                        $("#endDate").val(s.endDate);
+                    }
+                }
+                return s;
+            }
+        });
+        T.load();
 		registerEvents();
 	}
 
@@ -83,22 +89,6 @@ define(function(require, exports, module) {
 				tag = $el.get(0).tagName.toLowerCase();
 			if (cls && cls.indexOf('fa-calendar') > -1) {
 				$el.parent().siblings().focus();
-			}
-            //查询
-            if (id == 'query-btn') {
-                userParam = $form.form2json();
-                if (userParam) {
-                    //post请求展示数据
-                    _grid.setUrl(getUrl());
-                    _grid.loadData();
-                }
-			}
-            //重置
-			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
-				userParam = {};
-				$form.each("*[name]", function (i, k) {
-                    k.val("")
-                })
 			}
             //新增
             if (id == 'add-btn') {
@@ -119,21 +109,15 @@ define(function(require, exports, module) {
         });
 	}
 
-	function getUrl() {
-		return global_config.serverRoot + '/queryWrongRecord?userId=' + Utils.object2param(userParam);
-	}
-
     function exportExcel() {
-        var a = document.createElement('a');
-        a.href = global_config.serverRoot + '/downloadWrongRecord?userId=' + Utils.object2param(userParam);
-        a.target = '_blank';
-        a.height = 0;
-        a.width = 0;
-        document.body.appendChild(a);
-        var e = document.createEvent('HTMLEvents');
-        e.initEvent('click', true, false);
-        a.dispatchEvent(e);
-        a.remove();
+        var search = T.getSearch();
+        if(typeof search !== "object"){
+            search = tool.QueryString.parse(search);
+        }
+        delete search.pageNumber;
+        delete search.PerPageItemsCount;
+        var url = apis.down + "?" + tool.QueryString.stringify(search);
+        window.open(url)
     }
 
     function showPop(data) {

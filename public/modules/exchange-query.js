@@ -5,6 +5,7 @@ define(function(require, exports, module) {
         template = require('template'),
         art_dialog = require('dialog'),
         formValid = require("bv_valid"),
+        renderSelect = require("renderSelect"),
 		content = $('#content'),
 		listContainer = $('#grid_list'),
         $form = $("#dataForm"),
@@ -40,15 +41,15 @@ define(function(require, exports, module) {
 			jsonReader: {
 				root: 'data.pageData',
 				page: 'data.pageNo',
-				records: 'data.totalCount'
+				records: 'data.totalCnt'
 			}
 		});
-
 		listContainer.html(_grid.getHtml());
 		_grid.listen('refreshCallback', function(v) {
 			console.log(v);
 		});
 		_grid.load();
+        renderSelect($form);
 		registerEvents();
 	}
 
@@ -120,6 +121,7 @@ define(function(require, exports, module) {
             }
         });
         var $el = $(pop.node);
+        renderSelect($el);
         pop.show();
     }
 

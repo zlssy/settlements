@@ -49,24 +49,16 @@
                                         <div class="col-xs-12 col-sm-4">
                                             <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">源币种:</label></div>
                                             <div class="col-sm-9 no-padding">
-                                                <select class="form-control" name="srcCurrencyCode">
+                                                <select class="form-control" name="srcCurrencyCode" dict-name="currencyCode">
                                                     <option value="">全部</option>
-                                                    <option value="RMB">人民币</option>
-                                                    <option value="USD">美元</option>
-                                                    <option value="EUR">欧元</option>
-                                                    <option value="JP">日元</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
                                             <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">目标币种:</label></div>
                                             <div class="col-sm-9 no-padding">
-                                                <select class="form-control" name="targetCurrencyCode">
+                                                <select class="form-control" name="targetCurrencyCode" dict-name="currencyCode">
                                                     <option value="">全部</option>
-                                                    <option value="RMB">人民币</option>
-                                                    <option value="USD">美元</option>
-                                                    <option value="EUR">欧元</option>
-                                                    <option value="JP">日元</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -94,10 +86,8 @@
                                         <div class="col-xs-12 col-sm-4">
                                             <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">状态:</label></div>
                                             <div class="col-sm-9 no-padding">
-                                                <select class="form-control" name="status">
+                                                <select class="form-control" dict-name="exchangeStatus">
                                                     <option value="">全部</option>
-                                                    <option value="1">可用</option>
-                                                    <option value="2">不可用</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -145,13 +135,9 @@
             <label class="control-label col-md-3">源币种:</label>
 
             <div class="col-md-7">
-                <select data-select="category" class="form-control" name="srcCurrencyCode" required="required"
-                        data-def-value="{{= srcCurrencyCode }}">
+                <select class="form-control" name="srcCurrencyCode" required="required"
+                        data-def-value="{{= srcCurrencyCode }}" dict-name="currencyCode">
                     <option value="">全部</option>
-                    <option value="RMB">人民币</option>
-                    <option value="USD">美元</option>
-                    <option value="EUR">欧元</option>
-                    <option value="JP">日元</option>
                 </select>
             </div>
         </div>
@@ -159,13 +145,9 @@
             <label class="control-label col-md-3">目标币种:</label>
 
             <div class="col-md-7">
-                <select data-select="model" class="form-control" name="targetCurrencyCode"  required="required"
-                        data-def-value="{{= targetCurrencyCode }}">
+                <select class="form-control" name="targetCurrencyCode"  required="required"
+                        data-def-value="{{= targetCurrencyCode }}" dict-name="currencyCode">
                     <option value="">全部</option>
-                    <option value="RMB">人民币</option>
-                    <option value="USD">美元</option>
-                    <option value="EUR">欧元</option>
-                    <option value="JP">日元</option>
                 </select>
             </div>
         </div>
@@ -173,10 +155,8 @@
             <label class="control-label col-md-3">status:</label>
 
             <div class="col-md-7">
-                <select data-select="language" class="form-control" name="status"  required="required"
+                <select data-select="language" class="form-control" dict-name="exchangeStatus"  required="required"
                         data-def-value="{{= status }}">
-                    <option value="1">可用</option>
-                    <option value="2">不可用</option>
                 </select>
             </div>
         </div>

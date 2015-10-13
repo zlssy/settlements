@@ -1,6 +1,4 @@
 define(function(require, exports, module) {
-    //var a = require("../js/art_dialog.js");
-    seajs.use(["../css/art_dialog.css","../js/art_dialog.js"])
     var customOpt = {
                 modal: true,
                 fixed: true,
