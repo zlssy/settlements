@@ -6,6 +6,7 @@ define(function(require, exports, module) {
 	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
 	var apis = {
 			list : rooturl + '/queryTradeRecord',
+			typeList: rooturl + '/dataDictionary/dropdownlist',
 			down : rooturl + '/downloadTradeRecord'
 		}
 	var T;
@@ -13,6 +14,8 @@ define(function(require, exports, module) {
 		var msg = typeof e == 'object' ? e.statusText || e.msg || "未知错误!" : e;
 		Box.alert(msg);
 	}
+	var dataTypes = {}
+
 	$(function(){
 		T = Table('#grid_list',apis.list,{
 			checkRow: false,
@@ -21,83 +24,90 @@ define(function(require, exports, module) {
 			jsonReader:{root:'records',page:'data.pageNo',size:'currentItemsCount',records:'totalPage'},// totalCnt totalCount
 			pagenav:true,
 			cols: [{
-					name: '商户订单编号',index: 'merchantOrderId',
+					name: '商户订单编号',index: 'merchantOrderId'
 				},{
-					name: '交易流水号',index: 'payOrderId',
+					name: '交易流水号',index: 'payOrderId'
 				},{
-					name: '支付工具',index: 'payTool',
+					name: '支付工具',index: 'payTool',width: 80, typename:'payChannel'
 				},{
-					name: '订单日期',index: 'orderTime',
+					name: '订单日期',index: 'orderTime'
 				},{
-					name: '产品代码',index: 'productID',
+					name: '产品代码',index: 'productID'
 				},{
-					name: '产品名称',index: 'productName',
+					name: '产品名称',index: 'productName'
 				},{
-					name: '商户编号',index: 'merchantID',
+					name: '商户编号',index: 'merchantID'
 				},{
-					name: '商户名称',index: 'merchantName',
+					name: '商户名称',index: 'merchantName'
 				},{
-					name: '货币种类',index: 'currency',
+					name: '货币种类',index: 'currency',width:80
 				},{
-					name: '订单金额',index: 'orderAmount',
+					name: '订单金额',index: 'orderAmount',width:80
 				},{
-					name: '订单状态',index: 'orderStatus',
+					name: '订单状态',index: 'orderStatus',width:80
 				},
 			],
-			funFixtd: function(x,y,col,data){
-				if(col.index == 'comm'){
-					var html = '';
-					html += '<a data-comm="edit" class="btn btn-xs btn-link">' + '查看/修改' + '</a>'; 
-					//html += '<a data-comm="edit" class="btn btn-xs btn-link">' + '' + '</a>'; 
-					//html += '<a data-comm="del" class="btn btn-xs btn-link">' + '删除' + '</a>'; 
-					return html;
+			// funFixtd: function(x,y,col,data){
+			// 	// if(col.typename){
+			// 	// 	var arr = dataTypes[col.typename]
+			// 	// 	if(arr){
+			// 	// 		for(var i=0; i<arr.length; i++){
+			// 	// 			//if(arr[i].)
+			// 	// 		}
+			// 	// 	}
+			// 	// }
+			// },
+			getBaseSearch: function(){
+				var s = tool.QueryString.parse(location.hash.replace(/^\#/g,''));
+				if(typeof s.startDate  == 'undefined' && typeof s.endDate == "undefined"){
+					s.startDate = tool.dateFormat(new Date(new Date() - (1000*60*60*24*30)),"yyyy-MM-dd 00:00")
+					s.endDate = tool.dateFormat(new Date(),"yyyy-MM-dd 00:00");
+					if($("#startDate").val() == "" && $("#endDate").val() == ""){
+						$("#startDate").val(s.startDate);
+						$("#endDate").val(s.endDate);
+					}
 				}
+				return s;
 			}
 		});
 		bin_comm();
-		T.load();
+		init();
 		//菜单自动定位
 		tool.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
-		$('.datepicker').datepicker({
+		$("#startDate,#endDate").attr('title','双击清除').on("dblclick",function(){$(this).val('')})
+		$('#startDate,#endDate').datetimepicker({
 			autoclose: true,
-			todayHighlight: false
-		})
-		
-		// $("#startDate,#endDate").attr('title','双击清除').on("dblclick",function(){$(this).val('')})
-		// $("#startDate" ).datepicker({
-		// 	//defaultDate: "+1w",
-		// 	changeMonth: true,
-		// 	changeYear: true,
-		// 	onClose: function( selectedDate ) {
-		// 		$( "#endDate" ).datepicker( "option", "minDate", selectedDate );
-		// 	}
-		// })
-		// $("#endDate" ).datepicker({
-		// 	//defaultDate: "+1w",
-		// 	changeMonth: true,
-		// 	changeYear: true,
-		// 	onClose: function( selectedDate ) {
-		// 		$( "#startDate" ).datepicker( "option", "maxDate", selectedDate );
-		// 	}
-		// })
+			todayHighlight: true
+		});
 	})
 
-	//数据操作
-    function datacomm(comm,ids,data){
-        var comms = {
-            'show':{api:apis.show}
-            //,'del':{api:apis.del}
-        }
-        var obj = comms[comm];
-        if(obj){
-            var ids_data = {'ids':ids};
-            $.post(obj.api,$.extend({},ids_data,obj.data,data),null,'json').then(function(data){
-            	if(data.code != 0){throw data.message}
-                Box.alert('操作成功!')
-                T.load();
-            }).then(null,errfun)
-        }else Box.alert('未知操作!')
-    }
+	function init(){
+		var stypes = $("#sform").find('select[data-typename]');
+		var ajaxArr = []
+		for(var i=0; i<stypes.length; i++){
+			+function(){
+				var s = $(stypes[i]);
+				var typename = s.data('typename');
+				ajaxArr.push($.get(apis.typeList,{type:s.data('typename')},function(data){
+					if(data.code != 0){throw data.message}
+					if(data.data && data.data.dataArray){
+						var html = '',arr = data.data.dataArray;
+						dataTypes[typename] = arr;
+						for(var i=0; i<arr.length; i++){
+							var item = arr[i];
+							html += '<option value='+item.code+'>'+item.code+'</option>'
+						}
+					}
+					s.append(html);
+				}))
+			}()
+		}
+		$.when.apply($,ajaxArr).then(function(){
+			T.load();
+		}).then(null,function(e){
+			Box.alert("初始化失败!")
+		})
+	}
 
 	//绑定功能按钮
 	function bin_comm(){

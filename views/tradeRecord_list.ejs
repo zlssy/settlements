@@ -25,7 +25,7 @@
 			.ui-jqgrid .ui-jqgrid-htable th div {height:44px; line-height:20px;}
 			.ui-jqgrid .ui-jqgrid-htable th div .s-ico {line-height:15px;}
 			.ui-jqgrid .ui-jqgrid-htable tbody td {word-wrap: break-word;}
-
+		
 			/* = pagenav分页
 -------------------------------------------------------------- */
 .pagenav {line-height:23px; font-family:'宋体'; font-size:12px; color:#888; vertical-align: top;box-sizing:content-box; vertical-align:middle; height:25px; text-align: right; padding:10px;}
@@ -71,8 +71,8 @@
 									<div class="col-xs-12 col-sm-4">
 										<label class="col-sm-3 no-padding lm-5">清分日期:</label>
 										<div class="col-xs-12 col-sm-9 no-padding">
-										<div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate"  placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
-										<div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" id="endDate" name="endDate" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
+										<div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate"  placeholder="from" data-date-format="yyyy-mm-dd hh:ii" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
+										<div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" id="endDate" name="endDate" placeholder="to" data-date-format="yyyy-mm-dd hh:ii" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
 										</div>
 									</div>
 									<div class="col-xs-12 col-sm-4">
@@ -88,7 +88,7 @@
 									<div class="col-xs-12 col-sm-4">
 										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">支付渠道:</label></div>
 										<div class="col-sm-9 no-padding">
-											<select class="form-control" name="payTool">
+											<select class="form-control" data-typename="payChannel"  name="payTool">
 												<option value="">全部</option>
 											</select>
 										</div>
@@ -97,7 +97,9 @@
 										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">交易状态:</label></div>
 										<div class="col-sm-9">
 										<select class="form-control" name="orderStatus">
-											<option value="">全部</option>
+											<option value="全部">全部</option>
+											<option value="交易成功">交易成功</option>
+											<option value="交易失败">交易失败</option>
 										</select>
 										</div>
 									</div>

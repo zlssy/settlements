@@ -38,7 +38,7 @@ define(function(require, exports, module) {
           dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],
           dayNamesMin: ['日','一','二','三','四','五','六'],
           weekHeader: '周',
-          dateFormat: 'yy-mm-dd',
+          dateFormat: 'yy-mm-dd 00:00',
           firstDay: 1,
           isRTL: false,
           showMonthAfterYear: true,
@@ -358,6 +358,24 @@ define(function(require, exports, module) {
         }
         (typeof(defaultnumb) !== 'undefined') && (typeof(sa) == 'undefined') && (sa = defaultnumb)
         return alist.eq(sa).addClass(classname)
+    }
+
+    exports.dateFormat = function (date,fmt) {
+        var _date = date || (this.getMilliseconds ? this : new Date());
+        fmt = fmt || "yyyy-MM-dd hh:mm:ss"
+        var o = {
+            "M+": _date.getMonth() + 1, //月份 
+            "d+": _date.getDate(), //日 
+            "h+": _date.getHours(), //小时 
+            "m+": _date.getMinutes(), //分 
+            "s+": _date.getSeconds(), //秒 
+            "q+": Math.floor((_date.getMonth() + 3) / 3), //季度 
+            "S": _date.getMilliseconds() //毫秒 
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (_date.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
     }
 
 })
