@@ -28,8 +28,8 @@ define(function(require, exports, module) {
 				},{
 					name: '交易流水号',index: 'payOrderId'
 				},{
-					name: '支付工具',index: 'payTool',width: 80, typename:'payChannel'
-				},{
+				// 	name: '支付工具',index: 'payTool',width: 80, typename:'payChannel'
+				// },{
 					name: '订单日期',index: 'orderTime'
 				},{
 					name: '产品代码',index: 'productID'
