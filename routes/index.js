@@ -69,11 +69,19 @@ router.all('/upload', function(req, res, next){
 	})
 });
 
+router.all('/tradeRecord/list', function(req, res, next){
+	res.render('tradeRecord_list', {
+		title: '交易记录',
+		req: req
+	})
+});
+
 /** get root 放到最后 */
 router.get('/', function(req, res, next) {
-	res.render('index', {
-		title: 'TCL业务清算平台',
-        req: req
-	});
+	// res.render('index', {
+	// 	title: 'TCL业务清算平台',
+ //        req: req
+	// });
+	res.redirect('/tradeRecord/list');
 });
 module.exports = router;

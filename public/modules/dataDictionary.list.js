@@ -1,7 +1,8 @@
 define(function(require, exports, module) {
 	var Table = require('whygrid');
-	var Box = require('boxBootstrap');
+	var Box = window.Box = require('boxBootstrap');
 	var tool = require("why");
+	var D = window.D = require("dialog");
 	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
 	var apis = {
 			list : rooturl + '/dataDictionary/list',
@@ -60,7 +61,7 @@ define(function(require, exports, module) {
         if(obj){
             var ids_data = {'ids':ids};
             $.post(obj.api,$.extend({},ids_data,obj.data,data),null,'json').then(function(data){
-            	if(data.code != 0){throw data.message}
+            	if(data.code != 0){throw data.message || data.msg || "未知错误!"}
                 Box.alert('操作成功!')
                 T.load();
             }).then(null,errfun)
@@ -152,7 +153,7 @@ define(function(require, exports, module) {
 	Edit.showedit = function(id){
 		var o = this;
 		$.get(apis.show,{id:id},null,'json').then(function(data){
-			if(data.code != 0){throw data.message}
+			if(data.code != 0){throw data.message || data.msg || "未知错误!"}
 			o.showDom(data.data)
 		}).then(null,errfun)
 	}
@@ -216,7 +217,7 @@ define(function(require, exports, module) {
 	Edit.save = function(){
 		var saveData = this.getData();
 		$.post(apis.update,saveData,null,'json').then(function(data){
-			if(data.code != 0){throw data.message}
+			if(data.code != 0){throw data.message || data.msg || "未知错误!"}
 			Box.alert("操作成功!");
 			T.load();
 			Edit.Box && Edit.Box.remove();

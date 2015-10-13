@@ -28,7 +28,7 @@
 
 			/* = pagenav分页
 -------------------------------------------------------------- */
-.pagenav {line-height:23px; font-family:'宋体'; font-size:12px; color:#888; vertical-align: top;box-sizing:content-box; vertical-align:middle; height:40px; text-align: right; padding:10px;}
+.pagenav {line-height:23px; font-family:'宋体'; font-size:12px; color:#888; vertical-align: top;box-sizing:content-box; vertical-align:middle; height:25px; text-align: right; padding:10px;}
 .pagenav * {box-sizing:content-box;}
 .pagenav em {font-style: normal;}
 .pagenav a:hover {text-decoration:none;}
@@ -61,7 +61,7 @@
 						<div class="widget-header">
 							<h4 class="widget-title">搜索：</h4>
 							<div class="widget-toolbar">
-							<a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+							<a href="javascript:;" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
 							</div>
 						</div>
 						<div class="widget-body">
@@ -161,7 +161,7 @@
 	</div>
 	<div class="panel panel-primary">
 		<div class="panel-heading">
-			<h3 class="panel-title"><a href="#" class="pull-right addItem"><i class="glyphicon glyphicon-plus"></i></a>字典项</h3>
+			<h3 class="panel-title"><a href="javascript:;" class="pull-right addItem"><i class="glyphicon glyphicon-plus"></i></a>字典项</h3>
 		</div>
 		<div class="panel-body">
 			<div>
@@ -173,37 +173,40 @@
 				</div>
 			</div>
 		</div>
+
+		<!--以下可删除-->
 		<table class="table" style="display:none;">
-		<thead>
-			<tr>
-				<th>字典编码</th>
-				<th>名称(中文)</th>
-				<th>名称(英文)</th>
-				<th>内部数值</th>
-				<th>状态</th>
-				<th style="width:105px;"><a href="#" class="pull-right addItem"><i class="glyphicon glyphicon-plus"></i></a>操作</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><input type="hidden" name="dataInfoId"><input type="text" name="code" class="col-sm-12 input-sm" placeholder="字典编码" title="字典编码"></td>
-				<td><input type="text" name="label_zh" class="col-sm-12 input-sm" placeholder="名称(中文)" title="字典名称(中文)"></td>
-				<td><input type="text" name="label_en" class="col-sm-12 input-sm" placeholder="名称(英文)" title="字典名称(英文)"></td>
-				<td><input type="text" name="innerValue" class="col-sm-12 input-sm" placeholder="内部值" title="内部使用数值"></td>
-				<td>
+			<thead>
+				<tr>
+					<th>字典编码</th>
+					<th>名称(中文)</th>
+					<th>名称(英文)</th>
+					<th>内部数值</th>
+					<th>状态</th>
+					<th style="width:105px;"><a href="javascript:;" class="pull-right addItem"><i class="glyphicon glyphicon-plus"></i></a>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="hidden" name="dataInfoId"><input type="text" name="code" class="col-sm-12 input-sm" placeholder="字典编码" title="字典编码"></td>
+					<td><input type="text" name="label_zh" class="col-sm-12 input-sm" placeholder="名称(中文)" title="字典名称(中文)"></td>
+					<td><input type="text" name="label_en" class="col-sm-12 input-sm" placeholder="名称(英文)" title="字典名称(英文)"></td>
+					<td><input type="text" name="innerValue" class="col-sm-12 input-sm" placeholder="内部值" title="内部使用数值"></td>
+					<td>
+						<div class="btn-group btn-group-xs">
+						<button data-comm="onoff" type="button" class="btn btn-default" title="禁用/启用"><i class="glyphicon glyphicon-ban-circle"></i></button></td>
+						</div>
+					<td>
 					<div class="btn-group btn-group-xs">
-					<button data-comm="onoff" type="button" class="btn btn-default" title="禁用/启用"><i class="glyphicon glyphicon-ban-circle"></i></button></td>
+						<button data-comm="goup" type="button" class="btn btn-default" title="上移"><i class="glyphicon glyphicon-arrow-up"></i></button>
+						<button data-comm="godown" type="button" class="btn btn-default" title="下移"><i class="glyphicon glyphicon-arrow-down"></i></button>
+						<button data-comm="del" type="button" class="btn btn-default" title="删除"><i class="glyphicon glyphicon-remove"></i></button>
 					</div>
-				<td>
-				<div class="btn-group btn-group-xs">
-					<button data-comm="goup" type="button" class="btn btn-default" title="上移"><i class="glyphicon glyphicon-arrow-up"></i></button>
-					<button data-comm="godown" type="button" class="btn btn-default" title="下移"><i class="glyphicon glyphicon-arrow-down"></i></button>
-					<button data-comm="del" type="button" class="btn btn-default" title="删除"><i class="glyphicon glyphicon-remove"></i></button>
-				</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!--end-->
 	</div>
 </div>
 </script>

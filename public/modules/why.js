@@ -38,7 +38,7 @@ define(function(require, exports, module) {
           dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],
           dayNamesMin: ['日','一','二','三','四','五','六'],
           weekHeader: '周',
-          dateFormat: 'yy-mm-dd',
+          dateFormat: 'yy-mm-dd 00:00',
           firstDay: 1,
           isRTL: false,
           showMonthAfterYear: true,
@@ -229,7 +229,7 @@ define(function(require, exports, module) {
             return qsArr.join(this.a)
         }
         var Parse = function(str){
-            var qsArr = str.split(this.a),obj = {}
+            var qsArr = str.replace(/\+/g," ").split(this.a),obj = {}
             for(var i=0; i< qsArr.length; i++){
                 var _arr = qsArr[i].split(this.b)
                 if(_arr.length == 2){
@@ -336,7 +336,7 @@ define(function(require, exports, module) {
     }
 
     //简单翻页模版
-    exports.pageNav=function(a){var c,d,g,f,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,B,x,y,z,A,C,G,D,F,H,I,b={};if(b=a.values&&a.values.totalCount?{itemTotal:a.values.totalCount,itemPerPage:a.values.pageSize,page:a.values.pageNo}:a,c={itemPerPage:b.itemPerPage||10,sizeArr:b.sizeArr||[10,20,50],maxLinkShow:b.maxLinkShow||5,itemTotal:b.itemTotal||0,page:b.page||1,lang:b.lang||{textmode:"共<em>%Total%</em>条数据 当前 <em>%page%</em>/%maxpage% 页 ",Prev:'<i class="icon-angle-left"></i>上一页',Next:'下一页<i class="icon-angle-right"></i>',more:"..."}},f="",h=[],i=c.itemPerPage-0,j=c.page-0,k=c.itemTotal-0,l=c.maxLinkShow-0,m=k%i,n=Math.floor(k/i),o=m?n+1:n,0>=k?g=0:o>j?g=i:(j=o,g=m?m:i),o>0){if(p=[],c.sizeArr&&c.sizeArr.length){for(q=new RegExp("(\\s|^)"+i+"(\\s|$)"),q.test(c.sizeArr.join(" "))||c.sizeArr.push(i),c.sizeArr.sort(),p.push(' 每页<select name="pagesize">'),r=0;r<c.sizeArr.length;r++)s=c.sizeArr[r],p.push('<option value="'+s+'"'+(i==s?' selected="selected"':"")+">"+c.sizeArr[r]+"</option>");p.push("</select>条 ")}if(f='<span class="pagenav-wrapper'+(1===o?"only-one-page":"")+'"><span class="pagenav-desc">'+c.lang.textmode.replace("%page%",j).replace("%maxpage%",o).replace("%Total%",k)+p.join("")+'</span><span class="pagenav-units">',l>=o)for(d=1;o>=d;d++)j==d?(t="pagenav-current-link pagenav-link",u=!0):(t="pagenav-link",u=!1),v={text:d,index:d,isCurrent:u,cls:t},h.push(v);else if(o>l){for(w=l-3,(j>=o-1||2>=j)&&w++,x=Math.floor(w/2),y=w-x,z=j-1,A=o-j,j-1>x&&h.push({text:c.lang.Prev,index:j-1,isCurrent:!1,cls:"pagenav-link pagenav-link-prev"}),y>=A?(B=w-A,h.push({text:1,index:1,isCurrent:!1,cls:"pagenav-link"})):z>x?(B=x,h.push({text:1,index:1,isCurrent:!1,cls:"pagenav-link"})):B=z,C=w-B,d=0;B>d;d++)v={text:j-B+d,index:j-B+d,isCurrent:!1,cls:"pagenav-link"},h.push(v);for(h.push({text:j,index:j,isCurrent:!0,cls:"pagenav-link pagenav-current-link"}),d=1;C>=d;d++)v={text:j+d,index:j+d,isCurrent:!1,cls:"pagenav-link"},h.push(v);A>C&&h.push({text:o,index:o,isCurrent:j==o?!0:!1,cls:j==o?"pagenav-link pagenav-current-link":"pagenav-link"}),A>y&&h.push({text:c.lang.Next,index:j+1,isCurrent:!1,cls:"pagenav-link pagenav-link-next"})}}else f="";for(D=h.length,F=0,H="",I=!1;D>F;F++)G=h[F],F>0&&(I=h[F-1]),H=(G.isCurrent?"<span ":'<a href="javascript:;" ')+'data-page="'+G.index+'" class="page-'+G.index+" "+G.cls+'">'+G.text+"</"+(G.isCurrent?"span>":"a>"),I&&I.index<G.index-1&&(f+='<span class="pagenav-more">'+c.lang.more+"</span>"),f+=H;return f+="</span></span>"};
+    exports.pageNav=function(a){var c,d,f,h,i,j,k,l,m,n,o,p,q,r,s,t,u,z,v,w,x,y,A,E,B,D,F,G,b={};if(b=a.values&&a.values.totalCount?{itemTotal:a.values.totalCount,itemPerPage:a.values.pageSize,page:a.values.pageNo}:a,c={itemPerPage:b.itemPerPage||10,sizeArr:b.sizeArr||[10,20,50],maxLinkShow:b.maxLinkShow||5,itemTotal:b.itemTotal,page:b.page||1,lang:b.lang||{allcount:"共<em>%Total%</em>条数据",textmode:"当前 <em>%page%</em>/%maxpage% 页 ",Prev:'<i class="icon-angle-left"></i>上一页',Next:'下一页<i class="icon-angle-right"></i>',more:"..."},totalPage:b.totalPage||Math.ceil(b.itemTotal/b.itemPerPage)},f="",h=[],i=c.itemPerPage-0,j=c.page-0,k=c.itemTotal,l=c.maxLinkShow-0,m=c.totalPage,j>m&&(j=m),m>0){if(n=[],c.sizeArr&&c.sizeArr.length){for(o=new RegExp("(\\s|^)"+i+"(\\s|$)"),o.test(c.sizeArr.join(" "))||c.sizeArr.push(i),c.sizeArr.sort(),n.push(' 每页<select name="pagesize">'),p=0;p<c.sizeArr.length;p++)q=c.sizeArr[p],n.push('<option value="'+q+'"'+(i==q?' selected="selected"':"")+">"+c.sizeArr[p]+"</option>");n.push("</select>条 ")}if(f='<span class="pagenav-wrapper'+(1===m?"only-one-page":"")+'"><span class="pagenav-desc">'+("undefined"!=typeof k?c.lang.allcount.replace("%Total%",k):"")+c.lang.textmode.replace("%page%",j).replace("%maxpage%",m)+n.join("")+'</span><span class="pagenav-units">',l>=m)for(d=1;m>=d;d++)j==d?(r="pagenav-current-link pagenav-link",s=!0):(r="pagenav-link",s=!1),t={text:d,index:d,isCurrent:s,cls:r},h.push(t);else if(m>l){for(u=l-3,(j>=m-1||2>=j)&&u++,v=Math.floor(u/2),w=u-v,x=j-1,y=m-j,j-1>v&&h.push({text:c.lang.Prev,index:j-1,isCurrent:!1,cls:"pagenav-link pagenav-link-prev"}),w>=y?(z=u-y,h.push({text:1,index:1,isCurrent:!1,cls:"pagenav-link"})):x>v?(z=v,h.push({text:1,index:1,isCurrent:!1,cls:"pagenav-link"})):z=x,A=u-z,d=0;z>d;d++)t={text:j-z+d,index:j-z+d,isCurrent:!1,cls:"pagenav-link"},h.push(t);for(h.push({text:j,index:j,isCurrent:!0,cls:"pagenav-link pagenav-current-link"}),d=1;A>=d;d++)t={text:j+d,index:j+d,isCurrent:!1,cls:"pagenav-link"},h.push(t);y>A&&h.push({text:m,index:m,isCurrent:j==m?!0:!1,cls:j==m?"pagenav-link pagenav-current-link":"pagenav-link"}),y>w&&h.push({text:c.lang.Next,index:j+1,isCurrent:!1,cls:"pagenav-link pagenav-link-next"})}}else f="";for(B=h.length,D=0,F="",G=!1;B>D;D++)E=h[D],D>0&&(G=h[D-1]),F=(E.isCurrent?"<span ":'<a href="javascript:;" ')+'data-page="'+E.index+'" class="page-'+E.index+" "+E.cls+'">'+E.text+"</"+(E.isCurrent?"span>":"a>"),G&&G.index<E.index-1&&(f+='<span class="pagenav-more">'+c.lang.more+"</span>"),f+=F;return f+="</span></span>"};
 
     //自动定位导航
     exports.autonav = function(arr,classname,defaultnumb){
@@ -358,6 +358,24 @@ define(function(require, exports, module) {
         }
         (typeof(defaultnumb) !== 'undefined') && (typeof(sa) == 'undefined') && (sa = defaultnumb)
         return alist.eq(sa).addClass(classname)
+    }
+
+    exports.dateFormat = function (date,fmt) {
+        var _date = date || (this.getMilliseconds ? this : new Date());
+        fmt = fmt || "yyyy-MM-dd hh:mm:ss"
+        var o = {
+            "M+": _date.getMonth() + 1, //月份 
+            "d+": _date.getDate(), //日 
+            "h+": _date.getHours(), //小时 
+            "m+": _date.getMinutes(), //分 
+            "s+": _date.getSeconds(), //秒 
+            "q+": Math.floor((_date.getMonth() + 3) / 3), //季度 
+            "S": _date.getMilliseconds() //毫秒 
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (_date.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
     }
 
 })
