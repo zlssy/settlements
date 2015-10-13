@@ -72,8 +72,6 @@ define(function(require, exports, module) {
 		});
 		bin_comm();
 		init();
-		//菜单自动定位
-		tool.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
 		$("#startDate,#endDate").attr('title','双击清除').on("dblclick",function(){$(this).val('')})
 		$('#startDate,#endDate').datetimepicker({
 			autoclose: true,
@@ -103,7 +101,7 @@ define(function(require, exports, module) {
 			}()
 		}
 		$.when.apply($,ajaxArr).then(function(){
-			T.load();
+			T.load(); //加载列表数据;
 		}).then(null,function(e){
 			Box.alert("初始化失败!")
 		})
