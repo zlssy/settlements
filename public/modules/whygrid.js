@@ -229,7 +229,7 @@ define(function(require, exports, module) {
 			}
 			var pd = {
 				itemTotal:tool.getMapdata(data,jsonReader.records)
-			    ,itemPerPage:tool.getMapdata(data,jsonReader.size)
+			    ,itemPerPage:tool.getMapdata(data,jsonReader.size) || tool.getMapdata(search,prmNames.rows) || 20
 			    ,page: tool.getMapdata(data,jsonReader.page) || tool.getMapdata(search,prmNames.page) || 1 //页码
 			}
 			if(jsonReader.totalPage){

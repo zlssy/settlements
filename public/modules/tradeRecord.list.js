@@ -21,7 +21,7 @@ define(function(require, exports, module) {
 			checkRow: false,
 			seachForm: '#sform',
 			prmNames:{page:"pageNumber",rows:"PerPageItemsCount",sort:"sort",order:"order"},
-			jsonReader:{root:'records',page:'data.pageNo',size:'currentItemsCount',records:'',totalPage:'totalPage'},// totalCnt totalCount
+			jsonReader:{root:'records',page:'data.pageNo',size:'pageSize',records:'totalCnt',totalPage:'totalPage'},// totalCnt totalCount
 			pagenav:true,
 			cols: [{
 					name: '商户订单编号',index: 'merchantOrderId'
@@ -45,7 +45,7 @@ define(function(require, exports, module) {
 					name: '订单金额',index: 'orderAmount',width:80
 				},{
 					name: '订单状态',index: 'orderStatus',width:80
-				},
+				}
 			],
 			// funFixtd: function(x,y,col,data){
 			// 	// if(col.typename){
