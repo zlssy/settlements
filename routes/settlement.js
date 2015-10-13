@@ -111,11 +111,13 @@ if (daili) {
                 res.send(data);
             }
         }, function(e) {
-            next(e)
+            res.json({
+                "code": -100,
+                "msg": err.message || err
+            })
+            //next(e)
         })
     })
-
-    //上传文件
 }
 
 
@@ -219,6 +221,7 @@ router.all('/dataDictionary/dropdownlist', function(req, res, next) {
     })
     res.json(data);
 });
+
 var fileapi = {
     '/clearing/list': "settlement-clearing-list.json",
     '/settleCard/list': 'settle-card-list.json',
@@ -234,15 +237,6 @@ var fileapi = {
     '/reconciliation': 'reconciliation.json',
     '/settleLimit/history': 'settle-card-history.json'
 };
-
-//加载文件数据
-// router.all('/clearing/list',function(req,res,next){
-// 	if(fileapi[req.path]){
-// 		fs.createReadStream(path.resolve(__dirname,'../temp_data/',fileapi[req.path])).pipe(res);
-// 	}else{
-// 		next();
-// 	}
-// });
 
 if (!daili) {
     router.get('/*', function(req, res, next) {
@@ -285,27 +279,6 @@ if (!daili) {
             }
         }
     });
-}
-
-if (!daili) { //代理
-    router.all("/*", function(req, res, next) {
-        var callback = req.query.callback;
-        var obj = {
-            "method": req.method,
-            "uri": daili_url + req.url,
-            "headers": {
-                "userId": userid
-            }
-        };
-        if (req.method === "POST") {
-            obj.form = _.extend({}, req.body)
-        }
-        tool.qrequestStr(obj).done(function(data) {
-            res.send(data);
-        }, function(e) {
-            next(e)
-        })
-    })
 }
 
 module.exports = router;
