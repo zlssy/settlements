@@ -20,8 +20,7 @@ define(function(require, exports, module) {
 		T = Table('#grid_list',apis.list,{
 			checkRow: false,
 			seachForm: '#sform',
-			prmNames:{page:"pageNumber",rows:"PerPageItemsCount",sort:"sort",order:"order"},
-			jsonReader:{root:'records',page:'data.pageNo',size:'pageSize',records:'totalCnt',totalPage:'totalPage'},// totalCnt totalCount
+			oldApi: true, //是否是老接口
 			pagenav:true,
 			cols: [{
 					name: '商户订单编号',index: 'merchantOrderId'
@@ -57,7 +56,7 @@ define(function(require, exports, module) {
 			// 	// 	}
 			// 	// }
 			// },
-			getBaseSearch: function(){
+			getBaseSearch: function(){//默认查询条件
 				var s = tool.QueryString.parse(location.hash.replace(/^\#/g,''));
 				if(typeof s.startDate  == 'undefined' && typeof s.endDate == "undefined"){
 					s.startDate = tool.dateFormat(new Date(new Date() - (1000*60*60*24*30)),"yyyy-MM-dd 00:00")
