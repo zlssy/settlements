@@ -71,13 +71,6 @@ define(function(require, exports, module) {
                     _grid.loadData();
                 }
 			}
-            //重置
-			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
-				userParam = {};
-				$form.each("*[name]", function (i, k) {
-                    k.val("")
-                })
-			}
             //新增
             if (id == 'add-btn') {
                 showPop();
