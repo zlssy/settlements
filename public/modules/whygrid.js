@@ -2,7 +2,6 @@ define(function(require, exports, module) {
 	var _ = require("underscore.min.js") ;
 	var tool = require("why")
 		,qs = tool.QueryString;
-
 	//表头模版
 	var template_hide = '<th<%=col.width ? \' style="width:\' + (col.width+"").replace(/^(\\d*)$/,"$1px") + \'"\' : \'\' %>><div<%=col.index ? \' data-index="\' + _.escape(col.index) + \'"\' : \'\' %><%=col.sortable?\' class="ui-jqgrid-sortable"\':""%>><%-col.name%><%if(col.sortable){%><span class="s-ico" style=""><span oder="asc" class="ui-grid-ico-sort ui-icon-asc ui-icon ui-icon-triangle-1-n ui-sort-ltr ui-state-disabled"></span><span oder="desc" class="ui-grid-ico-sort ui-icon-desc ui-icon ui-icon-triangle-1-s ui-sort-ltr ui-state-disabled"></span></span><%}%></div></th>';
 	//表头全选模板
@@ -14,6 +13,7 @@ define(function(require, exports, module) {
 		prmNames:{page:"pageNo",rows:"pageSize",sort:"sort",order:"order"},
 		jsonReader:{root:'data.pageData',page:'data.pageNo',size:'data.pageSize',records:'data.totalCnt'}// totalCnt totalCount
 	}
+
 	var defOption = {
 		id: 'grid', //容器ID
 		key: 'id',
@@ -44,9 +44,8 @@ define(function(require, exports, module) {
 		html.push('			</thead>')
 		html.push('			<tbody></tbody>')
 		html.push('		</table>')
-		this.option.pagenav && 
-		html.push('		<div class="pagenav g-tr"></div>')
 		html.push('	</div>')
+		this.option.pagenav && html.push('		<div class="pagenav g-tr"></div>')
 		html.push('</div>')
 		var dom = $(html.join(''))
 		dom.find('table thead tr').append(getHeadHtml.call(this,this.option.cols))
@@ -107,7 +106,7 @@ define(function(require, exports, module) {
             return false;
         })
         .on('loading','table,ul.tree',function(){
-                $(this).trigger('colspanMsg',['<div class="g-tc" style="text-align:center;"><i class="g-inlb g-icon-load"></i> 正在加载数据！</div>']).find(':checkbox[data-checkname]').prop('checked',false)
+                $(this).trigger('colspanMsg',['<div class="g-tc" style="text-align:center; height:410px; line-height:410px;"><i class="g-inlb g-icon-load"></i> 正在加载数据！</div>']).find(':checkbox[data-checkname]').prop('checked',false)
                 return false;
             })
         .on('nodata','table,ul.tree',function(){
@@ -173,6 +172,7 @@ define(function(require, exports, module) {
     }
 
 	function Grid(box,apiurl,option){
+		this.listAjax = [];
 		this.box = $(box);
 		this.apiUrl = apiurl;
 		this.option = _.extend({},defOption,option)
@@ -182,7 +182,7 @@ define(function(require, exports, module) {
 	Grid.prototype = {
 		init:function(){
 			this.main = $(getInfoHtml.call(this));
-			this.box.append(this.main);
+			//this.box.append(this.main);
 			this.eventInit();
 			this.box.append(this.main);
 		},
@@ -237,14 +237,15 @@ define(function(require, exports, module) {
 		load:function(){
 			var o = this;
 			var s = JSON.parse(JSON.stringify(this.getSearch()));
-			o.main.find('table.g-table').trigger('loading');
-			$.get(this.apiUrl,s,null,'json').then(function(data){
-				if(data.code != 0){throw data.message}
+			o.loadingTable();
+			o.addAjax($.get(this.apiUrl,s,null,'json')).then(function(data){
+				if(data.code != 0){throw data.msg || data.message || "加载出错!"}
 				o.thieSearch = s; 
 				o.fillTabel(data);
 				o.option.pagenav && o.fillPage(data);
 				o.fix_oder();
 			}).then(null,function(err){
+				if(typeof err == 'object' && err.statusText == 'abort') return;
 				o.main.find('table.g-table').trigger('errdata',[err])
 			})
 		},
@@ -255,7 +256,17 @@ define(function(require, exports, module) {
 			}else{
 				document.location.href = url;
 			}
-		}
+		},
+		//准备异步获取列表数据
+		loadingTable: function(){
+			this.main.find('table.g-table').trigger('loading');
+			var Ajax = this.listAjax.pop();
+			if(Ajax){Ajax.abort();Ajax = null;}
+		},
+		addAjax: function(obj){
+			this.listAjax.push(obj)
+			return obj;
+		} 
 	}
 
 	module.exports = function(a,b,c){
