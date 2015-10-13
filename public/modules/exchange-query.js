@@ -22,7 +22,7 @@ define(function(require, exports, module) {
 			cols: [{
 				name: '源币种',
 				index: 'srcCurrencyCode',
-                width:40
+                width:20
 			}, {
 				name: '目标币种',
 				index: 'targetCurrencyCode'
@@ -101,7 +101,6 @@ define(function(require, exports, module) {
             content:content,
             skin:'ui-dialog-edit-2',
             ok:function(){
-
                 var $form =  $el.find("form");
                 if(!formValid($form)){
                     return false;
