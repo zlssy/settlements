@@ -25,7 +25,7 @@ define(function(require, exports, module) {
                 art_dialog.loading.start("uploading");
             },
             done: function (e, data) {
-                console.log(data);
+                console.log(data) ;
             },
             always:function(e, data){
                 art_dialog.loading.end();
