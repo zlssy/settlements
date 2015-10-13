@@ -11,7 +11,9 @@ define(function(require, exports, module) {
 	var template_hide_fun,template_tr_fun;
 	var _defObj = {
 		prmNames:{page:"pageNo",rows:"pageSize",sort:"sort",order:"order"},
-		jsonReader:{root:'data.pageData',page:'data.pageNo',size:'data.pageSize',records:'data.totalCnt'}// totalCnt totalCount
+		jsonReader:{root:'data.pageData',page:'data.pageNo',size:'data.pageSize',records:'data.totalCnt'},// totalCnt totalCount
+		prmNames_old:{page:"pageNumber",rows:"PerPageItemsCount",sort:"sort",order:"order"},
+		jsonReader_old:{root:'records',page:'data.pageNo',size:'pageSize',records:'totalCnt',totalPage:'totalPage'}// totalCnt totalCount
 	}
 
 	var defOption = {
@@ -21,6 +23,7 @@ define(function(require, exports, module) {
 		height: 400,
 		pagesize: 20,
 		page: 1,
+		oldApi: false, //是否老接口
 		actions: {add: false,del: false,edit: false,view: false,search: false,refresh: false},
 		getBaseSearch: function(){
 			return qs.parse(location.search.replace(/^\?/g,'')); //默认筛选条件
@@ -175,7 +178,12 @@ define(function(require, exports, module) {
 		this.listAjax = [];
 		this.box = $(box);
 		this.apiUrl = apiurl;
-		this.option = _.extend({},defOption,option)
+		var _defoption = _.extend({},defOption);
+		if(option.oldApi){
+			_defoption.prmNames = _defObj.prmNames_old;
+			_defoption.jsonReader = _defObj.jsonReader_old;
+		}
+		this.option = _.extend(_defoption,option)
 		this.init();
 	}
 

@@ -20,8 +20,7 @@ define(function(require, exports, module) {
 		T = Table('#grid_list',apis.list,{
 			checkRow: false,
 			seachForm: '#sform',
-			prmNames:{page:"pageNumber",rows:"PerPageItemsCount",sort:"sort",order:"order"},
-			jsonReader:{root:'records',page:'data.pageNo',size:'pageSize',records:'totalCnt',totalPage:'totalPage'},// totalCnt totalCount
+			oldApi: true, //是否是老接口
 			pagenav:true,
 			cols: [{
 					name: '商户订单编号',index: 'merchantOrderId'
@@ -57,7 +56,7 @@ define(function(require, exports, module) {
 			// 	// 	}
 			// 	// }
 			// },
-			getBaseSearch: function(){
+			getBaseSearch: function(){//默认查询条件
 				var s = tool.QueryString.parse(location.hash.replace(/^\#/g,''));
 				if(typeof s.startDate  == 'undefined' && typeof s.endDate == "undefined"){
 					s.startDate = tool.dateFormat(new Date(new Date() - (1000*60*60*24*30)),"yyyy-MM-dd 00:00")
@@ -72,8 +71,6 @@ define(function(require, exports, module) {
 		});
 		bin_comm();
 		init();
-		//菜单自动定位
-		tool.autonav('#sidebar ul.submenu>li','active').parents('ul.submenu').parent().addClass('active open');
 		$("#startDate,#endDate").attr('title','双击清除').on("dblclick",function(){$(this).val('')})
 		$('#startDate,#endDate').datetimepicker({
 			autoclose: true,
@@ -103,7 +100,7 @@ define(function(require, exports, module) {
 			}()
 		}
 		$.when.apply($,ajaxArr).then(function(){
-			T.load();
+			T.load(); //加载列表数据;
 		}).then(null,function(e){
 			Box.alert("初始化失败!")
 		})
