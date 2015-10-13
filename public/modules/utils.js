@@ -290,6 +290,18 @@ define(function(require, exports, module) {
 		return r;
 	}
 
+	/**
+	 * [once 执行一次的函数]
+	 * @param  {Function} fn [要执行的函数]
+	 * @return {[function]}      [返回无论条用多少次都执行一次的函数]
+	 */
+	function once(fn) {
+		var run = false;
+		return function() {
+			!run && (run = !run, fn.call());
+		}
+	}
+
 	return {
 		object2param: object2param,
 		cookie: {
@@ -309,6 +321,7 @@ define(function(require, exports, module) {
 		},
 		formatJson: formatJson,
 		loadJsonp: loadJsonp,
-		isDate: isDate
+		isDate: isDate,
+		once: once
 	};
 });

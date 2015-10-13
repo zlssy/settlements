@@ -1,18 +1,6 @@
 <script type="text/javascript">
 	try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 </script>
-<%
-	function checkReqUrl(req, a){
-		var arr = 'string' == typeof a ? [a]:a, r = false;
-		for(var i=0;i<arr.length;i++){
-			if(req.url.indexOf(arr[i])>-1){
-				r = true;
-				break;
-			}
-		}
-		return r;
-	}
-%>
 <div id="sidebar" class="sidebar responsive">
 	<script type="text/javascript">
 		try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
@@ -32,13 +20,12 @@
 						<i class="menu-icon fa fa-caret-right"></i>
 						交易明细查询
 					</a>
-
 					<b class="arrow"></b>
 				</li>
 			</ul>
 		</li>
 
-		<li<%if(checkReqUrl(req, 'qingfen-list-query')){%> class="active"<%}%>>
+		<li>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list-alt"></i>
 				<span class="menu-text"> 清分管理 </span>
@@ -49,7 +36,7 @@
 			<b class="arrow"></b>
 
 			<ul class="submenu">
-				<li class="">
+				<li>
 					<a id="qingfen-list-query" href="/qingfen-list-query">
 						<i class="menu-icon fa fa-caret-right"></i>
 						清分单查询
@@ -60,7 +47,7 @@
 			</ul>
 		</li>
 
-		<li<%if(checkReqUrl(req, ['settle-card', 'settle-rule', 'settle-limit', 'settle-query'])){%> class="active"<%}%>>
+		<li>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list-alt"></i>
 				<span class="menu-text"> 结算管理 </span>
@@ -71,28 +58,28 @@
 			<b class="arrow"></b>
 
 			<ul class="submenu">
-				<li class="">
+				<li>
 					<a id="settle-card" href="/settle-card">
 						<i class="menu-icon fa fa-caret-right"></i>
 						结算卡
 					</a>
 					<b class="arrow"></b>
 				</li>
-				<li class="">
+				<li>
 					<a id="settle-rule" href="/settle-rule">
 						<i class="menu-icon fa fa-caret-right"></i>
 						结算规则
 					</a>
 					<b class="arrow"></b>
 				</li>
-				<li class="">
+				<li>
 					<a id="settle-limit" href="/settle-limit">
 						<i class="menu-icon fa fa-caret-right"></i>
 						结算限额
 					</a>
 					<b class="arrow"></b>
 				</li>
-				<li class="">
+				<li>
 					<a id="settle-query" href="/settle-query">
 						<i class="menu-icon fa fa-caret-right"></i>
 						结算单查询
@@ -102,7 +89,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list-alt"></i>
 				<span class="menu-text"> 费率管理 </span>
@@ -113,8 +100,8 @@
 			<b class="arrow"></b>
 
 			<ul class="submenu">
-				<li class="">
-					<a id="rate-query" href="javascript:;">
+				<li>
+					<a id="rate-query" href="/rate">
 						<i class="menu-icon fa fa-caret-right"></i>
 						费率
 					</a>
@@ -124,7 +111,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list-alt"></i>
 				<span class="menu-text"> 汇率管理 </span>
@@ -135,7 +122,7 @@
 			<b class="arrow"></b>
 
 			<ul class="submenu">
-				<li class="">
+				<li>
 					<a id="exchange-query" href="exchange-query">
 						<i class="menu-icon fa fa-caret-right"></i>
 						汇率
@@ -146,7 +133,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-pencil-square-o"></i>
 				<span class="menu-text"> 对账差错处理 </span>
@@ -157,7 +144,7 @@
 			<b class="arrow"></b>
 
 			<ul class="submenu">
-				<li class="">
+				<li>
 					<a id="statement-upload" href="javascript:;">
 						<i class="menu-icon fa fa-caret-right"></i>
 						上传对账单
@@ -165,7 +152,7 @@
 
 					<b class="arrow"></b>
 				</li>
-				<li class="">
+				<li>
 					<a id="statement-query" href="javascript:;">
 						<i class="menu-icon fa fa-caret-right"></i>
 						差错张处理
@@ -176,7 +163,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-tachometer"></i>
 				<span class="menu-text"> 财务统计管理 </span>
@@ -187,7 +174,7 @@
 			<b class="arrow"></b>
 
 			<ul class="submenu">
-				<li class="">
+				<li>
 					<a id="finance-stat" href="javascript:;">
 						<i class="menu-icon fa fa-caret-right"></i>
 						财务统计查询
@@ -198,7 +185,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li>
 			<a href="/dataDictionary" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list"></i>
 				<span class="menu-text"> 数据字典管理 </span>
@@ -209,7 +196,7 @@
 			<b class="arrow"></b>
 
 			<ul class="submenu">
-				<li class="">
+				<li>
 					<a id="dictionary-manage" href="/dataDictionary/list">
 						<i class="menu-icon fa fa-caret-right"></i>
 						数据字典
@@ -220,7 +207,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li>
 			<a href="javascript:;" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list"></i>
 				<span class="menu-text"> 日志管理 </span>
@@ -231,7 +218,7 @@
 			<b class="arrow"></b>
 
 			<ul class="submenu">
-				<li class="">
+				<li>
 					<a id="log-manage" href="javascript:;">
 						<i class="menu-icon fa fa-caret-right"></i>
 						操作日志
@@ -242,7 +229,7 @@
 			</ul>
 		</li>
 
-		<li class="">
+		<li>
 			<a href="/dataDictionary" class="dropdown-toggle">
 				<i class="menu-icon fa fa-list"></i>
 				<span class="menu-text">常用功能</span>
@@ -250,14 +237,14 @@
 			</a>
 			<b class="arrow"></b>
 			<ul class="submenu">
-				<li class="">
+				<li>
 					<a id="dictionary-manage" href="/system/password">
 						<i class="menu-icon fa fa-caret-right"></i>
 						修改密码
 					</a>
 					<b class="arrow"></b>
 				</li>
-				<li class="">
+				<li>
 					<a id="dictionary-manage" href="/logout">
 						<i class="menu-icon fa fa-caret-right"></i>
 						安全退出
