@@ -3,6 +3,7 @@ var express = require('express');
 var request = require('request');
 var tool = require('../lib/tool');
 var fs = require('fs');
+var qs = require('querystring')
 var path = require('path');
 var router = express.Router();
 global._ = require('underscore');
@@ -21,47 +22,80 @@ if (daili) {
         ,'/downloadWrongRecord'
         ,'/settleCard/template'
         ,'/settleCard/import'
+        ,'/reconciliation'
+        ,"/test"
     ]
+
+    var conditions = [
+        '/queryTradeRecord'
+        ,'/downloadTradeRecord'
+        ,'/queryStatisticalRecord'
+        ,'/downloadStatisticalRecord'
+        ,'/queryWrongRecord'
+        ,'/downloadWrongRecord'
+    ]
+
+    router.all(conditions,function(req,res,next){
+        if(req.query.condition){return next()}
+        var comd = {'condition':JSON.stringify(req.query)}
+        req.apiurl = req._parsedUrl.pathname + '?' + qs.stringify(comd)
+        //req.query.condition = JSON.stringify(req.query)
+        next();
+    })
 
     //文件流代理
     router.all(downFiles,function(req,res,next){
-        var obj = {
-            "method": req.method,
-            "uri": daili_url + req.url,
-            "headers": {
-                "userId": userid
-            }
-        }
-        if (req.method === "POST") {
-            obj.form = _.extend({}, req.body)
-        }
-        var r = request(obj);
-        r.on('error',function(e){
-            res.json({
-                'msg' : e.message
-                ,'code' : 1
-            })
+        req.headers.userId = req.session.userId;
+
+        if(req.url == '/test'){
+            var r = request("http://127.0.0.1:3000/settlement/set");
+            req.pipe(r).pipe(res);
             return;
-        })
+        }
+        // var obj = {
+        //     "method": req.method,
+        //     "uri": daili_url + req.url,
+        //     "headers": {
+        //         "userId": userid
+        //     }
+        // }
+        // if (req.method === "POST") {
+        //     obj.form = _.extend({}, req.body)
+        // }
+        var r = request(daili_url + (req.apiurl || req.url));
+        // r.on('error',function(e){
+        //     res.json({
+        //         'msg' : e.message
+        //         ,'code' : 1
+        //     })
+        //     return;
+        // })
+        // 
+
+
         req.pipe(r).pipe(res);
+    })
+
+    router.all("/set",function(req,res,next){
+        console.log(req.headers);
+        return req.pipe(res);
     })
 
     //普通 get set 代理
     router.all("/*", function(req, res, next) {
-        var callback = req.query.callback;
+        //var callback = req.query.callback;
         var obj = {
             "method": req.method,
-            "uri": daili_url + req.url,
+            "uri": daili_url + (req.apiurl || req.url),
             "headers": {
-                "userId": userid
+                "userId": req.session.userId || "0"
             }
         };
         if (req.method === "POST") {
             obj.form = _.extend({}, req.body)
+            //关于dataArray的特殊处理
             if(req.body.dataArray){
                 obj.json = JSON.parse(req.body.dataArray);
-                //delete obj.form.dataArray;
-                //console.log(obj.form)
                 obj.qs = _.extend({},req.query,req.body);
                 delete obj.qs.dataArray;
                 delete obj.form;
@@ -70,6 +104,7 @@ if (daili) {
         tool.qrequestStr(obj).done(function(data) {
             try{
                 var json = JSON.parse(data);
+                if(typeof json.code == "undefined") json.code = 0;
                 res.json(json);
             }catch(e){
                 //res.set('Content-Type','application/json; charset=utf-8');
