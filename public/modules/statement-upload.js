@@ -20,12 +20,13 @@ define(function(require, exports, module) {
             }
         });
         $uploadFile.fileupload({
-            url: global_config.serverRoot + "/reconciliation?payChannel=" + payTool + "&date="+ new Date() +"",
+            url: "",
+            beforeSend: function (e, data) {
+                data.url = global_config.serverRoot + "/reconciliation?payChannel="
+                    + payTool + "&date=" + new Date() + "";
+            },
             start: function () {
                 art_dialog.loading.start("uploading");
-            },
-            done: function (e, data) {
-                console.log(data) ;
             },
             always:function(e, data){
                 art_dialog.loading.end();
@@ -37,12 +38,9 @@ define(function(require, exports, module) {
                         art_dialog.error('上传失败', data.result.msg);
                     }
                 }
-
-
             }
         })
     }
-
 
 	return {
 		init: init
