@@ -470,19 +470,13 @@ define(function(require, exports, module) {
 
     function registerEvents() {
         var evtListener = function(e) {
-            var $el = $(e.target || e.srcElement),
-                cls = $el.attr('class') || '',
-                id = $el.attr('id') || '',
-                tag = $el.get(0).tagName.toLowerCase();
-            if (cls && cls.indexOf('fa-calendar') > -1) {
-                $el.parent().siblings().focus();
-            }
+            var $el = $(e.target || e.srcElement);
             //新增
-            if (id == 'add-btn') {
+            if ($el.closest('#add-btn').length) {
                 showPop();
             }
             //导出
-            if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
+            if ($el.closest('#export-btn').length) {
                 exportExcel();
             }
         };

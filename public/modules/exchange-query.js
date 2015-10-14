@@ -59,14 +59,9 @@ define(function(require, exports, module) {
 
 	function registerEvents() {
 		var evtListener = function(e) {
-			var $el = $(e.target || e.srcElement),
-				cls = $el.attr('class') || '',
-				id = $el.attr('id') || '';
-			if (cls && cls.indexOf('fa-calendar') > -1) {
-				$el.parent().siblings().focus();
-			}
+			var $el = $(e.target || e.srcElement);
             //查询
-            if (id == 'query-btn') {
+            if ($el.closest('#query-btn').length) {
                 userParam = $form.form2json();
                 if (userParam) {
                     //post请求展示数据
@@ -75,7 +70,7 @@ define(function(require, exports, module) {
                 }
 			}
             //新增
-            if (id == 'add-btn') {
+            if ($el.closest('#add-btn').length) {
                 showPop();
             }
 		};
