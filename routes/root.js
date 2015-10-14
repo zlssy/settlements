@@ -6,6 +6,19 @@ var fs = require('fs');
 var path = require('path');
 var router = express.Router();
 
+
+router.use(function(req, res, next){
+    if(setting.proxyPath != ''){
+        res.redirect_ = res.redirect;
+        res.redirect = function(arg){
+            var argarr = Array.prototype.slice.call(arguments,0);
+            argarr[0] = argarr[0].replace(/^\/+/,setting.proxyPath+"/");
+            return res.redirect_.apply(res,argarr);
+        }
+    }
+    next();
+})
+
 //登陆页
 router.get('/login', function(req, res, next){
     res.render('login', {

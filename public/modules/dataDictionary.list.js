@@ -13,7 +13,7 @@ define(function(require, exports, module) {
 		}
 	var T;
 	var errfun = function(e){
-		var msg = typeof e == 'object' ? e.statusText || e.msg || "未知错误!" : e;
+		var msg = typeof e == 'object' ? (e.message || e.msg || e.statusText || "未知错误!") : e;
 		Box.alert(msg);
 	}
 	$(function(){

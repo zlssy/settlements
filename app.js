@@ -8,6 +8,12 @@ var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var test_route = require('./routes/test');
+var _ = require('underscore');
+var local = require('./local');
+global.TCL = {
+  setting : _.extend({},local)
+}
+var setting = global.setting = global.TCL.setting;
 
 var app = express();
 
@@ -23,7 +29,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.enable('trust proxy')
 app.use(express.static(path.join(__dirname, 'public')));
+_.extend(app.locals,{'setting':setting})
 app.use(session({
     secret: "secret"
     ,name: "sessionID"
@@ -34,17 +42,16 @@ app.use(session({
 }))
 
 
-app.use('/', require('./routes/root')); //
+//路由开始 
 
+app.use('/', require('./routes/root')); //路径 权限等
 app.use('/', routes);
 app.use('/users', users);
 app.use('/test', test_route);
-
 //数据字功能路由
 app.use('/dataDictionary',require('./routes/dataDictionary'))
 //系统功能
 app.use('/system',require('./routes/system'));
-
 //接口模拟
 app.use('/settlement',require('./routes/settlement'))
 
