@@ -110,7 +110,7 @@ if (daili) {
                 //res.set('Content-Type','application/json; charset=utf-8');
                 res.send(data);
             }
-        }, function(e) {
+        }, function(err) {
             res.json({
                 "code": -100,
                 "msg": err.message || err

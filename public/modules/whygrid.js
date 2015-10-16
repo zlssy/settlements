@@ -250,7 +250,7 @@ define(function(require, exports, module) {
 			var s = JSON.parse(JSON.stringify(this.getSearch()));
 			o.loadingTable();
 			o.addAjax($.get(this.apiUrl,s,null,'json')).then(function(data){
-				if(data.code != 0){throw data.msg || data.message || "加载出错!"}
+				if(data.code != 0){return $.Deferred().reject(data.msg || data.message || "加载出错!")}
 				o.thieSearch = s; 
 				o.fillTabel(data);
 				o.option.pagenav && o.fillPage(data);

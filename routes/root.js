@@ -44,7 +44,7 @@ router.all('/logout', function(req, res, next){
 //登录判断
 router.use(function(req,res,next){
     if(req.session.userId) return next();
-    if(req.xhr) return req.json({"code": -100,"msg": '登陆超时,请重新登陆!'})
+    if(req.xhr) return res.json({"code": -100,"msg": '登陆超时,请刷新页面重新登陆!'})
 	return res.redirect('/login?rurl='+encodeURIComponent(req.url));
 })
 
