@@ -9,7 +9,14 @@ define(function(require, exports, module) {
 		content = $('#content'),
 		listContainer = $('#grid_list'),
         $form = $("#dataForm"),
+        $grid_list = $("#grid_list"),
 		userParam = {},
+        urls = {
+            dataUrl:global_config.serverRoot + "/exchangeRate/list",
+            delUrl: global_config.serverRoot + "",
+            detailUrl: global_config.serverRoot + "/exchangeRate/detail",
+            addUrl: global_config.serverRoot + "/exchangeRate/addOrUpdate"
+        },
 		_grid;
 	function init() {
 		loadData();
@@ -17,7 +24,7 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		_grid = Grid.create({
-			key: 'merchantId',
+			key: 'id',
 			checkbox: false,
 			cols: [{
 				name: '源币种',
@@ -35,8 +42,20 @@ define(function(require, exports, module) {
 			}, {
 				name: '创建时间',
 				index: 'creationDate'
-			}],
-			url: getUrl(),
+			}, {
+                name: '操作',
+                index: '',
+                format: function(v) {
+                    var html_arr = [
+                        '<div class="ui-pg-div align-center">',
+                        '<span class="glyphicon icon_edit mr20 ace-icon glyphicon-pencil blue" title="编辑"></span>',
+                        //'<span class="glyphicon icon_trash mr20 ace-icon glyphicon-trash blue" title="删除"></span>',
+                        '<div>'
+                    ];
+                    return html_arr.join('')
+                }
+            }],
+			url: urls.dataUrl + '?userId=&' +  Utils.object2param(userParam),
 			pagesize: 10,
 			jsonReader: {
 				root: 'data.pageData',
@@ -45,10 +64,12 @@ define(function(require, exports, module) {
 			}
 		});
 		listContainer.html(_grid.getHtml());
-		_grid.listen('refreshCallback', function(v) {
-			console.log(v);
-		});
 		_grid.load();
+        _grid.listen('renderCallback', function(v) {
+            $('.ui-pg-div *[title]').tooltip({
+                container: 'body'
+            });
+        });
         renderSelect($form.find("[dict-name=currencyCode]"), {
             "value": "code",
             "label": "label"
@@ -58,24 +79,36 @@ define(function(require, exports, module) {
 	}
 
 	function registerEvents() {
-		var evtListener = function(e) {
-			var $el = $(e.target || e.srcElement);
+
+        $form.on("click", function (e) {
+            var $el = $(e.target || e.srcElement);
             //查询
             if ($el.closest('#query-btn').length) {
                 userParam = $form.form2json();
                 if (userParam) {
-                    //post请求展示数据
                     _grid.setUrl(getUrl());
                     _grid.loadData();
                 }
-			}
+            }
             //新增
             if ($el.closest('#add-btn').length) {
                 showPop();
             }
-		};
+        });
 
-		$(document.body).on('click', evtListener);
+        //编辑
+        $grid_list.on("click", ".icon_edit", function () {
+            var $this = $(this),
+                id = $this.closest("tr").attr('data-id');
+            editItem(id);
+        });
+        //删除
+        $grid_list.on("click", ".icon_trash", function () {
+            var $this = $(this),
+                id = $this.closest("tr").attr('data-id');
+            delItem(id);
+        });
+
 		$('.datepicker').datetimepicker({
             format: 'yyyy-mm-dd hh:ii:ss',
 			autoclose: true,
@@ -84,15 +117,31 @@ define(function(require, exports, module) {
 		});
 	}
 
-	function getUrl() {
-		return global_config.serverRoot + '/exchangeRate/list?userId=&' +  Utils.object2param(userParam);
-	}
+    function editItem(id) {
+        $.get(urls.detailUrl + "?id=" + id, function (res) {
+            if (res.code == 0) {
+                showPop(res.data);
+            } else {
+                art_dialog.error('错误', res.msg);
+            }
+        });
+    }
+
+    function delItem(id) {
+        $.post(urls.delUrl + "?id=" + id, function(res){
+            if(res.code == 0){
+                _grid.loadData();
+            } else {
+                art_dialog.error('错误', res.msg);
+            }
+        }, 'json');
+    }
 
     function showPop(data) {
         data = data || {};
-        var content = template('tpleditItem')(data);
+        var content = template('tpleditItem')(data), title = $.isEmptyObject(data) ? "新增汇率" : "编辑汇率";
         var pop = art_dialog.edit({
-            title:"新增汇率",
+            title: title,
             content:content,
             skin:'ui-dialog-edit-2',
             ok:function(){
@@ -120,7 +169,7 @@ define(function(require, exports, module) {
     }
 
     function doCreateItem(data, callback){
-        $.post(global_config.serverRoot + "/exchangeRate/addOrUpdate", data, function(res){
+        $.post(urls.addUrl, data, function(res){
             if(res.code == 0){
                 callback(res);
             } else {

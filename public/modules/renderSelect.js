@@ -6,41 +6,32 @@ define(function(require, exports, module) {
         _cacheDataDictionary = {},
         art_dialog = require('dialog');
 
+    /*
+    * param
+    * el:dom节点
+    * options：{"value":"innerValue","label":"label"}
+    *
+    * */
     function renderSelect(el, options) {
-        var l = arguments.length, dataArray, type = el.attr("dict-name");
+        var l = arguments.length, dataArray, type = el.attr("dict-name"),
+            def_value, value, label;
         getData(type, function (res) {
             dataArray = res.dataArray || [];
             if (dataArray.length) {
                 for (var i = 0; i < dataArray.length; i++) {
-                    el.append('<option value="' +
-                        ((l === 2) ? dataArray[i][options.value] : dataArray[i].innerValue) + '">' +
-                        ((l === 2) ? Xss.inHTMLData(dataArray[i][options.label]) : dataArray[i].label)
-                        + '</option>');
+                    value = ((l === 2) ? dataArray[i][options.value] : dataArray[i].innerValue);
+                    label = ((l === 2) ? Xss.inHTMLData(dataArray[i][options.label]) : dataArray[i].label);
+                    $.each(el, function (i, k) {
+                        def_value = $(k).attr("data-def-value");
+                        if (value == def_value) {
+                            $(k).append('<option selected value="' + value + '">' +label + '</option>');
+                        } else {
+                            $(k).append('<option value="' + value + '">' +label + '</option>');
+                        }
+                    });
                 }
             }
         });
-//        var selctArray = $(el).find("[dict-name]"),
-//            dataArray,
-//            dictName,
-//            flag,
-//            l = arguments.length;
-//        if (selctArray.length) {
-//            $.each(selctArray, function (i, k) {
-//                dictName = $(k).attr("dict-name");
-//                flag = $(k).attr("dict-custom");
-//                getData(dictName, function (res) {
-//                    dataArray = res.dataArray || [];
-//                    if (dataArray.length) {
-//                        for (var i = 0; i < dataArray.length; i++) {
-//                            $(k).append('<option value="' +
-//                                ((l === 2) ? dataArray[i][options.value] : dataArray[i].innerValue) + '">' +
-//                                ((l === 2) ? Xss.inHTMLData(dataArray[i][options.label]) : dataArray[i].label)
-//                                + '</option>');
-//                        }
-//                    }
-//                });
-//            });
-//        }
     }
 
     function getData(type, callback) {
