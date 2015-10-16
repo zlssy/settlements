@@ -107,7 +107,7 @@ define(function(require, exports, module) {
 		a.height = 0;
 		a.width = 0;
 		document.body.appendChild(a);
-		var e = document.createEvent('HTMLEvents');
+		var e = document.createEvent('MouseEvents');
 		e.initEvent('click', true, false);
 		a.dispatchEvent(e);
 		a.remove();

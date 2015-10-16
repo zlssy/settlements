@@ -13,6 +13,9 @@
 		<link href='<%-setting.filePath%>/css/datepicker.min.css' rel="stylesheet" />
 		<link href='<%-setting.filePath%>/css/bootstrap-datetimepicker.min.css' rel="stylesheet" />
 		<link href='<%-setting.filePath%>/css/ui.jqgrid.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/art_dialog.css' rel="stylesheet" />
+    	<link href='<%-setting.filePath%>/css/dialog.css' rel="stylesheet" />
+		<link href='<%-setting.filePath%>/css/jquery.fileupload.css' rel="stylesheet" />
 		<%- include('public/header') %>
 		<style>
 			.lm-5{
@@ -111,6 +114,7 @@
 								</div>
 							</div>
 							<div class="row">
+								<form onsubmit="return false">
 								<div class="col-md-6">
 									<button id="query-btn" class="btn btn-info btn-sm" type="button">
 										<i class="ace-icon fa fa-check bigger-110"></i>
@@ -126,15 +130,17 @@
 										<i class="ace-icon fa fa-plus bigger-110 white"></i>
 										添加
 									</button>
-									<button id="import-btn" class="btn btn-info btn-sm" type="button">
+									<button id="import-btn" class="btn btn-primary j-btn-upload fileinput-button btn-info btn-sm" type="button">
 										<i class="ace-icon fa fa-file-excel-o bigger-110 white"></i>
 										批量导入
+										<input type="file" name="file" tabindex="-1">
 									</button>
 									<button id="downtemplate-btn" class="btn btn-info btn-sm" type="button">
 										<i class="ace-icon fa fa-download bigger-110 white"></i>
 										下载模板
 									</button>
 								</div>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -214,7 +220,7 @@
 </script>
 
 <script id="importTpl" type="text/html">
-<iframe id="importFrm" src="<%-setting.filePath%>/upload" style="width:100%; height:100; overflow:hidden; border:none; padding:0; margin:0;"></iframe>
+
 </script>
 <%- include('public/footscript1') %>
 <%- include('public/footscript2') %>
@@ -225,7 +231,8 @@
 <script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
 <script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
 <script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
-
+<script src="<%-setting.filePath%>/js/art_dialog.js"></script>
+<script src="<%-setting.filePath%>/js/jquery.fileupload.js"></script>
 
 <!-- process enter -->
 <script>
