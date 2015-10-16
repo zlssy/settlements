@@ -55,7 +55,7 @@ define(function(require, exports, module) {
                     return html_arr.join('')
                 }
             }],
-			url: urls.dataUrl + '?userId=&' +  Utils.object2param(userParam),
+			url: getUrl(),
 			pagesize: 10,
 			jsonReader: {
 				root: 'data.pageData',
@@ -125,6 +125,10 @@ define(function(require, exports, module) {
                 art_dialog.error('错误', res.msg);
             }
         });
+    }
+
+    function getUrl() {
+        return  urls.dataUrl + '?userId=&' +  Utils.object2param(userParam);
     }
 
     function delItem(id) {
