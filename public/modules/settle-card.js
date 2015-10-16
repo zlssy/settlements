@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 		Box = require('boxBootstrap'),
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
+		art_dialog = require('dialog'),
 
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
@@ -16,7 +17,7 @@ define(function(require, exports, module) {
 			key: 'id',
 			cols: [{
 				name: '商户编号',
-				index: 'id'
+				index: 'merchantId'
 			}, {
 				name: '状态',
 				index: 'settleCardStatus'
@@ -332,7 +333,7 @@ define(function(require, exports, module) {
 	 * @return {[type]} [description]
 	 */
 	function getUrl() {
-		return global_config.serverRoot + 'settleCard/list?userId=' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'settleCard/list?userId=&' + Utils.object2param(userParam);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
@@ -377,37 +378,62 @@ define(function(require, exports, module) {
 		a.height = 0;
 		a.width = 0;
 		document.body.appendChild(a);
-		var e = document.createEvent('HTMLEvents');
+		var e = document.createEvent('MouseEvents');
 		e.initEvent('click', true, false);
 		a.dispatchEvent(e);
 		a.remove();
 	}
 
 	function importExcel() {
-		var opt = {};
-		opt.message = importTpl;
-		opt.buttons = {
-			"save": {
-				label: '<i class="ace-icon fa fa-check"></i> 上传',
-				className: 'btn-sm btn-success',
-				callback: function() {
-					var ctx = $('#importFrm').contents(),
-						fd = ctx.find('#file'),
-						fdv = fd.val();
-					if (fdv) {
-						ctx.find('#form').submit();
-					} else {
-						Box.alert('请先选择要上传的文件~')
-						return false;
-					}
-				}
-			},
-			"cancel": {
-				label: '取消',
-				className: 'btn-sm'
-			}
-		};
-		showDialog(opt);
+		// var opt = {};
+		// opt.message = importTpl;
+		// opt.buttons = {
+		// 	"save": {
+		// 		label: '<i class="ace-icon fa fa-check"></i> 上传',
+		// 		className: 'btn-sm btn-success',
+		// 		callback: function(e, dialog) {
+		// 			var fd = $('#file'),
+		// 				fdv = fd.val();
+		// 			if (fdv) {
+		// 				fd.fileupload({
+		// 					url: "",
+		// 					beforeSend: function(e, data) {
+		// 						data.url = global_config.serverRoot + "/settleCard/import?userId=" + "&t=" + Math.random();
+		// 					},
+		// 					start: function() {
+		// 						art_dialog.loading.start("uploading");
+		// 					},
+		// 					always: function(e, data) {
+		// 						art_dialog.loading.end();
+		// 						if (data.result) {
+		// 							(typeof data.result === "string") && (data.result = JSON.parse(data.result));
+		// 							if (data.result.code == 0) {
+		// 								art_dialog.error('导入成功', data.result.msg);
+		// 							} else {
+		// 								art_dialog.error('导入失败', data.result.msg);
+		// 							}
+		// 						}
+		// 					}
+		// 				});
+		// 				return false;
+		// 			} else {
+		// 				Box.alert('请先选择要上传的文件~');
+		// 			}
+		// 			return false;
+		// 		}
+		// 	},
+		// 	"cancel": {
+		// 		label: '取消',
+		// 		className: 'btn-sm'
+		// 	}
+		// };
+		// showDialog(opt);
+		// $('#file').ace_file_input({
+		// 	style: 'well',
+		// 	btn_choose: '点击上传文件',
+		// 	btn_change: '已选文件如下：',
+		// 	droppable: true
+		// });
 	}
 
 	/**
@@ -464,8 +490,25 @@ define(function(require, exports, module) {
 		$('#downtemplate-btn').on('click', function() {
 			download();
 		});
-		$('#import-btn').on('click', function() {
-			importExcel();
+		$('#import-btn').fileupload({
+			url: "",
+			beforeSend: function(e, data) {
+				data.url = global_config.serverRoot + "/settleCard/import?userId=" + "&t=" + Math.random();
+			},
+			start: function() {
+				art_dialog.loading.start("uploading");
+			},
+			always: function(e, data) {
+				art_dialog.loading.end();
+				if (data.result) {
+					(typeof data.result === "string") && (data.result = JSON.parse(data.result));
+					if (data.result.code == 0) {
+						art_dialog.error('导入成功', data.result.msg);
+					} else {
+						art_dialog.error('导入失败', data.result.msg);
+					}
+				}
+			}
 		});
 	}
 
@@ -483,7 +526,7 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val();
 		if (commercialId) {
-			newParam.commercialId = encodeURIComponent(commercialId);
+			newParam.commercialIds = encodeURIComponent(commercialId);
 		}
 		if (issuer) {
 			newParam.issuer = encodeURIComponent(issuer);
@@ -494,10 +537,10 @@ define(function(require, exports, module) {
 		if (cardNumber) {
 			newParam.cardNumber = encodeURIComponent(cardNumber);
 		}
-		if (cardType) {
+		if (cardType != '0') {
 			newParam.cardType = cardType;
 		}
-		if (status) {
+		if (status != '0') {
 			newParam.status = status;
 		}
 		if (isDate(effectiveDateStart)) {
@@ -514,17 +557,24 @@ define(function(require, exports, module) {
 		}
 
 		for (var k in newParam) {
-			if (newParam[k] != userParam[k]) {
+			if (newParam[k] !== userParam[k]) {
+				newchange = true;
+				break;
+			} else {
+				delete userParam[k];
+			}
+		}
+		for (var k in userParam) {
+			if (userParam.hasOwnProperty(k)) {
 				newchange = true;
 				break;
 			}
 		}
-		if (newchange) {
-			userParam = newParam;
-		} else {
+		if (!newchange) {
 			Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
+		userParam = newParam;
 		return true;
 	}
 

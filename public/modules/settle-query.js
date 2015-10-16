@@ -107,7 +107,7 @@ define(function(require, exports, module) {
 		a.height = 0;
 		a.width = 0;
 		document.body.appendChild(a);
-		var e = document.createEvent('HTMLEvents');
+		var e = document.createEvent('MouseEvents');
 		e.initEvent('click', true, false);
 		a.dispatchEvent(e);
 		a.remove();
@@ -261,17 +261,24 @@ define(function(require, exports, module) {
 		}
 
 		for (var k in newParam) {
-			if (newParam[k] != userParam[k]) {
+			if (newParam[k] !== userParam[k]) {
+				newchange = true;
+				break;
+			} else {
+				delete userParam[k];
+			}
+		}
+		for (var k in userParam) {
+			if (userParam.hasOwnProperty(k)) {
 				newchange = true;
 				break;
 			}
 		}
-		if (newchange) {
-			userParam = newParam;
-		} else {
+		if (!newchange) {
 			Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
+		userParam = newParam;
 		return true;
 	}
 

@@ -174,7 +174,7 @@ define(function(require, exports, module) {
 	function render(data) {
 		var d, col, colfn, colval, atr, wstr, xsscheck,
 			html = [];
-		if (data) {
+		if (data && data.length) {
 			this.data = data;
 			for (var i = 0; i < data.length; i++) {
 				d = data[i];
@@ -197,9 +197,12 @@ define(function(require, exports, module) {
 				}
 				html.push('</tr>');
 			};
-			this.setContent(html.join(''));
-			this.trigger('renderCallback', this);
+		} else {
+			var colNum = this.cols.length + (this.checkbox ? 1 : 0);
+			html.push('<tr><td colspan="' + colNum + '" style="height:40px; line-height:40px;"><p class="text-info center">当前条件下没有检索到数据</p></td></tr>')
 		}
+		this.setContent(html.join(''));
+		this.trigger('renderCallback', this);
 	}
 
 	function updatePager() {
@@ -207,6 +210,10 @@ define(function(require, exports, module) {
 			to = from + this.pagesize - 1;
 		if (this.page === this.totalPage) {
 			to = this.total;
+		}
+		if (0 == this.total) {
+			from = 0;
+			to = 0;
 		}
 		this.controls.nPageBtn.val(this.page);
 		this.controls.totalPageView.html(this.totalPage);
@@ -232,9 +239,15 @@ define(function(require, exports, module) {
 					self.jsonReader.records && (self.total = getMapData(json, self.jsonReader.records));
 					if (self.total) {
 						self.totalPage = Math.ceil(self.total / self.pagesize);
+					} else {
+						self.totalPage = 0;
 					}
 					self.updatePager();
 				} else {
+					self.page = 1;
+					self.totalPage = 0;
+					self.total = 0;
+					self.updatePager();
 					self.trigger('ajaxError', json);
 				}
 			},
@@ -486,9 +499,16 @@ define(function(require, exports, module) {
 			}
 		});
 		this.controls.lastPageBtn.off().on('click', function(e) {
-			console.log(e);
 			if (!$(this).hasClass('ui-state-disabled')) {
 				self.setUrl(Utils.url.replaceParam('pageNo', self.totalPage, self.getUrl(), true));
+				loadData.call(self);
+			}
+		});
+		this.controls.nPageBtn.off().on('keydown', function(e) {
+			var code = e.keyCode;
+			if (13 == code) {
+				var page = $(this).val() - 0 || 1;
+				self.setUrl(Utils.url.replaceParam('pageNo', page, self.getUrl(), true));
 				loadData.call(self);
 			}
 		});
