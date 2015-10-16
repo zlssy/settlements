@@ -5,12 +5,12 @@ var tool = require('../lib/tool');
 var fs = require('fs');
 var qs = require('querystring')
 var path = require('path');
+var _ = require('underscore');
 var router = express.Router();
-global._ = require('underscore');
 
 //代理
 var daili = true; //是否启用代理
-var daili_url = "http://testtclpay.tclclouds.com/settlement";
+var daili_url = setting.apiUrl || "http://testtclpay.tclclouds.com/settlement";
 var userid = 12345;
 
 if (daili) {
