@@ -16,7 +16,7 @@ define(function(require, exports, module) {
 			key: 'id',
 			cols: [{
 				name: '商户编号',
-				index: 'id'
+				index: 'merchantId'
 			}, {
 				name: '状态',
 				index: 'settleCardStatus'
@@ -332,7 +332,7 @@ define(function(require, exports, module) {
 	 * @return {[type]} [description]
 	 */
 	function getUrl() {
-		return global_config.serverRoot + 'settleCard/list?userId=' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'settleCard/list?userId=&' + Utils.object2param(userParam);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
@@ -390,16 +390,22 @@ define(function(require, exports, module) {
 			"save": {
 				label: '<i class="ace-icon fa fa-check"></i> 上传',
 				className: 'btn-sm btn-success',
-				callback: function() {
+				callback: function(e, dialog) {
 					var ctx = $('#importFrm').contents(),
 						fd = ctx.find('#file'),
-						fdv = fd.val();
+						fdv = fd.val(),
+						upload = $('#importFrm')[0].contentWindow.upload || function() {};
 					if (fdv) {
-						ctx.find('#form').submit();
+						// ctx.find('#form').submit();
+						upload(function() {
+							console.log('success', dialog);
+						}, function() {
+							console.log('failure', dialog);
+						});
 					} else {
-						Box.alert('请先选择要上传的文件~')
-						return false;
+						Box.alert('请先选择要上传的文件~');
 					}
+					return false;
 				}
 			},
 			"cancel": {
@@ -483,7 +489,7 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val();
 		if (commercialId) {
-			newParam.commercialId = encodeURIComponent(commercialId);
+			newParam.commercialIds = encodeURIComponent(commercialId);
 		}
 		if (issuer) {
 			newParam.issuer = encodeURIComponent(issuer);
@@ -494,10 +500,10 @@ define(function(require, exports, module) {
 		if (cardNumber) {
 			newParam.cardNumber = encodeURIComponent(cardNumber);
 		}
-		if (cardType) {
+		if (cardType != '0') {
 			newParam.cardType = cardType;
 		}
-		if (status) {
+		if (status != '0') {
 			newParam.status = status;
 		}
 		if (isDate(effectiveDateStart)) {
@@ -514,17 +520,24 @@ define(function(require, exports, module) {
 		}
 
 		for (var k in newParam) {
-			if (newParam[k] != userParam[k]) {
+			if (newParam[k] !== userParam[k]) {
+				newchange = true;
+				break;
+			} else {
+				delete userParam[k];
+			}
+		}
+		for (var k in userParam) {
+			if (userParam.hasOwnProperty(k)) {
 				newchange = true;
 				break;
 			}
 		}
-		if (newchange) {
-			userParam = newParam;
-		} else {
+		if (!newchange) {
 			Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
+		userParam = newParam;
 		return true;
 	}
 

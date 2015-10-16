@@ -40,12 +40,13 @@
 <script src='<%-setting.filePath%>/js/bootstrap-datetimepicker.min.js'></script>
 <script src='<%-setting.filePath%>/js/jquery.jqGrid.min.js'></script>
 <script src='<%-setting.filePath%>/js/grid.locale-cn.js'></script>
-
+<script src="<%-setting.filePath%>/js/jquery.fileupload.js"></script>
 
 <!-- process enter -->
 <script>
 seajs.use('upload', function(m){
 	m.init();
+	window.upload = m.upload;
 });
 </script>
 <%- include('public/footer') %>
