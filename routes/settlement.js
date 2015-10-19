@@ -22,6 +22,7 @@ if (daili) {
         ,'/downloadWrongRecord'
         ,'/settleCard/template'
         ,'/settleCard/import'
+        ,'/settleCard/importReturnJson'
         ,'/reconciliation'
         ,"/test"
     ]

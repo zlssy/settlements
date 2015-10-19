@@ -493,7 +493,7 @@ define(function(require, exports, module) {
 		$('#import-btn').fileupload({
 			url: "",
 			beforeSend: function(e, data) {
-				data.url = global_config.serverRoot + "/settleCard/import?userId=" + "&t=" + Math.random();
+				data.url = global_config.serverRoot + "/settleCard/importReturnJson?userId=" + "&t=" + Math.random();
 			},
 			start: function() {
 				art_dialog.loading.start("uploading");
@@ -503,7 +503,30 @@ define(function(require, exports, module) {
 				if (data.result) {
 					(typeof data.result === "string") && (data.result = JSON.parse(data.result));
 					if (data.result.code == 0) {
-						art_dialog.error('导入成功', data.result.msg);
+						if (data.result.data.Failed == 0) {
+							art_dialog.error('导入成功', data.result.msg);
+							_grid.loadData();
+							console.log('reload data grid.');
+						} else {
+							var html = [],
+								d;
+							html.push('<div class="col-xs-12 no-padding" style="height:200px; overflow-x:hidden; overflow-y:auto;">');
+							html.push('<table class="table table-striped table-bordered table-hover no-padding">');
+							html.push('<thead><tr><th>编号</th><th>状态</th><th>描述</th></tr></thead>');
+							html.push('<tbody>');
+							for (var i = 0; i < data.result.data.dataArray.length; i++) {
+								d = data.result.data.dataArray[i];
+								html.push('<tr>');
+								html.push('<td>' + (i + 1) + '</td>');
+								html.push('<td>' + d.uploadStatus + '</td>');
+								html.push('<td>' + d.comment + '</td>');
+								html.push('</tr>');
+							}
+							html.push('</tbody>');
+							html.push('</table>');
+							html.push('</div>');
+							art_dialog.error('导入失败', html.join(''));
+						}
 					} else {
 						art_dialog.error('导入失败', data.result.msg);
 					}

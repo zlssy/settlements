@@ -62,7 +62,7 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: '',
 				format: function(v) {
-					return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa glyphicon-euro blue" title="付款确认"></span></div>';
+					return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认">付款确认</a></div>';
 				}
 			}],
 			url: getUrl(),
@@ -78,7 +78,7 @@ define(function(require, exports, module) {
 			$('.ui-pg-div *[title]').tooltip({
 				container: 'body'
 			});
-			$('.ui-pg-div .glyphicon-euro').on('click', function() {
+			$('.ui-pg-div .confirm').on('click', function() {
 				Box.confirm('是否要确认付款？', function(v) {
 					if (v) {
 						confirmPay(_grid.getSelectedRow());
