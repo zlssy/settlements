@@ -29,37 +29,37 @@ define(function(require, exports, module) {
 			key: 'merchantId',
 			checkbox: false,
 			cols: [{
-				name: '商户ID',
+				name: '商户编码',
 				index: 'merchantId'
 			}, {
-				name: '流水号',
+				name: '账户',
 				index: 'accountNumber'
 			}, {
 				name: '清算日期',
 				index: 'clearingDate'
 			}, {
-				name: '交易金额',
+				name: '交易总金额',
 				index: 'tradeAmount'
 			}, {
-				name: '交易笔数',
+				name: '交易总笔数',
 				index: 'tradeTrans'
 			}, {
-				name: '退还金额',
+				name: '退款总金额',
 				index: 'refundAmount'
 			}, {
-				name: '退换笔数',
+				name: '退款总笔数',
 				index: 'refundTrans'
 			}, {
-				name: '成本',
+				name: '交易成本',
 				index: 'cost'
 			}, {
-				name: '服务费',
+				name: '交易手续费',
 				index: 'serviceCharge'
 			}, {
-				name: '清算量',
+				name: '结算总金额',
 				index: 'settleAmount'
 			}, {
-				name: '收益',
+				name: '毛利润',
 				index: 'profit'
 			}, {
 				name: '状态',
@@ -79,12 +79,12 @@ define(function(require, exports, module) {
 			console.log(v);
 		});
 		_grid.load();
-		getDictionaryFromServer('clearingStatus', function(json){
-			if('0' == json.code){
+		getDictionaryFromServer('clearingStatus', function(json) {
+			if ('0' == json.code) {
 				dictionaryCollection.statusArr = json.data && json.data.dataArray || [];
 				setSelect('statusArr', doms.qfstatus);
 			}
-		}, function(e){
+		}, function(e) {
 			// report
 		});
 		registerEvents();

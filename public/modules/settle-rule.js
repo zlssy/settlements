@@ -27,7 +27,7 @@ define(function(require, exports, module) {
 		_grid = Grid.create({
 			key: 'id',
 			cols: [{
-				name: '商户编号',
+				name: '账户编号',
 				index: 'accountNumber'
 			}, {
 				name: '结算卡选择方式',
