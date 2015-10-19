@@ -86,7 +86,7 @@ define(function(require, exports, module) {
 				var s = $(stypes[i]);
 				var typename = s.data('typename');
 				ajaxArr.push($.get(apis.typeList,{type:s.data('typename')},function(data){
-					if(data.code != 0){throw data.message}
+					if(data.code != 0){$.Deferred().reject(data.message || data.msg || "未知错误!")}
 					if(data.data && data.data.dataArray){
 						var html = '',arr = data.data.dataArray;
 						dataTypes[typename] = arr;
