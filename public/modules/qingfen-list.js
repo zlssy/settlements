@@ -33,7 +33,12 @@ define(function(require, exports, module) {
 				index: 'merchantId'
 			}, {
 				name: '账户',
-				index: 'accountNumber'
+				index: 'accountNumber',
+				format: function(v, ov){
+					if(!ov){
+						return ' '
+					}
+				}
 			}, {
 				name: '清算日期',
 				index: 'clearingDate'
