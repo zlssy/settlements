@@ -85,6 +85,7 @@ if (daili) {
     //普通 get set 代理
     router.all("/*", function(req, res, next) {
         //var callback = req.query.callback;
+ //       if(~req.url.indexOf('queryTradeRecord') && ((Math.random()*1000)>>0) % 2){return next(new Error("test error"))}
         var obj = {
             "method": req.method,
             "uri": daili_url + (req.apiurl || req.url),
@@ -116,6 +117,7 @@ if (daili) {
                 "code": -100,
                 "msg": err.message || err
             })
+            console.error(err);
             //next(e)
         })
     })

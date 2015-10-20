@@ -116,7 +116,15 @@ define(function(require, exports, module) {
                 $(this).trigger('colspanMsg',['<div class="g-tc" style="text-align:center;">暂无数据！</div>'])
                 return false;
             })
-        .on('errdata','table,ul.tree',function(e,errmsg){
+        .on('errdata','table,ul.tree',function(e,err){
+        		var errmsg="";
+        		if(typeof err == "object"){
+        			errmsg += err.status ? "status:" + err.status : '';
+        			errmsg += err.statusText ? " statusText:" + err.statusText : '';
+        			errmsg += err.responseText ? " responseText:" + err.responseText : '';
+        		}else{
+        			errmsg = err;
+        		}
                 $(this).trigger('colspanMsg',['<div class="g-tc g-red"><i class="icon-cancel-circled"></i> 出错：' + tool.HTML.Encode(errmsg) + '</div>'])
                 return false;
             })

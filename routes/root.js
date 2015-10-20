@@ -27,8 +27,21 @@ router.get('/login', function(req, res, next){
 });
 
 router.post('/login', function(req, res, next){
-    req.session.userId = 12345;
-    res.redirect(req.query.rurl || '/');
+    if(req.body.username !== 'admin' || req.body.password !== "P@ssw0rd"){
+        var msg;
+        if(!msg && req.body.username == '') msg = "用户名不能为空!";
+        if(!msg && req.body.password == '') msg = "密码不能为空!";
+        console.log(msg);
+        res.render('login', {
+            title: '登录 - TCL业务清算平台',
+            errmsg: msg || '用户名或密码错误!',
+            body: req.body
+        });
+        console.log(req.body)
+    }else{
+        req.session.userId = 'admin';
+        res.redirect(req.query.rurl || '/');
+    }
 });
 
 //注销
