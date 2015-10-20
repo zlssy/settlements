@@ -27,20 +27,25 @@ router.get('/login', function(req, res, next){
 });
 
 router.post('/login', function(req, res, next){
-    if(req.body.username !== 'admin' || req.body.password !== "P@ssw0rd"){
-        var msg;
-        if(!msg && req.body.username == '') msg = "用户名不能为空!";
-        if(!msg && req.body.password == '') msg = "密码不能为空!";
-        console.log(msg);
+    var msg;
+    if(!msg && req.body.username == '') msg = "用户名不能为空!";
+    if(!msg && req.body.password == '') msg = "密码不能为空!";
+    var userobj;
+    for(var i=0; i<setting.users.length; i++){
+        if(req.body.username === setting.users[i][0] && req.body.password === setting.users[i][1]){
+            userobj = setting.users[i];
+            break;
+        }
+    }
+    if(userobj){
+        req.session.userId = userobj[0];
+        res.redirect(req.query.rurl || '/');
+    }else{
         res.render('login', {
             title: '登录 - TCL业务清算平台',
             errmsg: msg || '用户名或密码错误!',
             body: req.body
         });
-        console.log(req.body)
-    }else{
-        req.session.userId = 'admin';
-        res.redirect(req.query.rurl || '/');
     }
 });
 
