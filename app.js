@@ -25,12 +25,12 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-//app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger("short",{skip: function (req, res) { return res.statusCode < 400 }}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.enable('trust proxy')
-app.use(express.static(path.join(__dirname, 'public')));
 _.extend(app.locals,{'setting':setting})
 app.use(session({
     secret: "secret"
@@ -92,7 +92,7 @@ app.use(function(err, req, res, next) {
       error: {}
     });
   }
-  console.error(err);
+  if(!err.status || err.status >= 500)  console.error(err);
 });
 
 
