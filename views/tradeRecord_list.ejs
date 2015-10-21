@@ -69,14 +69,19 @@
 								<form class="form" id="sform">
 								<div class="row">
 									<div class="col-xs-12 col-sm-4">
-										<label class="col-sm-3 no-padding lm-5">清分日期:</label>
+										<label class="col-sm-3 no-padding lm-5">交易日期:</label>
 										<div class="col-xs-12 col-sm-9 no-padding">
-										<div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate" readonly placeholder="from" data-date-format="yyyy-mm-dd hh:ii" /><label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label></div></div>
-										<div class="col-sm-6 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" id="endDate" name="endDate" readonly placeholder="to" data-date-format="yyyy-mm-dd hh:ii" /><label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label></div></div>
+										<div class="input-group">
+											<input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate" placeholder="from" data-date-format="yyyy-mm-dd hh:ii" />
+											<label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+											<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+											<input type="text" class="input-sm form-control datepicker" id="endDate" name="endDate" placeholder="to" data-date-format="yyyy-mm-dd hh:ii" />
+											<label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+										</div>
 										</div>
 									</div>
 									<div class="col-xs-12 col-sm-4">
-										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">订单编号:</label></div>
+										<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">商户订单编号:</label></div>
 										<div class="col-sm-9"><input type="text" name="merchantOrderId" class="form-control col-sm-5 input-sm"></div>
 									</div>
 									<div class="col-xs-12 col-sm-4">
