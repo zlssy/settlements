@@ -70,11 +70,7 @@ define(function(require, exports, module) {
                 container: 'body'
             });
         });
-        renderSelect($form.find("[dict-name=currencyCode]"), {
-            "value": "code",
-            "label": "label"
-        });
-        renderSelect($form.find("[dict-name=exchangeStatus]"));
+        getSelect($form);
 		registerEvents();
 	}
 
@@ -166,12 +162,16 @@ define(function(require, exports, module) {
             }
         });
         $el = $(pop.node);
-        renderSelect($el.find("[dict-name=currencyCode]"), {
+        getSelect($el);
+        pop.show();
+    }
+
+    function getSelect(parent) {
+        renderSelect(parent.find("[dict-name=currencyCode]"), {
             "value": "code",
             "label": "label"
         });
-        renderSelect($el.find("[dict-name=exchangeStatus]"));
-        pop.show();
+        renderSelect(parent.find("[dict-name=exchangeStatus]"));
     }
 
     function doCreateItem(data, callback){
