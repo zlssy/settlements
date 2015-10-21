@@ -143,8 +143,10 @@ define(function(require, exports, module) {
 
     function showPop(data) {
         data = data || {};
-        var content = template('tpleditItem')(data), title = $.isEmptyObject(data) ? "新增汇率" : "编辑汇率";
-        var pop = art_dialog.edit({
+        var content = template('tpleditItem')(data),
+            title = $.isEmptyObject(data) ? "新增汇率" : "编辑汇率",
+            pop, $el;
+        pop = art_dialog.edit({
             title: title,
             content:content,
             skin:'ui-dialog-edit-2',
@@ -163,7 +165,7 @@ define(function(require, exports, module) {
             cancel:function(){
             }
         });
-        var $el = $(pop.node);
+        $el = $(pop.node);
         renderSelect($el.find("[dict-name=currencyCode]"), {
             "value": "code",
             "label": "label"
