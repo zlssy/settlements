@@ -205,8 +205,8 @@ define(function(require, exports, module) {
 		if (jyend) {
 			newParam.tranDateEnd = jyend;
 		}
-		if (qfstatus) {
-			newParam.status = qfstatus;
+		if (qfstatus != '0') {
+			newParam.statusInt = qfstatus;
 		}
 		if (commercialId) {
 			newParam.commercialId = commercialId;

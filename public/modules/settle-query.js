@@ -250,8 +250,8 @@ define(function(require, exports, module) {
 		if (settleStatementIds) {
 			newParam.settleStatementIds = settleStatementIds;
 		}
-		if (status) {
-			newParam.status = status;
+		if (status != '0') {
+			newParam.settleStatus = status;
 		}
 		if (settleDateStart) {
 			newParam.settleDateStart = settleDateStart;

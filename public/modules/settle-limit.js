@@ -492,6 +492,7 @@ define(function(require, exports, module) {
 			businessLimitFloor = $("#businessLimitFloor").val(),
 			businessLimitCeiling = $("#businessLimitCeiling").val(),
 			businessLimit = $("#businessLimit").val(),
+			businessTypeInt = $('#businessTypeInt').val(),
 			legalPersonLimitFloor = $("#legalPersonLimitFloor").val(),
 			legalPersonLimitCeiling = $("#legalPersonLimitCeiling").val(),
 			legalPersonLimit = $("#legalPersonLimit").val();
@@ -504,6 +505,9 @@ define(function(require, exports, module) {
 		}
 		if (district) {
 			newParam.district = district;
+		}
+		if(businessTypeInt !='0'){
+			newParam.businessTypeInt = businessTypeInt;
 		}
 		if (businessLimitFloor) {
 			newParam.businessLimitFloor = businessLimitFloor;

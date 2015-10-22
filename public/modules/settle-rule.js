@@ -220,10 +220,10 @@ define(function(require, exports, module) {
 		if (fexpirationDate) {
 			data.expirationDate = fexpirationDate;
 		}
-		if(fruleType){
+		if (fruleType) {
 			data.ruleType = fruleType;
 		}
-		if(fruleCardMethod){
+		if (fruleCardMethod) {
 			data.ruleCardMethod = fruleCardMethod;
 		}
 		if (ftZeroLimit) {
@@ -287,14 +287,14 @@ define(function(require, exports, module) {
 		if (data.longestSettle) {
 			$("#flongestSettle").val(data.longestSettle)
 		}
-		if(data.ruleCardMethod){
+		if (data.ruleCardMethod) {
 			$('#fruleCardMethod').val(data.ruleCardMethod)
 		}
-		if(data.ruleType){
+		if (data.ruleType) {
 			$('#fruleType').val(data.ruleType);
 		}
-		if(data.status){
-			$('input[name="fstatus"][value="'+data.status+'"]').prop('checked', true);
+		if (data.status) {
+			$('input[name="fstatus"][value="' + data.status + '"]').prop('checked', true);
 		}
 		if (data.effectiveDate) {
 			$("#feffectiveDate").val(data.effectiveDate)
@@ -526,13 +526,13 @@ define(function(require, exports, module) {
 		if (commercialId) {
 			newParam.commercialId = encodeURIComponent(commercialId);
 		}
-		if (type) {
+		if (type != '0') {
 			newParam.type = type;
 		}
-		if (status) {
+		if (status != '0') {
 			newParam.status = status;
 		}
-		if (cardType) {
+		if (cardType != '0') {
 			newParam.cardType = encodeURIComponent(cardType);
 		}
 		if (Utils.isDate(createTimeStart)) {
