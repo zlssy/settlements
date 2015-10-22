@@ -70,11 +70,7 @@ define(function(require, exports, module) {
                 container: 'body'
             });
         });
-        renderSelect($form.find("[dict-name=currencyCode]"), {
-            "value": "code",
-            "label": "label"
-        });
-        renderSelect($form.find("[dict-name=exchangeStatus]"));
+        getSelect($form);
 		registerEvents();
 	}
 
@@ -143,8 +139,10 @@ define(function(require, exports, module) {
 
     function showPop(data) {
         data = data || {};
-        var content = template('tpleditItem')(data), title = $.isEmptyObject(data) ? "新增汇率" : "编辑汇率";
-        var pop = art_dialog.edit({
+        var content = template('tpleditItem')(data),
+            title = $.isEmptyObject(data) ? "新增汇率" : "编辑汇率",
+            pop, $el;
+        pop = art_dialog.edit({
             title: title,
             content:content,
             skin:'ui-dialog-edit-2',
@@ -163,13 +161,17 @@ define(function(require, exports, module) {
             cancel:function(){
             }
         });
-        var $el = $(pop.node);
-        renderSelect($el.find("[dict-name=currencyCode]"), {
+        $el = $(pop.node);
+        getSelect($el);
+        pop.show();
+    }
+
+    function getSelect(parent) {
+        renderSelect(parent.find("[dict-name=currencyCode]"), {
             "value": "code",
             "label": "label"
         });
-        renderSelect($el.find("[dict-name=exchangeStatus]"));
-        pop.show();
+        renderSelect(parent.find("[dict-name=exchangeStatus]"));
     }
 
     function doCreateItem(data, callback){
