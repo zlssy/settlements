@@ -572,26 +572,14 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val(),
 			creationDateStart = doms.creationDateStart.val(),
-			creationDateEnd = doms.creationDateEnd.val();
-
+			creationDateEnd = doms.creationDateEnd.val();		
+		
 		if (ids) {
 			newParam.ids = ids;
 		}
 		if (ownerIds) {
 			newParam.ownerIds = ownerIds;
-		}
-		if (chargeTypeInt) {
-			newParam.chargeTypeInt = chargeTypeInt;
-		}
-		if (chargeSystemPropertyInt) {
-			newParam.chargeSystemPropertyInt = chargeSystemPropertyInt;
-		}
-		if (chargeStatusInt) {
-			newParam.chargeStatusInt = chargeStatusInt;
-		}
-		if (chargeServiceTypeInt) {
-			newParam.chargeServiceTypeInt = chargeServiceTypeInt;
-		}
+		}		
 		if (effectiveDateStart) {
 			newParam.effectiveDateStart = effectiveDateStart;
 		}
@@ -610,7 +598,19 @@ define(function(require, exports, module) {
 		if (creationDateEnd) {
 			newParam.creationDateEnd = creationDateEnd;
 		}
-
+		if(chargeTypeInt!='0'){
+			newParam.chargeTypeInt = chargeTypeInt;
+		}
+		if(chargeSystemPropertyInt!='0'){
+			newParam.chargeSystemPropertyInt = chargeSystemPropertyInt;
+		}
+		if(chargeStatusInt!='0'){
+			newParam.chargeStatusInt = chargeStatusInt;
+		}
+		if(chargeServiceTypeInt!='0'){
+			newParam.chargeServiceTypeInt = chargeServiceTypeInt;
+		}
+		
 		for (var k in newParam) {
 			if (newParam[k] !== userParam[k]) {
 				newchange = true;
@@ -628,7 +628,7 @@ define(function(require, exports, module) {
 		if (!newchange) {
 			Box.alert('您的查询条件并没有做任何修改.');
 			return false;
-		}
+		}		
 		userParam = newParam;
 		return true;
 	}
