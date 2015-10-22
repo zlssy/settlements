@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 		var html = [];
 		html.push('<div class="ui-jqgrid ui-widget ui-widget-content ui-corner-all">')
 		html.push('	<div class="ui-state-default ui-jqgrid-hdiv">')
-		html.push('		<table class="g-table ui-jqgrid-htable" style="width:100%;">')
+		html.push('		<table class="g-table ui-jqgrid-htable table-hover" style="width:100%;">')
 		html.push('			<thead>')
 		html.push('				<tr class="g-tc ui-jqgrid-labels"></tr>')
 		html.push('			</thead>')
