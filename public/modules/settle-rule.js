@@ -469,7 +469,7 @@ define(function(require, exports, module) {
 	}
 
 	function getUrl() {
-		return global_config.serverRoot + 'settleRule/list?userId=' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'settleRule/list?userId=&' + Utils.object2param(userParam);
 	}
 
 	function registerEvents() {
@@ -524,16 +524,16 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val();
 		if (commercialId) {
-			newParam.commercialId = encodeURIComponent(commercialId);
+			newParam.merchantIds = encodeURIComponent(commercialId);
 		}
 		if (type != '0') {
-			newParam.type = type;
+			newParam.ruleType = type;
 		}
 		if (status != '0') {
 			newParam.status = status;
 		}
 		if (cardType != '0') {
-			newParam.cardType = encodeURIComponent(cardType);
+			newParam.ruleCardMethod = encodeURIComponent(cardType);
 		}
 		if (Utils.isDate(createTimeStart)) {
 			newParam.createTimeStart = createTimeStart;
