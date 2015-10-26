@@ -152,7 +152,9 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						submitData(data);
+						if(!submitData(data)){
+							return false;
+						}
 					}
 				}
 			},
@@ -185,9 +187,13 @@ define(function(require, exports, module) {
 			autoclose: true,
 			todayHighlight: true
 		});
-		$('.bootbox input, .bootbox select').on('change', function(e) {
+		$("#fownerId").on('change',function(e){
 			validate($(this));
 		});
+		/*$('.bootbox input, .bootbox select').on('change', function(e) {
+			validate($(this));
+		});*/
+		
 	}
 
 	/**
@@ -213,9 +219,27 @@ define(function(require, exports, module) {
 					pass = false;
 					elp.addClass('has-error');
 				}
+			} else if(el.attr('id')=='fownerId')
+			{
+				if(el.val().trim()){
+					elp.removeClass('has-error');
+				} else {
+					pass = false;
+					elp.addClass('has-error');
+				}
 			}
+			
 		} else {
-			$('.bootbox input').each(function(i, v) {
+			if($('#fownerId').val().trim())
+			{
+				$('#fownerId').parents('.form-group:first').removeClass('has-error');
+			}
+			else
+			{
+				pass = false;
+				$('#fownerId').parents('.form-group:first').addClass('has-error');
+			}
+			/*$('.bootbox input').each(function(i, v) {
 				var $el = $(this),
 					$p = $el.parents('.form-group:first'),
 					isInt = $el.data('int'),
@@ -236,7 +260,8 @@ define(function(require, exports, module) {
 						$p.addClass('has-error');
 					}
 				}
-			});
+			});*/
+			
 		}
 		return pass;
 	}
@@ -385,22 +410,36 @@ define(function(require, exports, module) {
 			arr[i].transactionCeiling = ftransactionCeiling[i + start];
 		}
 		data.dataArray = JSON.stringify(arr);
-
+		var pass = true;
 		$.ajax({
 			url: global_config.serverRoot + 'clearingCharge/addOrUpdate',
 			method: 'post',
 			data: data,
+			async:false,
 			success: function(json) {
 				if ('0' == json.code) {
 					_grid.loadData();
 				} else {
-					Box.alert('数据保存失败！');
+					if(json.code == '106' || json.code == '107'){
+						pass = false;
+						$("#fownerId").parents('.form-group:first').addClass('has-error');
+						alert('所有者编号不存在，数据保存失败！');						
+					}
+					else if(json.code == '109'){
+						pass = false;
+						$("#fownerId").parents('.form-group:first').addClass('has-error');
+						alert('所有者编号重复，数据保存失败！');
+					}
+					else{
+						Box.alert('数据保存失败！');
+					}
 				}
 			},
 			error: function(json) {
 				Box.alert('数据保存失败~');
 			}
 		})
+		return pass;
 	}
 
 	//box dialog init
@@ -469,6 +508,7 @@ define(function(require, exports, module) {
 			setTimeout(function() {
 				console.log('retry');
 				fn.apply(context, args);
+				
 			}, 10);
 			return;
 		}
