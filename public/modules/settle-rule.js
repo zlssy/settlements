@@ -27,8 +27,8 @@ define(function(require, exports, module) {
 		_grid = Grid.create({
 			key: 'id',
 			cols: [{
-				name: '账户编号',
-				index: 'accountNumber'
+				name: '商户编号',
+				index: 'merchantId'
 			}, {
 				name: '结算卡选择方式',
 				index: 'settleCardMethod'
@@ -165,6 +165,8 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					fillData(json.data);
+				} else if (-100 == json.code) {
+					location.reload();
 				}
 			},
 			error: function(e) {
@@ -249,6 +251,8 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					_grid.loadData();
+				} else if (-100 == json.code) {
+					location.reload();
 				} else {
 					Box.alert('数据保存失败！');
 				}
@@ -382,6 +386,7 @@ define(function(require, exports, module) {
 				var $el = $(this),
 					$p = $el.parents('.form-group:first'),
 					isInt = $el.data('int'),
+					isEmpty = $el.data('empty'),
 					isDate = $el.hasClass('datepicker');
 				if (isDate) {
 					if (Utils.isDate($el.val())) {
@@ -399,9 +404,37 @@ define(function(require, exports, module) {
 						$p.addClass('has-error');
 					}
 				}
+				if (isEmpty) {
+					if ('' != $el.val().trim()) {
+						$p.removeClass('has-error');
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+					}
+				}
 			});
 		}
 		return pass;
+	}
+
+	/**
+	 * [arr2map 数组转map]
+	 * @param  {[Array]} arr [要转的数组]
+	 * @param  {[String]} key [作为key的字段名称]
+	 * @param  {[String]} val [作为value的字段名称]
+	 * @return {[Object]}     [Object]
+	 */
+	function arr2map(arr, key, val) {
+		if (!key || !val || 0 == arr.length) {
+			return {};
+		}
+		var r = {};
+		for (var i = 0; i < arr.length; i++) {
+			if (undefined != arr[i][key] && undefined != arr[i][val]) {
+				r[arr[i][key]] = arr[i][val];
+			}
+		}
+		return r;
 	}
 
 	/**
@@ -418,7 +451,10 @@ define(function(require, exports, module) {
 				title_html: true
 			};
 		opt.message = Utils.formatJson(viewTpl, {
-			data: d
+			data: d,
+			ruleCardType: arr2map(dictionaryCollection['ruleCardTypeArr'], 'innerValue', 'label'),
+			ruleType: arr2map(dictionaryCollection['ruleTypeArr'], 'innerValue', 'label'),
+			status: arr2map(dictionaryCollection['statusArr'], 'innerValue', 'label')
 		});
 		opt.buttons = {
 			'ok': {

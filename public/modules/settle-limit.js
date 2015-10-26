@@ -241,6 +241,8 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					fillData(json.data);
+				} else if (-100 == json.code) {
+					location.reload();
 				}
 			},
 			error: function(e) {
@@ -311,6 +313,7 @@ define(function(require, exports, module) {
 				var $el = $(this),
 					$p = $el.parents('.form-group:first'),
 					isInt = $el.data('int'),
+					isEmpty = $el.data('empty'),
 					isDate = $el.hasClass('datepicker');
 				if (isDate) {
 					if (Utils.isDate($el.val())) {
@@ -328,9 +331,37 @@ define(function(require, exports, module) {
 						$p.addClass('has-error');
 					}
 				}
+				if (isEmpty) {
+					if ('' != $el.val().trim()) {
+						$p.removeClass('has-error');
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+					}
+				}
 			});
 		}
 		return pass;
+	}
+
+	/**
+	 * [arr2map 数组转map]
+	 * @param  {[Array]} arr [要转的数组]
+	 * @param  {[String]} key [作为key的字段名称]
+	 * @param  {[String]} val [作为value的字段名称]
+	 * @return {[Object]}     [Object]
+	 */
+	function arr2map(arr, key, val) {
+		if (!key || !val || 0 == arr.length) {
+			return {};
+		}
+		var r = {};
+		for (var i = 0; i < arr.length; i++) {
+			if (undefined != arr[i][key] && undefined != arr[i][val]) {
+				r[arr[i][key]] = arr[i][val];
+			}
+		}
+		return r;
 	}
 
 	/**
@@ -357,9 +388,12 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					opt.message = Utils.formatJson(viewTpl, {
-						data: json.data
+						data: json.data,
+						businessType: arr2map(dictionaryCollection['businessTypeArr'], 'innerValue', 'label')
 					});
 					Box.dialog(opt);
+				} else if (-100 == json.code) {
+					location.reload();
 				} else {
 					// report
 				}
@@ -377,6 +411,8 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					showHistory(json.data.pageData);
+				} else if (-100 == json.code) {
+					location.reload();
 				}
 			},
 			error: function(json) {
@@ -506,7 +542,7 @@ define(function(require, exports, module) {
 		if (district) {
 			newParam.district = district;
 		}
-		if(businessTypeInt !='0'){
+		if (businessTypeInt != '0') {
 			newParam.businessTypeInt = businessTypeInt;
 		}
 		if (businessLimitFloor) {

@@ -243,6 +243,8 @@ define(function(require, exports, module) {
 						self.totalPage = 0;
 					}
 					self.updatePager();
+				} else if (-100 == json.code) {
+					location.reload();
 				} else {
 					self.page = 1;
 					self.totalPage = 0;

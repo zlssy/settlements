@@ -283,7 +283,7 @@ define(function(require, exports, module) {
 	function isDate(d) {
 		var r;
 		try {
-			r = !!Date.parse(d);
+			r = !!Date.parse(d.replace(/-/g, '/'));
 		} catch (e) {
 			r = false;
 		}

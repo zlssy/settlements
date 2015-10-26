@@ -152,24 +152,37 @@ define(function(require, exports, module) {
 				}
 			}
 		} else {
-			if (!this.sxsjDom) {
-				this.sxsjDom = $('#sxsj');
-				this.sxsjDomP = this.sxsjDom.parents('.form-group:first');
-				this.xxsjDom = $('#xxsj');
-				this.xxsjDomP = this.xxsjDom.parents('.form-group:first');
-			}
-			if (!isDate(this.sxsjDom.val())) {
-				pass = false;
-				this.sxsjDomP.addClass('has-error');
-			} else {
-				this.sxsjDomP.removeClass('has-error');
-			}
-			if (!isDate(this.xxsjDom.val())) {
-				pass = false;
-				this.xxsjDomP.addClass('has-error');
-			} else {
-				this.xxsjDomP.removeClass('has-error');
-			}
+			$('.bootbox input').each(function(i, v) {
+				var $el = $(this),
+					$p = $el.parents('.form-group:first'),
+					isInt = $el.data('int'),
+					isEmpty = $el.data('empty'),
+					isDate = $el.hasClass('datepicker');
+				if (isDate) {
+					if (Utils.isDate($el.val())) {
+						$p.removeClass('has-error');
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+					}
+				}
+				if (isInt) {
+					if ($.isNumeric($el.val())) {
+						$p.removeClass('has-error');
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+					}
+				}
+				if (isEmpty) {
+					if ('' != $el.val().trim()) {
+						$p.removeClass('has-error');
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+					}
+				}
+			});
 		}
 		return pass;
 	}
@@ -198,6 +211,9 @@ define(function(require, exports, module) {
 		}
 		if (data.userName) {
 			$('#khm').val(data.userName);
+		}
+		if (data.issuer) {
+			$('#fissuer').val(data.issuer);
 		}
 		if (data.priority) {
 			$('#yxj').val(data.priority);
@@ -232,6 +248,7 @@ define(function(require, exports, module) {
 			priority = $('#yxj').val(),
 			status = $('#zt').val(),
 			cardType = $('#lx').val(),
+			fissuer = $('#fissuer').val(),
 			effectiveDate = $('#sxsj').val(),
 			expirationDate = $('#xxsj').val();
 		if (merchantId) {
@@ -258,6 +275,7 @@ define(function(require, exports, module) {
 		if (expirationDate) {
 			data.expirationDate = expirationDate;
 		}
+		data.issuer = fissuer;
 		$.ajax({
 			url: global_config.serverRoot + 'settleCard/addOrUpdate',
 			method: 'post',
@@ -265,6 +283,9 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					_grid.loadData();
+					Box.alert('数据保存成功.');
+				} else if (-100 == json.code) {
+					location.reload();
 				} else {
 					Box.alert('数据保存失败！');
 				}
@@ -287,6 +308,8 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					showHistory(json.data.pageData);
+				} else if (-100 == json.code) {
+					location.reload();
 				}
 			},
 			error: function(json) {

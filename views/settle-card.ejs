@@ -93,22 +93,20 @@
 								<div class="col-xs-12 col-sm-6">
 								 <label class="col-sm-3 no-padding lm-5">生效时间:</label>
 								 <div class="col-sm-9 no-padding">
-								 	<div class="col-sm-6">
-								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="effectiveDateStart" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
-								 	</div>
-								 	<div class="col-sm-6">
-								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="effectiveDateEnd" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 	<div class="col-sm-12">
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="effectiveDateStart" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+								 		<input type="text" class="input-sm form-control datepicker" id="effectiveDateEnd" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
 								 	</div>
 								 </div>
 								</div>
 								<div class="col-xs-12 col-sm-6">
 								 <label class="col-sm-3 no-padding lm-5">失效时间:</label>
 								 <div class="col-sm-9 no-padding">
-								 	<div class="col-sm-6">
-								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="expirationDateStart" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
-								 	</div>
-								 	<div class="col-sm-6">
-								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="expirationDateEnd" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+								 	<div class="col-sm-12">
+								 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="expirationDateStart" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+								 		<input type="text" class="input-sm form-control datepicker" id="expirationDateEnd" data-date-format="yyyy-mm-dd hh:ii:ss" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
 								 	</div>
 								 </div>
 								</div>
@@ -130,11 +128,11 @@
 										<i class="ace-icon fa fa-plus bigger-110 white"></i>
 										添加
 									</button>
-									<button id="import-btn" class="btn btn-primary j-btn-upload fileinput-button btn-info btn-sm" type="button">
+									<a id="import-btn" class="btn btn-primary j-btn-upload fileinput-button btn-info btn-sm">
 										<i class="ace-icon fa fa-file-excel-o bigger-110 white"></i>
 										批量导入
 										<input type="file" name="file" tabindex="-1">
-									</button>
+									</a>
 									<button id="downtemplate-btn" class="btn btn-info btn-sm" type="button">
 										<i class="ace-icon fa fa-download bigger-110 white"></i>
 										下载模板
@@ -163,7 +161,7 @@
 	<div class="col-xs-12 col-sm-6 form-group">
 		<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户编号:</label>
 		<div class="col-sm-9">
-			<input type="text" id="shbh" class="form-control col-sm-5 input-sm">
+			<input type="text" id="shbh" class="form-control col-sm-5 input-sm" placeholder="必须填写" data-empty='true'>
 		</div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
@@ -183,7 +181,15 @@
 	<div class="col-xs-12 col-sm-6 form-group">
 		<label class="col-sm-3 control-label no-padding lm-5" for="yxj">优先级:</label>
 		<div class="col-sm-9">
-			<input type="text" id="yxj" class="form-control col-sm-5 input-sm">
+			<input type="text" id="yxj" class="form-control col-sm-5 input-sm" placeholder="数字" data-int="true">
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12 col-sm-6 form-group">
+		<label class="col-sm-3 control-label no-padding lm-5" for="fissuer">开户行:</label>
+		<div class="col-sm-9">
+			<input type="text" id="fissuer" class="form-control col-sm-5 input-sm">
 		</div>
 	</div>
 </div>
