@@ -1,3 +1,5 @@
+//适合ace admin样式,调用jQuery Dialog的弹框的一套语法糖 
+//author why
 define(function(require, exports, module) {
 //var dialog = require('jqueryui.dialog.js');
 $.widget("ui.dialog",$.extend({}, $.ui.dialog.prototype,{
@@ -45,7 +47,7 @@ var dialog = {
     style: {//样式的默认配置
         alert:{box:'<div class="alert" style="word-wrap:break-word;word-break:break-all"></div>',textselect:'>div'}
         ,tip:{box:'<div class="ui-dialog-alert" style="word-wrap:break-word;word-break:break-all"><table class="tablemsg"><tr><td class="msgtext"><div></div></td></tr></tr></table></div>',textselect:'td.msgtext div'}
-        ,confirm:{box:'<div class="ui-dialog-alert" style="word-wrap:break-word;word-break:break-all"></div>',textselect:'>div'}
+        ,confirm:{box:'<div class="alert" style="word-wrap:break-word;word-break:break-all"></div>',textselect:'>div'}
         ,err:{
             //box:'<div class="row"><div class="col-md-4 text-center bigger-230"><i class="glyphicon glyphicon-remove"></i></div><div class="msgtext col-md-8"></div></div>'
             box:'<div class="row"><table style="width:100%"><tr><td class="col-md-4 text-center bigger-230 red"><i class="glyphicon glyphicon-remove"></i></td><td class="msgtext col-md-8"><div style="word-wrap:break-word;word-break:break-all"></div></td></tr></table></div>'
