@@ -152,7 +152,7 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						if(!submitData(data)){
+						if (!submitData(data)) {
 							return false;
 						}
 					}
@@ -187,13 +187,13 @@ define(function(require, exports, module) {
 			autoclose: true,
 			todayHighlight: true
 		});
-		$("#fownerId").on('change',function(e){
+		$("#fownerId").on('change', function(e) {
 			validate($(this));
 		});
 		/*$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
 		});*/
-		
+
 	}
 
 	/**
@@ -219,23 +219,19 @@ define(function(require, exports, module) {
 					pass = false;
 					elp.addClass('has-error');
 				}
-			} else if(el.attr('id')=='fownerId')
-			{
-				if(el.val().trim()){
+			} else if (el.attr('id') == 'fownerId') {
+				if (el.val().trim()) {
 					elp.removeClass('has-error');
 				} else {
 					pass = false;
 					elp.addClass('has-error');
 				}
 			}
-			
+
 		} else {
-			if($('#fownerId').val().trim())
-			{
+			if ($('#fownerId').val().trim()) {
 				$('#fownerId').parents('.form-group:first').removeClass('has-error');
-			}
-			else
-			{
+			} else {
 				pass = false;
 				$('#fownerId').parents('.form-group:first').addClass('has-error');
 			}
@@ -261,7 +257,7 @@ define(function(require, exports, module) {
 					}
 				}
 			});*/
-			
+
 		}
 		return pass;
 	}
@@ -273,6 +269,8 @@ define(function(require, exports, module) {
 				if ('0' == json.code) {
 					fillData(json.data);
 					'function' == typeof cb && cb.call();
+				} else if (-100 == json.code) {
+					location.reload();
 				}
 			},
 			error: function(e) {
@@ -415,22 +413,22 @@ define(function(require, exports, module) {
 			url: global_config.serverRoot + 'clearingCharge/addOrUpdate',
 			method: 'post',
 			data: data,
-			async:false,
+			async: false,
 			success: function(json) {
 				if ('0' == json.code) {
 					_grid.loadData();
+				} else if (-100 == json.code) {
+					location.reload();
 				} else {
-					if(json.code == '106' || json.code == '107'){
+					if (json.code == '106' || json.code == '107') {
 						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
-						alert('所有者编号不存在，数据保存失败！');						
-					}
-					else if(json.code == '109'){
+						alert('所有者编号不存在，数据保存失败！');
+					} else if (json.code == '109') {
 						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
 						alert('所有者编号重复，数据保存失败！');
-					}
-					else{
+					} else {
 						Box.alert('数据保存失败！');
 					}
 				}
@@ -466,6 +464,9 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					showHistory(json.data.pageData);
+				}
+				else if(-100 == json.code){
+					location.reload();
 				}
 			},
 			error: function(json) {
@@ -508,7 +509,7 @@ define(function(require, exports, module) {
 			setTimeout(function() {
 				console.log('retry');
 				fn.apply(context, args);
-				
+
 			}, 10);
 			return;
 		}
@@ -612,14 +613,14 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val(),
 			creationDateStart = doms.creationDateStart.val(),
-			creationDateEnd = doms.creationDateEnd.val();		
-		
+			creationDateEnd = doms.creationDateEnd.val();
+
 		if (ids) {
 			newParam.ids = ids;
 		}
 		if (ownerIds) {
 			newParam.ownerIds = ownerIds;
-		}		
+		}
 		if (effectiveDateStart) {
 			newParam.effectiveDateStart = effectiveDateStart;
 		}
@@ -638,19 +639,19 @@ define(function(require, exports, module) {
 		if (creationDateEnd) {
 			newParam.creationDateEnd = creationDateEnd;
 		}
-		if(chargeTypeInt!='0'){
+		if (chargeTypeInt != '0') {
 			newParam.chargeTypeInt = chargeTypeInt;
 		}
-		if(chargeSystemPropertyInt!='0'){
+		if (chargeSystemPropertyInt != '0') {
 			newParam.chargeSystemPropertyInt = chargeSystemPropertyInt;
 		}
-		if(chargeStatusInt!='0'){
+		if (chargeStatusInt != '0') {
 			newParam.chargeStatusInt = chargeStatusInt;
 		}
-		if(chargeServiceTypeInt!='0'){
+		if (chargeServiceTypeInt != '0') {
 			newParam.chargeServiceTypeInt = chargeServiceTypeInt;
 		}
-		
+
 		for (var k in newParam) {
 			if (newParam[k] !== userParam[k]) {
 				newchange = true;
@@ -668,7 +669,7 @@ define(function(require, exports, module) {
 		if (!newchange) {
 			Box.alert('您的查询条件并没有做任何修改.');
 			return false;
-		}		
+		}
 		userParam = newParam;
 		return true;
 	}
