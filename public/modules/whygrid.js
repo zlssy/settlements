@@ -1,3 +1,5 @@
+//配合ace及settlements接口做的数据列表展示组件
+//author why
 define(function(require, exports, module) {
 	var _ = require("underscore.min.js") ;
 	var tool = require("why")

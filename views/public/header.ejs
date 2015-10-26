@@ -30,6 +30,9 @@ global_config = {
 	serverRoot :'<%-setting.proxyPath%>/settlement/'
 };
 seajs.config({
-	base: '<%-setting.filePath%>/modules/'
+	base: '<%-setting.filePath%>/modules/',
+	alias: {
+		"dialog.ace" : "jqueryui.dialog.ace.js"
+	}
 });
 </script>

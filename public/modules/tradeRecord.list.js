@@ -1,8 +1,7 @@
 define(function(require, exports, module) {
 	var Table = require('whygrid');
-	var Box = window.Box = require('boxBootstrap');
 	var tool = require("why");
-	var D = window.D = require("dialog");
+	var D = window.D = require("dialog.ace");
 	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
 	var apis = {
 			list : rooturl + '/queryTradeRecord',
@@ -12,7 +11,7 @@ define(function(require, exports, module) {
 	var T;
 	var errfun = function(e){
 		var msg = typeof e == 'object' ? e.statusText || e.msg || "未知错误!" : e;
-		Box.alert(msg);
+		D.err(msg);
 	}
 	var dataTypes = {}
 
@@ -102,7 +101,7 @@ define(function(require, exports, module) {
 		$.when.apply($,ajaxArr).then(function(){
 			T.load(); //加载列表数据;
 		}).then(null,function(e){
-			Box.alert("初始化失败!")
+			D.err("初始化失败!")
 		})
 	}
 

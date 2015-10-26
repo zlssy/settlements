@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 	var Table = require('whygrid');
 	var Box = window.Box = require('boxBootstrap');
 	var tool = require("why");
-	var D = window.D = require("dialog");
+	var D = window.D = require("dialog.ace");
 	var rooturl = global_config.serverRoot.replace(/\/+$/,'');
 	var apis = {
 			list : rooturl + '/dataDictionary/list',
@@ -14,7 +14,7 @@ define(function(require, exports, module) {
 	var T;
 	var errfun = function(e){
 		var msg = typeof e == 'object' ? (e.message || e.msg || e.statusText || "未知错误!") : e;
-		Box.alert(msg);
+		D.err(msg);
 	}
 	$(function(){
 		T = Table('#grid_list',apis.list,{
@@ -62,10 +62,10 @@ define(function(require, exports, module) {
             var ids_data = {'ids':ids};
             $.post(obj.api,$.extend({},ids_data,obj.data,data),null,'json').then(function(data){
             	if(data.code != 0){$.Deferred().reject(data.message || data.msg || "未知错误!")}
-                Box.alert('操作成功!')
+                D.suss('操作成功!')
                 T.load();
             }).then(null,errfun)
-        }else Box.alert('未知操作!')
+        }else D.err('未知操作!')
     }
 
 	//绑定功能按钮
@@ -79,9 +79,7 @@ define(function(require, exports, module) {
 			var o = $(this)
 				,comm = o.data('comm')
 			var id = o.parents('tr').data('key');
-			if(comm == 'del'){
-				Box.confirm("您确定要删除吗?", function(result){ result && datacomm(comm,id); })
-            }else if(comm == 'edit'){
+			if(comm == 'edit'){
                 Edit.showedit(id)
             }else{
                 datacomm(comm,id)
@@ -97,19 +95,41 @@ define(function(require, exports, module) {
 		var o = this;
 		var opt = {};
 		var dom = opt.message = $($('#addEditTpl').html());
-		opt.message.find('#title b').html(data ? '修改数据字典' : '新增数据字典');
-		opt.buttons = {
-			"save": {
-				label: '<i class="ace-icon fa fa-check"></i> 保存',
-				className: 'btn-sm btn-success',
-				callback: function() {o.save(); return false;}
-			},
-			"cancel": {
-				label: '取消',
-				className: 'btn-sm'
-			}
-		};
-		this.Box = Box.dialog(opt);
+		// opt.message.find('#title b').html(data ? '修改数据字典' : '新增数据字典');
+		// opt.buttons = {
+		// 	"save": {
+		// 		label: '<i class="ace-icon fa fa-check"></i> 保存',
+		// 		className: 'btn-sm btn-success',
+		// 		callback: function() {o.save(); return false;}
+		// 	},
+		// 	"cancel": {
+		// 		label: '取消',
+		// 		className: 'btn-sm'
+		// 	}
+		// };
+		// this.Box = Box.dialog(opt);
+		
+		this.Box = D.dialog(dom,{
+			title: data ? '修改数据字典' : '新增数据字典',
+			buttons:[{
+					text : "确定", 
+					'class' : 'btn btn-minier btn-success',
+					click : function(){
+						o.save();
+					}
+				},{
+					text : "取消", 
+                    'class' : 'btn btn-minier',
+                    click : function(){
+						$(this).dialog('close')
+                    }
+				}
+			],
+            modal:true,
+            width:700
+		})
+
+		
 		data && o.fillDom(dom,data);
 		this.dom = dom;
 		this.events();
@@ -218,9 +238,10 @@ define(function(require, exports, module) {
 		var saveData = this.getData();
 		$.post(apis.update,saveData,null,'json').then(function(data){
 			if(data.code != 0){throw data.message || data.msg || "未知错误!"}
-			Box.alert("操作成功!");
+			D.suss("操作成功!");
 			T.load();
-			Edit.Box && Edit.Box.remove();
+			//Edit.Box && Edit.Box.remove();
+			Edit.Box && Edit.Box.dialog('close');
 		}).then(null,errfun)
 	}
 
