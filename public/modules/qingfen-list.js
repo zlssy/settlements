@@ -209,7 +209,7 @@ define(function(require, exports, module) {
 			newParam.statusInt = qfstatus;
 		}
 		if (commercialId) {
-			newParam.commercialId = commercialId;
+			newParam.merchantIds = commercialId;
 		}
 		if (commercialName) {
 			newParam.commercialName = encodeURIComponent(commercialName);
