@@ -142,9 +142,15 @@ define(function(require, exports, module) {
 			data: req,
 			success: function(json) {
 				if ('0' == json.code) {
+					Box.alert('确认付款成功');
 					_grid.loadData();
+				} else if ('110' == json.code) {
+					Box.alert('改单已成功结算');
+				} else if (-100 == json.code) {
+					location.reload();
 				} else {
 					// report
+					Box.alert('确认付款失败');
 					console.log(json)
 				}
 			},

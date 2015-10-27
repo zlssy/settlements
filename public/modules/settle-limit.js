@@ -147,7 +147,7 @@ define(function(require, exports, module) {
 		var opt = {
 				modal: true,
 				dragable: true,
-				title: '<h4><b>' + (data ? '修改结算规则' : '新增结算规则') + '</b></h4>',
+				title: '<h4><b>' + (data ? '修改结算限额' : '新增结算限额') + '</b></h4>',
 				title_html: true
 			},
 			id = '';

@@ -572,10 +572,10 @@ define(function(require, exports, module) {
 			newParam.ruleCardMethod = encodeURIComponent(cardType);
 		}
 		if (Utils.isDate(createTimeStart)) {
-			newParam.createTimeStart = createTimeStart;
+			newParam.creationDateStart = createTimeStart;
 		}
 		if (Utils.isDate(createTimeEnd)) {
-			newParam.createTimeEnd = createTimeEnd;
+			newParam.creationDateEnd = createTimeEnd;
 		}
 		if (Utils.isDate(effectiveDateStart)) {
 			newParam.effectiveDateStart = effectiveDateStart;
