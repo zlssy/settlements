@@ -369,7 +369,7 @@ define(function(require, exports, module) {
 				return $(this).val()
 			}).get(),
 			arr = [];
-
+		
 		data.id = row && row[0] && row[0].id || '';
 		if (fownerId) {
 			data.ownerId = fownerId;
@@ -394,18 +394,17 @@ define(function(require, exports, module) {
 		}
 		if (fchargeTypeInt == dictionaryCollection.chargeTypeArr[1].innerValue) {
 			start = 1;
-		}
-		console.log(start);
+		}		
 		for (var i = 0; i < ffixedCharge.length - 1; i++) {
 			arr[i] = {};
-			arr[i].ruleId = fruleId[i + start];
-			arr[i].fixedCharge = ffixedCharge[i + start];
-			arr[i].excludeChanelCharge = fexcludeChanelCharge[i + start];
-			arr[i].variableRate = fvariableRate[i + start];
-			arr[i].chargeFloor = fchargeFloor[i + start];
-			arr[i].chargeCeiling = fchargeCeiling[i + start];
-			arr[i].transactionFloor = ftransactionFloor[i + start];
-			arr[i].transactionCeiling = ftransactionCeiling[i + start];
+			arr[i].ruleId = fruleId[i+start];
+			arr[i].fixedCharge = ffixedCharge[i+start];
+			arr[i].excludeChanelCharge = fexcludeChanelCharge[i+start];
+			arr[i].variableRate = fvariableRate[i+start];
+			arr[i].chargeFloor = fchargeFloor[i+start];
+			arr[i].chargeCeiling = fchargeCeiling[i+start];
+			arr[i].transactionFloor = ftransactionFloor[i];
+			arr[i].transactionCeiling = ftransactionCeiling[i];
 		}
 		data.dataArray = JSON.stringify(arr);
 		var pass = true;
@@ -417,7 +416,7 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					_grid.loadData();
-				} else if (-100 == json.code) {
+				} else if (-102 == json.code) {
 					location.reload();
 				} else {
 					if (json.code == '106' || json.code == '107') {
