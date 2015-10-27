@@ -114,7 +114,7 @@ if (daili) {
             }
         }, function(err) {
             res.json({
-                "code": -100,
+                "code": -102,
                 "msg": err.message || err
             })
             console.error(err);
