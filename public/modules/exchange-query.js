@@ -106,10 +106,10 @@ define(function(require, exports, module) {
         });
 
 		$('.datepicker').datetimepicker({
-            format: 'yyyy-mm-dd hh:ii:ss',
-			autoclose: true,
-			todayHighlight: true,
-            minuteStep:1
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+            minView:2
 		});
 	}
 
