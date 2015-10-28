@@ -27,7 +27,7 @@ define(function(require, exports, module) {
 				return false;
 			}
 			$.post(apis.update,form.serialize(),null,'json').then(function(){
-				if(data.code != 0){$.Deferred().reject(data.message || data.msg || "未知错误!")}
+				if(data.code != 0){return $.Deferred().reject(data.message || data.msg || "未知错误!")}
 				Box.alert('操作成功!')
 			}).then(null,errfun)
 			return false;

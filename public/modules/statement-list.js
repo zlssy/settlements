@@ -65,8 +65,8 @@ define(function(require, exports, module) {
             getBaseSearch: function(){
                 var s = tool.QueryString.parse(location.hash.replace(/^\#/g,''));
                 if(typeof s.startDate  == 'undefined' && typeof s.endDate == "undefined"){
-                    s.startDate = tool.dateFormat(new Date(new Date() - (1000*60*60*24*30)),"yyyy-MM-dd 00:00")
-                    s.endDate = tool.dateFormat(new Date(),"yyyy-MM-dd 00:00");
+                    s.startDate = tool.dateFormat(new Date(new Date() - (1000*60*60*24*30)),"yyyy-MM-dd")
+                    s.endDate = tool.dateFormat(new Date(),"yyyy-MM-dd");
                     if($("#startDate").val() == "" && $("#endDate").val() == ""){
                         $("#startDate").val(s.startDate);
                         $("#endDate").val(s.endDate);
@@ -95,10 +95,10 @@ define(function(require, exports, module) {
 		$(document.body).on('click', evtListener);
         $(".datepicker").attr('title','双击清除').on("dblclick",function(){$(this).val('')});
         $('.datepicker').datetimepicker({
-            format: 'yyyy-mm-dd hh:ii:ss',
+            format: 'yyyy-mm-dd',
             autoclose: true,
             todayHighlight: true,
-            minuteStep:1
+            minView:2
         });
 	}
 
