@@ -325,7 +325,7 @@ define(function(require, exports, module) {
 		for (var i = 0; i < list.length; i++) {
 			$("input[name='fruleId']").eq(i + start).val(list[i].ruleId);
 			$("input[name='ffixedCharge']").eq(i + start).val(list[i].fixedCharge);
-			$("input[name='fexcludeChanelCharge']").eq(i + start).val(list[i].excludeChanelCharge);
+			$("select[name='fexcludeChanelCharge']").eq(i + start).val(list[i].excludeChannelCharge);
 			$("input[name='fvariableRate']").eq(i + start).val(list[i].variableRate);
 			$("input[name='fchargeFloor']").eq(i + start).val(list[i].chargeFloor);
 			$("input[name='fchargeCeiling']").eq(i + start).val(list[i].chargeCeiling);
@@ -399,7 +399,7 @@ define(function(require, exports, module) {
 			arr[i] = {};
 			arr[i].ruleId = fruleId[i+start];
 			arr[i].fixedCharge = ffixedCharge[i+start];
-			arr[i].excludeChanelCharge = fexcludeChanelCharge[i+start];
+			arr[i].excludeChannelCharge = fexcludeChanelCharge[i+start];
 			arr[i].variableRate = fvariableRate[i+start];
 			arr[i].chargeFloor = fchargeFloor[i+start];
 			arr[i].chargeCeiling = fchargeCeiling[i+start];
