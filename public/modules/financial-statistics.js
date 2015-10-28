@@ -200,6 +200,7 @@ define(function(require, exports, module) {
         };
 
         $(document.body).on('click', evtListener);
+        $(".datepicker").attr('title','双击清除').on("dblclick",function(){$(this).val('')});
         $('.datepicker').datetimepicker({
             format: 'yyyy-mm-dd hh:ii:00',
             autoclose: true,

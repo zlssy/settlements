@@ -70,20 +70,15 @@
                                 <div class="widget-main">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-4">
-                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">开始日期:</label></div>
-                                            <div class="input-group date datepicker col-sm-9 no-padding">
-                                                <input class="form-control" size="16" type="text" value="" name="startDate" readonly="">
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-xs-12 col-sm-4">
-                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">结束日期:</label></div>
-                                            <div class="input-group date datepicker col-sm-9 no-padding">
-                                                <input class="form-control" size="16" type="text" value="" readonly="" name="endDate">
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                            <label class="col-sm-3 no-padding lm-5">统计日期:</label>
+                                            <div class="col-xs-12 col-sm-9 no-padding">
+                                                <div class="input-group">
+                                                    <input type="text" class="input-sm form-control datepicker" id="startDate" name="startDate" placeholder="from" data-date-format="yyyy-mm-dd hh:ii" />
+                                                    <label for="startDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+                                                    <span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
+                                                    <input type="text" class="input-sm form-control datepicker" id="endDate" name="endDate" placeholder="to" data-date-format="yyyy-mm-dd hh:ii" />
+                                                    <label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-4">
@@ -94,14 +89,14 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-xs-12 col-sm-4">
                                             <label class="col-sm-3 no-padding lm-5" >产品名称:</label>
                                             <div class="col-sm-9 no-padding">
                                                 <input type="text" name="productName" class="form-control col-sm-5 input-sm">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-xs-12 col-sm-4">
                                             <label class="col-sm-3 no-padding lm-5" >产品类别:</label>
                                             <div class="col-sm-9 no-padding">
