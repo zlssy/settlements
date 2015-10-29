@@ -32,16 +32,14 @@ define(function(require, exports, module) {
 				name: '商户编码',
 				index: 'merchantId'
 			}, {
-				name: '账户',
-				index: 'accountNumber',
-				format: function(v, ov){
-					if(!ov){
-						return ' '
-					}
-				}
-			}, {
 				name: '清算日期',
 				index: 'clearingDate'
+			}, {
+				name: '交易开始日期',
+				index: 'tradeStartDate'
+			}, {
+				name: '交易结束日期',
+				index: 'tradeEndDate'
 			}, {
 				name: '交易总金额',
 				index: 'tradeAmount'
@@ -54,6 +52,12 @@ define(function(require, exports, module) {
 			}, {
 				name: '退款总笔数',
 				index: 'refundTrans'
+			}, {
+				name: '币种',
+				index: 'currencyCode'
+			}, {
+				name: '交易渠道',
+				index: 'payChannel'
 			}, {
 				name: '交易成本',
 				index: 'cost'
@@ -130,7 +134,8 @@ define(function(require, exports, module) {
 		$(document.body).on('click', evtListener);
 		$('.datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+			minView:2
 		});
 	}
 

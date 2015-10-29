@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 		Box = require('boxBootstrap'),
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
+		accountCheck = require('checkAccount'),
 
 		userParam = {},
 		doms = {
@@ -152,10 +153,15 @@ define(function(require, exports, module) {
 		data && getRowDetail(data[0].id);
 		$('.bootbox .datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+			minView:2
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
+		});
+		accountCheck.check({
+			el: $('#fmerchantId'),
+			elp: $('#fmerchantId').parents('.form-group:first')
 		});
 	}
 
@@ -414,7 +420,7 @@ define(function(require, exports, module) {
 				}
 			});
 		}
-		return pass;
+		return accountCheck.isPass() && pass;
 	}
 
 	/**
@@ -511,7 +517,8 @@ define(function(require, exports, module) {
 	function registerEvents() {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+			minView:2
 		});
 		$('#add-btn').on('click', function() {
 			_grid.trigger('addCallback');

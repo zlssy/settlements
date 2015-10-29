@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 		Xss = require('xss'),
 		Box = require('boxBootstrap'),
 		Grid = require('gridBootstrap'),
+		accountCheck = require('checkAccount'),
 
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
@@ -179,6 +180,10 @@ define(function(require, exports, module) {
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
 		});
+		accountCheck.check({
+			el: $('#fmerchantId'),
+			elp: $('#fmerchantId').parents('.form-group:first')
+		});
 	}
 
 	function submitData(row) {
@@ -341,7 +346,7 @@ define(function(require, exports, module) {
 				}
 			});
 		}
-		return pass;
+		return accountCheck.isPass() && pass;
 	}
 
 	/**

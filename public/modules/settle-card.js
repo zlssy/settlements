@@ -4,6 +4,7 @@ define(function(require, exports, module) {
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
 		art_dialog = require('dialog'),
+		accountCheck = require('checkAccount'),
 
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
@@ -127,10 +128,17 @@ define(function(require, exports, module) {
 		data && fillData(data);
 		$('.bootbox .datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+			minView: 2
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
+		});
+		var shbh = $('#shbh'),
+			elp = shbh.parents('.form-group:first');
+		accountCheck.check({
+			el: shbh,
+			elp: elp
 		});
 	}
 
@@ -184,7 +192,7 @@ define(function(require, exports, module) {
 				}
 			});
 		}
-		return pass;
+		return accountCheck.isPass() && pass;
 	}
 
 	/**
@@ -480,7 +488,8 @@ define(function(require, exports, module) {
 		});
 		$('.datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+			minView: 2
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
