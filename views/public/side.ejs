@@ -2,7 +2,7 @@
 	try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 </script>
 <%
-	var url = req.url,
+	var url = req.originalUrl,
 		menus = [{
 			name: '交易管理',
 			child: [{
@@ -89,7 +89,7 @@
 			var menu, children, child;
 			for(var i=0;i<menus.length;i++){
 				menu = menus[i];
-				children = menu.child;
+				children = menu.child;				
 		%>
 		<li<%if(menu.keys.map(function(v){if(url.indexOf(v) > -1){return 1} return ''}).join('') != ''){%> class="active open"<%}%>>
 			<a href="javascript:;" class="dropdown-toggle">
