@@ -140,6 +140,10 @@ define(function(require, exports, module) {
 			el: shbh,
 			elp: elp
 		});
+
+		data && setTimeout(function() {
+			shbh.focus();
+		}, 80);
 	}
 
 	/**
