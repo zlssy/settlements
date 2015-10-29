@@ -127,7 +127,7 @@ define(function(require, exports, module) {
         		}else{
         			errmsg = err;
         		}
-                $(this).trigger('colspanMsg',['<div class="g-tc g-red"><i class="icon-cancel-circled"></i> 出错：' + tool.HTML.Encode(errmsg) + '</div>'])
+                $(this).trigger('colspanMsg',['<div class="g-tc g-red"> 出错：' + tool.HTML.Encode(errmsg) + '</div>'])
                 return false;
             })
     }
