@@ -163,6 +163,9 @@ define(function(require, exports, module) {
 			el: $('#fmerchantId'),
 			elp: $('#fmerchantId').parents('.form-group:first')
 		});
+		data && setTimeout(function() {
+			shbh.focus();
+		}, 80);
 	}
 
 	function getRowDetail(id) {
