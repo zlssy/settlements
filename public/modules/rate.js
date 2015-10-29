@@ -87,8 +87,9 @@ define(function(require, exports, module) {
 			}
 		});
 		_grid.listen('editCallback', function(row) {
-			if (dictionaryCollection.chargeTypeArr) {
+			if (dictionaryCollection.chargeTypeArr) {				
 				addAndUpdate(row);
+				$('#fownerId').prop('disabled', true);
 			}
 		});
 		_grid.listen('viewCallback', function(row) {
@@ -193,9 +194,9 @@ define(function(require, exports, module) {
 		$("#fownerId").on('change', function(e) {
 			validate($(this));
 		});
-		/*$('.bootbox input, .bootbox select').on('change', function(e) {
+		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
-		});*/
+		});
 		accountCheck.check({
 			el: $('#fownerId'),
 			elp: $('#fownerId').parents('.form-group:first')
@@ -225,6 +226,14 @@ define(function(require, exports, module) {
 					pass = false;
 					elp.addClass('has-error');
 				}
+			} else if(el.data('empty')){
+				if ('' != el.val().trim()) {
+					elp.removeClass('has-error');
+				} else {
+					pass = false;
+					elp.addClass('has-error');
+				}
+				
 			} else if (el.attr('id') == 'fownerId') {
 				if (el.val().trim()) {
 					elp.removeClass('has-error');
@@ -235,16 +244,27 @@ define(function(require, exports, module) {
 			}
 
 		} else {
-			if ($('#fownerId').val().trim()) {
-				$('#fownerId').parents('.form-group:first').removeClass('has-error');
-			} else {
-				pass = false;
-				$('#fownerId').parents('.form-group:first').addClass('has-error');
-			}
-			/*$('.bootbox input').each(function(i, v) {
+			var obj=$('.bootbox').find("#gdPanel").find("input");//里面有很多input名字重名的在不同费率下
+			if($("input[name=fchargeTypeInt]:checked").val()=='2')
+			{
+				obj = $('.bootbox').find("#jtPanel").find("input");
+			}			
+			var pass1= validBase($('.bootbox').find("#baseInfoPanel").find("input"));//基本信息的valid判断
+			var pass2= validBase(obj);//各费率模块valid判断
+			pass = pass1 && pass2;
+		}		
+		//return accountCheck.isPass() && pass;
+		return pass;
+	}
+	
+	//判断有效的根基func
+	function validBase(boxObj){
+		var pass = true;
+		boxObj.each(function(i, v) {
 				var $el = $(this),
 					$p = $el.parents('.form-group:first'),
 					isInt = $el.data('int'),
+					isEmpty = $el.data('empty'),
 					isDate = $el.hasClass('datepicker');
 				if (isDate) {
 					if (Utils.isDate($el.val())) {
@@ -261,11 +281,17 @@ define(function(require, exports, module) {
 						pass = false;
 						$p.addClass('has-error');
 					}
+				}				
+				if (isEmpty) {
+					if ('' != $el.val().trim()) {
+						$p.removeClass('has-error');
+					} else {
+						pass = false;
+						$p.addClass('has-error');
+					}
 				}
-			});*/
-
-		}
-		return accountCheck.isPass() && pass;
+			});
+		return pass;	
 	}
 
 	function getRowDetail(id, cb) {
@@ -425,7 +451,7 @@ define(function(require, exports, module) {
 				} else if (-102 == json.code) {
 					location.reload();
 				} else {
-					if (json.code == '106' || json.code == '107') {
+					if (json.code == '107' || json.code == '108') {
 						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
 						alert('所有者编号不存在，数据保存失败！');
