@@ -2,6 +2,8 @@ define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
+		accountCheck = require('checkAccount'),
+
 		addEditTpl = $('#viewTpl-baseInfo').html(),
 		viewTpl = $('#viewTpl').html(),
 		baseTpl = $('#addEditTpl-baseInfo').html(),
@@ -185,7 +187,8 @@ define(function(require, exports, module) {
 		data && getRowDetail(data[0].id, cb);
 		$('.bootbox .datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+			minView: 2
 		});
 		$("#fownerId").on('change', function(e) {
 			validate($(this));
@@ -193,7 +196,10 @@ define(function(require, exports, module) {
 		/*$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
 		});*/
-
+		accountCheck.check({
+			el: $('#fownerId'),
+			elp: $('#fownerId').parents('.form-group:first')
+		});
 	}
 
 	/**
@@ -259,7 +265,7 @@ define(function(require, exports, module) {
 			});*/
 
 		}
-		return pass;
+		return accountCheck.isPass() && pass;
 	}
 
 	function getRowDetail(id, cb) {
@@ -539,7 +545,8 @@ define(function(require, exports, module) {
 		});
 		$('.datepicker').datetimepicker({
 			autoclose: true,
-			todayHighlight: true
+			todayHighlight: true,
+			minView: 2
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
