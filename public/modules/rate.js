@@ -87,8 +87,9 @@ define(function(require, exports, module) {
 			}
 		});
 		_grid.listen('editCallback', function(row) {
-			if (dictionaryCollection.chargeTypeArr) {
+			if (dictionaryCollection.chargeTypeArr) {				
 				addAndUpdate(row);
+				$('#fownerId').prop('disabled', true);
 			}
 		});
 		_grid.listen('viewCallback', function(row) {
