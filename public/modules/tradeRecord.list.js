@@ -58,8 +58,8 @@ define(function(require, exports, module) {
 			getBaseSearch: function(){//默认查询条件
 				var s = tool.QueryString.parse(location.hash.replace(/^\#/g,''));
 				if(typeof s.startDate  == 'undefined' && typeof s.endDate == "undefined"){
-					s.startDate = tool.dateFormat(new Date(new Date() - (1000*60*60*24*30)),"yyyy-MM-dd")
-					s.endDate = tool.dateFormat(new Date(),"yyyy-MM-dd");
+					s.startDate = tool.dateFormat(new Date(new Date() - (1000*60*60*24*30)),"yyyy-MM-dd 00:00")
+					s.endDate = tool.dateFormat(new Date(),"yyyy-MM-dd 00:00");
 					if($("#startDate").val() == "" && $("#endDate").val() == ""){
 						$("#startDate").val(s.startDate);
 						$("#endDate").val(s.endDate);
@@ -72,7 +72,7 @@ define(function(require, exports, module) {
 		init();
 		$("#startDate,#endDate").attr('title','双击清除').on("dblclick",function(){$(this).val('')})
 		$('#startDate,#endDate').datetimepicker({
-            format: 'yyyy-mm-dd',
+            format: 'yyyy-mm-dd 00:00',
             autoclose: true,
             todayHighlight: true,
             minView:2
