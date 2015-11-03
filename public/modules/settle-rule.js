@@ -163,9 +163,6 @@ define(function(require, exports, module) {
 			el: $('#fmerchantId'),
 			elp: $('#fmerchantId').parents('.form-group:first')
 		});
-		data && setTimeout(function() {
-			shbh.focus();
-		}, 80);
 	}
 
 	function getRowDetail(id) {
@@ -330,6 +327,10 @@ define(function(require, exports, module) {
 		if (data.status) {
 			$('#fstatus').val(data.status);
 		}
+		$("#fmerchantId").focus();
+		setTimeout(function(){
+			$("#fmerchantId").blur();
+		},0);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
@@ -615,7 +616,7 @@ define(function(require, exports, module) {
 			}
 		}
 		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
+			// Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
 		userParam = newParam;

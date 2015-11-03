@@ -184,15 +184,12 @@ define(function(require, exports, module) {
 			el: $('#fmerchantId'),
 			elp: $('#fmerchantId').parents('.form-group:first')
 		});
-		data && setTimeout(function() {
-			shbh.focus();
-		}, 80);
 	}
 
 	function submitData(row) {
 		var data = {},
 			fmerchantId = $("#fmerchantId").val(),
-			fmerchantName = $("#fmerchantName").val(),
+			// fmerchantName = $("#fmerchantName").val(),
 			fbusinessTypeInt = $('#fbusinessTypeInt').val(),
 			fbusinessLimit = $("#fbusinessLimit").val(),
 			flegalPersonLimit = $("#flegalPersonLimit").val(),
@@ -204,9 +201,9 @@ define(function(require, exports, module) {
 		if (fmerchantId) {
 			data.merchantId = fmerchantId;
 		}
-		if (fmerchantName) {
-			data.merchantName = fmerchantName;
-		}
+		// if (fmerchantName) {
+		// 	data.merchantName = fmerchantName;
+		// }
 		if (fbusinessTypeInt) {
 			data.businessTypeInt = fbusinessTypeInt;
 		}
@@ -269,9 +266,9 @@ define(function(require, exports, module) {
 		if (data.merchantId) {
 			$("#fmerchantId").val(data.merchantId)
 		}
-		if (data.merchantName) {
-			$("#fmerchantName").val(data.merchantName)
-		}
+		// if (data.merchantName) {
+		// 	$("#fmerchantName").val(data.merchantName)
+		// }
 		if (data.businessTypeInt) {
 			$('#fbusinessTypeInt').val(data.businessTypeInt);
 		}
@@ -290,6 +287,10 @@ define(function(require, exports, module) {
 		if (data.tranOneHolidayLimit) {
 			$("#ftOneHolidayLimit").val(data.tranOneHolidayLimit)
 		}
+		$("#fmerchantId").focus();
+		setTimeout(function(){
+			$("#fmerchantId").blur();
+		},0);
 	}
 
 	/**
@@ -587,7 +588,7 @@ define(function(require, exports, module) {
 			}
 		}
 		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
+			// Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
 		userParam = newParam;
