@@ -238,7 +238,7 @@ define(function(require, exports, module) {
 			}
 		}
 		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
+			// Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
 		userParam = newParam;

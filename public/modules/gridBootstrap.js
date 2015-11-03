@@ -53,7 +53,6 @@ define(function(require, exports, module) {
 		html.push('				<table id="' + this.id + '_listbox" tabindex="0" cellspacing="0" cellpadding="0" border="0" role="grid" aria-multiselectable="true" aria-labelledby="gbox_grid" class="ui-jqgrid-btable" style="' + (this.have_scroll ? "width:" + this.fixed_table_width + "px" : "width:100%;") + '">');
 		html.push('				<tbody id="' + this.id + '_list">');
 		html.push('				</tbody>');
-		html.push(getFirstRow.call(this));
 		html.push('				</table>');
 		html.push('				</div>');
 		html.push('			</div>');
@@ -123,6 +122,7 @@ define(function(require, exports, module) {
 	function getHeader() {
 		var html = [],
 			id = this.id,
+			idx = 0,
 			col, colid, colwidth, colvalue, wstr;
 		if (this.checkbox) {
 			html.push('<th id="' + id + '_cb" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" style="width: 25px;"><div id="' + id + '_grid_cb"><input role="checkbox" id="' + id + '_hcb" class="cbox" type="checkbox"><span class="s-ico" style="display:none"><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-state-disabled ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-state-disabled ui-icon ui-icon-triangle-1-s ui-sort-ltr"></span></span></div></th>');
@@ -130,12 +130,13 @@ define(function(require, exports, module) {
 
 		for (var i = 0; i < this.colLen; i++) {
 			col = this.cols[i];
+			idx = i + (this.checkbox ? 1 : 0);
 			if (col) {
 				colid = col.id || 'col' + (++guid);
 				colwidth = col.width || this.col_average_width;
 				colvalue = col.name || '&nbsp;';
 				wstr = i != this.colLen - 1 ? 'style="width: ' + colwidth + '%;"' : '';
-				html.push('<th id="' + id + '_' + colid + '" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" ' + wstr + '><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor:default">&nbsp;</span><div id="' + id + '_h_' + colid + '" class="ui-jqgrid-sortable">' + colvalue + '<span class="s-ico" style="display:none"><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-state-disabled ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-state-disabled ui-icon ui-icon-triangle-1-s ui-sort-ltr"></span></span></div></th>');
+				html.push('<th id="' + id + '_' + colid + '" role="columnheader" class="ui-state-default ui-th-column ui-th-ltr" ' + wstr + '><span class="ui-jqgrid-resize ui-jqgrid-resize-ltr" style="cursor:col-resize;width:2px;" data-idx="' + idx + '">&nbsp;</span><div id="' + id + '_h_' + colid + '" class="ui-jqgrid-sortable">' + colvalue + '<span class="s-ico" style="display:none"><span sort="asc" class="ui-grid-ico-sort ui-icon-asc ui-state-disabled ui-icon ui-icon-triangle-1-n ui-sort-ltr"></span><span sort="desc" class="ui-grid-ico-sort ui-icon-desc ui-state-disabled ui-icon ui-icon-triangle-1-s ui-sort-ltr"></span></span></div></th>');
 			}
 		};
 
@@ -169,6 +170,7 @@ define(function(require, exports, module) {
 			throw new Error('Could\'t find the list container. Maybe your html struct did\'t render on the dom.')
 		}
 		this.trigger('setContentCallback', this);
+		this.controls.firstRow = $('.jqgfirstrow');
 	}
 
 	function render(data) {
@@ -192,7 +194,7 @@ define(function(require, exports, module) {
 					colfn = col.format;
 					colval = d[col.index];
 					xsscheck = !!colval;
-					colval = 'function' === typeof colfn ? colfn(xsscheck ? colval : d[this.key], colval) : colval;
+					colval = 'function' === typeof colfn ? colfn(xsscheck ? colval : d[this.key], colval, d) : colval;
 					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
 				}
 				html.push('</tr>');
@@ -275,7 +277,9 @@ define(function(require, exports, module) {
 			nPageBtn: $('#' + this.id + '_n_pager'),
 			totalPageView: $('#' + this.id + '_sp_pager'),
 			pageInfo: $('#' + this.id + '_pager_info'),
-			headerCheckbox: $('#' + this.id + '_hcb')
+			headerCheckbox: $('#' + this.id + '_hcb'),
+			headerDiv: $('.ui-jqgrid-hdiv'),
+			firstRow: $('.jqgfirstrow')
 		};
 	}
 
@@ -518,6 +522,66 @@ define(function(require, exports, module) {
 		$('.ui-pg-button').tooltip({
 			container: 'body'
 		});
+
+		/** 注册拖拽事件 */
+		$('.ui-jqgrid-resize').on('mousedown', function(e) {
+			dragStart.apply(self, [$(this), e]);
+		});
+		this.controls.headerDiv.on('mousemove', function(e) {
+			dragMove.apply(self, [e]);
+		});
+		$(document).on('mouseup', function(e) {
+			dragEnd.apply(self, [e]);
+		});
+	}
+
+	function dragStart(el, e) {
+		var left = el.offset().left,
+			idx = el.data('idx');
+		this.curBox = el.parent();
+		this.resizing = {
+			idx: idx,
+			el: el,
+			startX: e.clientX,
+			oldLeft: left,
+			pwidth: this.curBox.width()
+		}
+		document.onselectstart = function() {
+			return false;
+		}
+		this.controls.headerDiv.css("cursor", 'col-resize');
+	}
+
+	function dragMove(e) {
+		if (this.resizing) {
+			var x = e.clientX,
+				ox = this.resizing.startX,
+				nw = x - ox + this.resizing.pwidth;
+			this.curBox.css({
+				width: nw
+			});
+			this.resizing.newWidth = nw;
+		}
+	}
+
+	function dragEnd() {
+		var idx,
+			newWidth;
+		if (this.resizing) {
+			idx = this.resizing.idx;
+			newWidth = this.resizing.newWidth;
+			if (newWidth && undefined != idx) {
+				this.controls.firstRow.find('td').eq(idx).css({
+					width: newWidth
+				});
+			}
+			this.resizing = null;
+			this.curBox = null;
+			document.onselectstart = function() {
+				return true;
+			}
+			this.controls.headerDiv.css("cursor", 'default');
+		}
 	}
 
 	return {

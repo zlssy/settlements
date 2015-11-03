@@ -140,10 +140,6 @@ define(function(require, exports, module) {
 			el: shbh,
 			elp: elp
 		});
-
-		data && setTimeout(function() {
-			shbh.focus();
-		}, 80);
 	}
 
 	/**
@@ -242,6 +238,10 @@ define(function(require, exports, module) {
 		if (data.expirationDate) {
 			$('#xxsj').val(data.expirationDate);
 		}
+		$('#shbh').focus();
+		setTimeout(function() {
+			$('#shbh').blur();
+		}, 0);
 	}
 
 	/**
@@ -541,7 +541,6 @@ define(function(require, exports, module) {
 					if (data.result.code == 0) {
 						if (data.result.data.Failed == 0) {
 							art_dialog.error('导入成功', data.result.msg);
-							_grid.loadData();
 							console.log('reload data grid.');
 						} else {
 							var html = [],
@@ -563,6 +562,7 @@ define(function(require, exports, module) {
 							html.push('</div>');
 							art_dialog.error('导入失败', html.join(''));
 						}
+						_grid.loadData();
 					} else {
 						art_dialog.error('导入失败', data.result.msg);
 					}
@@ -630,7 +630,7 @@ define(function(require, exports, module) {
 			}
 		}
 		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
+			// Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
 		userParam = newParam;

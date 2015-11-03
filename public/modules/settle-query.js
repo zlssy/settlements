@@ -61,8 +61,12 @@ define(function(require, exports, module) {
 			}, {
 				name: '操作',
 				index: '',
-				format: function(v) {
-					return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认">付款确认</a></div>';
+				format: function(v, ov, col) {
+					if ('已付款' != col['settleStatus'].toString().trim()) {
+						return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认">付款确认</a></div>';
+					} else {
+						return ' '
+					}
 				}
 			}],
 			url: getUrl(),
@@ -199,7 +203,7 @@ define(function(require, exports, module) {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView:2
+			minView: 2
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
@@ -282,7 +286,7 @@ define(function(require, exports, module) {
 			}
 		}
 		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
+			// Box.alert('您的查询条件并没有做任何修改.');
 			return false;
 		}
 		userParam = newParam;
