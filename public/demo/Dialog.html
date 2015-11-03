@@ -1,0 +1,117 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>D Demo</title>
+<script src="../jquery-ui-1.10.4/js/jquery-1.10.2.js"></script>
+<script src="../jquery-ui-1.10.4/js/jquery-ui-1.10.4.custom.js"></script>
+<style>
+body {padding:10px; font-size:12px;}
+h1 {font-size:25px; line-height:35px; padding:10px 0; text-align:center;}
+h2 {font-size:18px; border-left:3px solid #CCC; text-indent:10px;}
+h3 {font-size:12px; color:#999;}
+.eval { padding-left:20px;}
+.eval * {vertical-align:middle;}
+</style>
+<link rel="stylesheet" type="text/css" href="../jquery-ui-1.10.4/css/ui-darkness/jquery-ui-1.10.4.custom.css">
+<link rel="stylesheet" type="text/css" href="../qida.dialog.css">
+<script src="../qida.dialog.js"></script>
+<script>
+$(function(){
+	$("div.eval button").on("click",function(){
+		var cold = $(this).parent().find("textarea").val()
+		try{
+            eval(cold);
+		}catch(e){
+			alert(e)
+		}
+	});
+})
+</script>
+</head>
+<body>
+<h1>jquery UI Dialog for eac 语法糖</h1>
+<h2>普通提示框：D.alert</h2>
+    <div class="eval">
+        <h3>普通调用：</h3>
+        <textarea cols="100" rows="2">D.alert("提示内容！")</textarea>
+        <button>运行</button>
+    </div>
+    <div class="eval">
+        <h3>标题，模态窗口，回调函数：</h3>
+        <textarea cols="100" rows="4">
+D.alert("提示内容1","标题",function(){alert("回调")})
+//D.alert("提示内容2","标题",true,function(){alert("回调")}) //模态
+//D.alert("提示内容500px").dialog("option","width","500px") //重新设定宽度
+//D.alert($("<div>123123</div>"))</textarea>
+        <button>运行</button>
+    </div>
+<h2>自动关闭提示框：D.tip</h2>
+    <div class="eval">
+        <h3>调用方法</h3>
+        <textarea cols="100" rows="2">D.tip("提示内容！")</textarea>
+        <button>运行</button>
+    </div>    
+<h2>出错提示框：D.err</h2>
+    <div class="eval">
+        <h3>调用与alert一至</h3>
+        <textarea cols="100" rows="2">D.err("提示内容！")</textarea>
+        <button>运行</button>
+    </div>
+<h2>成功提示框：D.suss</h2>
+    <div class="eval">
+        <h3>普通调用</h3>
+        <textarea cols="100" rows="2">D.suss("提示内容！")</textarea>
+        <button>运行</button>
+    </div>
+    <div class="eval">
+        <h3>调用自动关闭延时修改</h3>
+        <textarea cols="100" rows="2">D.suss("提示内容！","3秒后关闭",3000)
+D.suss("提示内容！","不自动关闭",0) //不自动关闭</textarea>
+        <button>运行</button>
+    </div>
+<h2>选择提示框：D.confirm</h2>
+    <div class="eval">
+        <h3>普通调用</h3>
+        <textarea cols="100" rows="2">
+D.confirm("提示内容！","标题",function(){alert("yes")},function(){alert("no")})</textarea>
+        <button>运行</button>
+    </div>
+    <div class="eval">
+        <h3>定义安钮文字</h3>
+        <textarea cols="100" rows="2">
+D.confirm("提示内容！","标题",["YES",function(){alert("yes")}],["NO",function(){alert("no")}])</textarea>
+        <button>运行</button>
+    </div>
+    <div class="eval">
+        <h3>不关闭窗口</h3>
+        <textarea cols="100" rows="2">
+D.confirm("提示内容！","标题",function(){alert("yes"); return false;},function(){alert("no");return false;})</textarea>
+        <button>运行</button>
+    </div>
+    <div class="eval">
+        <h3>获取内容</h3>
+        <textarea cols="100" rows="2">
+D.confirm('<input type="text" value="123">',"标题",function(o){alert($(o).find('input').val()); return false;})</textarea>
+        <button>运行</button>
+    </div>
+   	<div class="eval">
+        <h3>内容传入jQuery对像</h3>
+        <textarea cols="100" rows="3">
+var showbox = $('<div style="text-align:center; padding:10px;"><button>绑定事件</button></div>');
+    showbox.find("button").on("click",function(){alert("1")}); //先绑事件
+D.confirm(showbox,"标题",function(o){alert($(o).html());return false;});</textarea>
+        <button>运行</button>
+    </div>
+<h2>自定义：D.dialog</h2>
+   	<div class="eval">
+        <h3>自定义(第二个参数，类似jquery UI dialog的初始化参数)</h3>
+        <textarea cols="100" rows="2">
+D.dialog('<div style="padding:20px;">自定义</div>',{title:"123123",modal:true,width:400,height:200});</textarea>
+        <button>运行</button>
+    </div>
+
+
+</body>
+</html>
