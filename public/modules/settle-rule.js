@@ -22,6 +22,8 @@ define(function(require, exports, module) {
 		addEditTpl = $('#addEditTpl').html(),
 		viewTpl = $('#viewTpl').html(),
 		listContainer = $('#grid_list'),
+		submitLock = false,
+		submitInterval = 2000, // 2秒之内限定只能点击提交按钮一次
 		_grid;
 
 	function init() {
@@ -134,7 +136,13 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						submitData(data);
+						if (!submitLock) {
+							submitData(data);
+							submitLock = true;
+							setTimeout(function() {
+								submitLock = false;
+							}, submitInterval);
+						}
 					}
 				}
 			},
@@ -154,7 +162,7 @@ define(function(require, exports, module) {
 		$('.bootbox .datepicker').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView:2
+			minView: 2
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
@@ -328,9 +336,9 @@ define(function(require, exports, module) {
 			$('#fstatus').val(data.status);
 		}
 		$("#fmerchantId").focus();
-		setTimeout(function(){
+		setTimeout(function() {
 			$("#fmerchantId").blur();
-		},0);
+		}, 0);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
@@ -522,7 +530,7 @@ define(function(require, exports, module) {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView:2
+			minView: 2
 		});
 		$('#add-btn').on('click', function() {
 			_grid.trigger('addCallback');
@@ -615,10 +623,7 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			// Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
+
 		userParam = newParam;
 		return true;
 	}

@@ -153,8 +153,8 @@ define(function(require, exports, module) {
 		for (var i = 0; i < this.colLen; i++) {
 			col = this.cols[i];
 			if (col) {
-				colwidth = col.width || this.col_average_width;
-				wstr = i != this.colLen - 1 ? 'width: ' + colwidth + '%;' : '';
+				colwidth = col.fixedWidth ? col.fixedWidth + 'px' : (col.width || this.col_average_width) + '%';
+				wstr = i != this.colLen - 1 ? 'width: ' + colwidth + ';' : '';
 				html.push('<td role="gridcell" style="height: 0px; ' + wstr + '"></td>');
 			}
 		}
@@ -574,6 +574,7 @@ define(function(require, exports, module) {
 				this.controls.firstRow.find('td').eq(idx).css({
 					width: newWidth
 				});
+				this.cols[idx].fixedWidth = newWidth;
 			}
 			this.resizing = null;
 			this.curBox = null;

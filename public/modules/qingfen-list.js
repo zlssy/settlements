@@ -141,7 +141,7 @@ define(function(require, exports, module) {
 
 	function exportExcel() {
 		var a = document.createElement('a');
-		a.href = global_config.serverRoot + 'clearing/export?userId=' + Utils.object2param(userParam);
+		a.href = global_config.serverRoot + 'clearing/export?userId=&' + Utils.object2param(userParam);
 		a.target = '_blank';
 		a.height = 0;
 		a.width = 0;
@@ -236,10 +236,6 @@ define(function(require, exports, module) {
 				newchange = true;
 				break;
 			}
-		}
-		if (!newchange) {
-			// Box.alert('您的查询条件并没有做任何修改.');
-			return false;
 		}
 		userParam = newParam;
 		return true;

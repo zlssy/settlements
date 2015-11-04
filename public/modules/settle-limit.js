@@ -33,6 +33,8 @@ define(function(require, exports, module) {
 			label: '电商'
 		}],
 		businessTypeDefault = '',
+		submitLock = false,
+		submitInterval = 2000,
 		_grid;
 
 	function init() {
@@ -162,7 +164,13 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						submitData(data);
+						if (!submitLock) {
+							submitData(data);
+							submitLock = true;
+							setTimeout(function() {
+								submitLock = false;
+							}, submitInterval);
+						}
 					}
 				}
 			},
@@ -288,9 +296,9 @@ define(function(require, exports, module) {
 			$("#ftOneHolidayLimit").val(data.tranOneHolidayLimit)
 		}
 		$("#fmerchantId").focus();
-		setTimeout(function(){
+		setTimeout(function() {
 			$("#fmerchantId").blur();
-		},0);
+		}, 0);
 	}
 
 	/**
@@ -587,10 +595,7 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			// Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
+
 		userParam = newParam;
 		return true;
 	}

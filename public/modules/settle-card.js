@@ -11,7 +11,9 @@ define(function(require, exports, module) {
 		importTpl = $('#importTpl').html(),
 		_grid, doms = {},
 		dictionaryCollection = {},
-		userParam = {};
+		userParam = {},
+		submitLock = false,
+		submitInterval = 2000;
 
 	function init() {
 		_grid = Grid.create({
@@ -113,7 +115,13 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						submitData(data);
+						if (!submitLock) {
+							submitData(data);
+							submitLock = true;
+							setTimeout(function() {
+								submitLock = false;
+							}, submitInterval);
+						}
 					}
 				}
 			},
@@ -539,7 +547,7 @@ define(function(require, exports, module) {
 				if (data.result) {
 					(typeof data.result === "string") && (data.result = JSON.parse(data.result));
 					if (data.result.code == 0) {
-						if (data.result.data.Failed == 0) {
+						if (data.result.data.Failed == 0 && data.result.data.Updated == 0) {
 							art_dialog.error('导入成功', data.result.msg);
 							console.log('reload data grid.');
 						} else {
@@ -560,7 +568,7 @@ define(function(require, exports, module) {
 							html.push('</tbody>');
 							html.push('</table>');
 							html.push('</div>');
-							art_dialog.error('导入失败', html.join(''));
+							art_dialog.error(data.result.data.Failed == 0 ? '导入成功' : '导入失败', html.join(''));
 						}
 						_grid.loadData();
 					} else {
@@ -629,10 +637,7 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			// Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
+
 		userParam = newParam;
 		return true;
 	}
