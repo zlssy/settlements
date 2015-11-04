@@ -698,10 +698,6 @@ define(function(require, exports, module) {
 				break;
 			}
 		}
-		if (!newchange) {
-			Box.alert('您的查询条件并没有做任何修改.');
-			return false;
-		}
 		userParam = newParam;
 		return true;
 	}
