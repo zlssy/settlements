@@ -32,7 +32,8 @@ define(function(require, exports, module) {
 			ownerIds: $('#ownerIds'),
 			ids: $('#ids')
 		},
-
+		submitLock = false,
+		submitInterval = 2000, // 点击按钮点击后锁定2秒钟
 		_grid;
 
 	function init() {
@@ -87,7 +88,7 @@ define(function(require, exports, module) {
 			}
 		});
 		_grid.listen('editCallback', function(row) {
-			if (dictionaryCollection.chargeTypeArr) {				
+			if (dictionaryCollection.chargeTypeArr) {
 				addAndUpdate(row);
 				$('#fownerId').prop('disabled', true);
 			}
@@ -155,8 +156,14 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						if (!submitData(data)) {
-							return false;
+						if (!submitLock) {
+							submitLock = true;
+							if (!submitData(data)) {
+								return false;
+							}
+							setTimeout(function(){
+								submitLock = false;
+							}, submitInterval);
 						}
 					}
 				}
@@ -226,14 +233,14 @@ define(function(require, exports, module) {
 					pass = false;
 					elp.addClass('has-error');
 				}
-			} else if(el.data('empty')){
+			} else if (el.data('empty')) {
 				if ('' != el.val().trim()) {
 					elp.removeClass('has-error');
 				} else {
 					pass = false;
 					elp.addClass('has-error');
 				}
-				
+
 			} else if (el.attr('id') == 'fownerId') {
 				if (el.val().trim()) {
 					elp.removeClass('has-error');
@@ -244,54 +251,53 @@ define(function(require, exports, module) {
 			}
 
 		} else {
-			var obj=$('.bootbox').find("#gdPanel").find("input");//里面有很多input名字重名的在不同费率下
-			if($("input[name=fchargeTypeInt]:checked").val()=='2')
-			{
+			var obj = $('.bootbox').find("#gdPanel").find("input"); //里面有很多input名字重名的在不同费率下
+			if ($("input[name=fchargeTypeInt]:checked").val() == '2') {
 				obj = $('.bootbox').find("#jtPanel").find("input");
-			}			
-			var pass1= validBase($('.bootbox').find("#baseInfoPanel").find("input"));//基本信息的valid判断
-			var pass2= validBase(obj);//各费率模块valid判断
+			}
+			var pass1 = validBase($('.bootbox').find("#baseInfoPanel").find("input")); //基本信息的valid判断
+			var pass2 = validBase(obj); //各费率模块valid判断
 			pass = pass1 && pass2;
-		}		
+		}
 		//return accountCheck.isPass() && pass;
 		return pass;
 	}
-	
+
 	//判断有效的根基func
-	function validBase(boxObj){
+	function validBase(boxObj) {
 		var pass = true;
 		boxObj.each(function(i, v) {
-				var $el = $(this),
-					$p = $el.parents('.form-group:first'),
-					isInt = $el.data('int'),
-					isEmpty = $el.data('empty'),
-					isDate = $el.hasClass('datepicker');
-				if (isDate) {
-					if (Utils.isDate($el.val())) {
-						$p.removeClass('has-error');
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-					}
+			var $el = $(this),
+				$p = $el.parents('.form-group:first'),
+				isInt = $el.data('int'),
+				isEmpty = $el.data('empty'),
+				isDate = $el.hasClass('datepicker');
+			if (isDate) {
+				if (Utils.isDate($el.val())) {
+					$p.removeClass('has-error');
+				} else {
+					pass = false;
+					$p.addClass('has-error');
 				}
-				if (isInt) {
-					if ($.isNumeric($el.val())) {
-						$p.removeClass('has-error');
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-					}
-				}				
-				if (isEmpty) {
-					if ('' != $el.val().trim()) {
-						$p.removeClass('has-error');
-					} else {
-						pass = false;
-						$p.addClass('has-error');
-					}
+			}
+			if (isInt) {
+				if ($.isNumeric($el.val())) {
+					$p.removeClass('has-error');
+				} else {
+					pass = false;
+					$p.addClass('has-error');
 				}
-			});
-		return pass;	
+			}
+			if (isEmpty) {
+				if ('' != $el.val().trim()) {
+					$p.removeClass('has-error');
+				} else {
+					pass = false;
+					$p.addClass('has-error');
+				}
+			}
+		});
+		return pass;
 	}
 
 	function getRowDetail(id, cb) {
@@ -401,7 +407,7 @@ define(function(require, exports, module) {
 				return $(this).val()
 			}).get(),
 			arr = [];
-		
+
 		data.id = row && row[0] && row[0].id || '';
 		if (fownerId) {
 			data.ownerId = fownerId;
@@ -426,15 +432,15 @@ define(function(require, exports, module) {
 		}
 		if (fchargeTypeInt == dictionaryCollection.chargeTypeArr[1].innerValue) {
 			start = 1;
-		}		
+		}
 		for (var i = 0; i < ffixedCharge.length - 1; i++) {
 			arr[i] = {};
-			arr[i].ruleId = fruleId[i+start];
-			arr[i].fixedCharge = ffixedCharge[i+start];
-			arr[i].excludeChannelCharge = fexcludeChanelCharge[i+start];
-			arr[i].variableRate = fvariableRate[i+start];
-			arr[i].chargeFloor = fchargeFloor[i+start];
-			arr[i].chargeCeiling = fchargeCeiling[i+start];
+			arr[i].ruleId = fruleId[i + start];
+			arr[i].fixedCharge = ffixedCharge[i + start];
+			arr[i].excludeChannelCharge = fexcludeChanelCharge[i + start];
+			arr[i].variableRate = fvariableRate[i + start];
+			arr[i].chargeFloor = fchargeFloor[i + start];
+			arr[i].chargeCeiling = fchargeCeiling[i + start];
 			arr[i].transactionFloor = ftransactionFloor[i];
 			arr[i].transactionCeiling = ftransactionCeiling[i];
 		}
@@ -451,7 +457,7 @@ define(function(require, exports, module) {
 				} else if (-102 == json.code) {
 					location.reload();
 				} else {
-					if (json.code == '107' || json.code == '108') {
+					if (json.code == '106' || json.code == '107' || json.code == '108') {
 						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
 						alert('所有者编号不存在，数据保存失败！');
@@ -495,8 +501,7 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					showHistory(json.data.pageData);
-				}
-				else if(-100 == json.code){
+				} else if (-100 == json.code) {
 					location.reload();
 				}
 			},
