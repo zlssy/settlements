@@ -32,6 +32,9 @@ define(function(require, exports, module) {
 				name: '商户编码',
 				index: 'merchantId'
 			}, {
+				name: '商户名称',
+				index: 'merchantName'
+			}, {
 				name: '清算日期',
 				index: 'clearingDate'
 			}, {
@@ -135,7 +138,7 @@ define(function(require, exports, module) {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView:2
+			minView: 2
 		});
 	}
 
