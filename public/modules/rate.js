@@ -161,7 +161,7 @@ define(function(require, exports, module) {
 							if (!submitData(data)) {
 								return false;
 							}
-							setTimeout(function(){
+							setTimeout(function() {
 								submitLock = false;
 							}, submitInterval);
 						}
@@ -457,10 +457,14 @@ define(function(require, exports, module) {
 				} else if (-102 == json.code) {
 					location.reload();
 				} else {
-					if (json.code == '106' || json.code == '107' || json.code == '108') {
+					if (json.code == '106' || json.code == '107') {
 						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
 						alert('所有者编号不存在，数据保存失败！');
+					} else if (json.code == '108') {
+						pass = false;
+						$("input[name='feffectiveDate']").parents('.form-group:first').addClass('has-error');
+						alert('有效期起止时间必须大于当前时间，数据保存失败！');
 					} else if (json.code == '109') {
 						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');

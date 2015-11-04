@@ -200,6 +200,7 @@ define(function(require, exports, module) {
 				}
 			});
 		}
+		!accountCheck.isPass() && $('#shbh').parents('.form-group:first').addClass('has-error');
 		return accountCheck.isPass() && pass;
 	}
 

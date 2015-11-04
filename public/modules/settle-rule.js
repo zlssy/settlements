@@ -432,6 +432,7 @@ define(function(require, exports, module) {
 				}
 			});
 		}
+		!accountCheck.isPass() && $('#fmerchantId').parents('.form-group:first').addClass('has-error');
 		return accountCheck.isPass() && pass;
 	}
 
