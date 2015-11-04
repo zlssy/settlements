@@ -104,6 +104,13 @@ define(function(require, exports, module) {
 	}
 
 	function exportExcel() {
+		var settleDateStart = $('#settleDateStart').val(), settleDateEnd = $('#settleDateEnd').val();
+		if(!settleDateStart || !settleDateEnd){
+			Box.alert('请选择结算日期后下载。');
+			return;
+		}
+		userParam.settleDateStart = settleDateStart;
+		userParam.settleDateEnd = settleDateEnd;
 		var a = document.createElement('a');
 		var url = 'http://testtclpay.tclclouds.com/settlement/settleStatement/export?userId=&' + Utils.object2param(userParam);
 		a.href = url; //global_config.serverRoot + '/settleStatement/export?userId=&' + Utils.object2param(userParam);

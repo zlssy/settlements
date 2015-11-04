@@ -143,7 +143,14 @@ define(function(require, exports, module) {
 	}
 
 	function exportExcel() {
+		var clearingDateStart = doms.qfstart.val(), clearingDateEnd = doms.qfend.val();
+		if(!clearingDateStart || !clearingDateEnd){
+			Box.alert('请选择清分起始日期后导出。');
+			return;
+		}
 		var a = document.createElement('a');
+		userParam.clearingDateStart = clearingDateStart;
+		userParam.clearingDateEnd = clearingDateEnd;
 		a.href = global_config.serverRoot + 'clearing/export?userId=&' + Utils.object2param(userParam);
 		a.target = '_blank';
 		a.height = 0;
