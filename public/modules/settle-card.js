@@ -376,7 +376,7 @@ define(function(require, exports, module) {
 	 * @return {[type]} [description]
 	 */
 	function getUrl() {
-		return global_config.serverRoot + 'settleCard/list?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'settleCard/list?userId=&sort=merchantIds&' + Utils.object2param(userParam);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
