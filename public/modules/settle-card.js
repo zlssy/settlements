@@ -594,7 +594,7 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val();
 		if (commercialId) {
-			newParam.commercialIds = encodeURIComponent(commercialId);
+			newParam.merchantIds = encodeURIComponent(commercialId);
 		}
 		if (issuer) {
 			newParam.issuer = encodeURIComponent(issuer);
