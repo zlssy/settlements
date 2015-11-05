@@ -259,21 +259,12 @@ define(function(require, exports, module) {
 		var d1 = $('input[name="feffectiveDate"]'),
 			dv1 = d1.val(),
 			d2 = $('input[name="fexpirationDate"]'),
-			dv2 = d2.val(),
-			now = Date.now();
+			dv2 = d2.val();
 		d1.parents('.input-group:first').removeClass('has-error');
 		d2.parents('.input-group:first').removeClass('has-error');
 		if(dv1 && dv2){
 			dv1 = new Date(dv1).getTime();
-			dv2 = new Date(dv2).getTime();
-			if(dv1 < now){
-				pass = false;
-				d1.parents('.input-group:first').addClass('has-error');
-			}
-			if(dv2 < now){
-				pass = false;
-				d2.parents('.input-group:first').addClass('has-error');
-			}
+			dv2 = new Date(dv2).getTime();			
 			if(dv1 > dv2){
 				pass = false;
 				d1.parents('.input-group:first').addClass('has-error');
