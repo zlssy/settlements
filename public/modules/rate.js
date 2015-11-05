@@ -255,6 +255,30 @@ define(function(require, exports, module) {
 			var pass2 = validBase(obj); //各费率模块valid判断
 			pass = pass1 && pass2;
 		}
+		/** 特殊校验 */
+		var d1 = $('input[name="feffectiveDate"]'),
+			dv1 = d1.val(),
+			d2 = $('input[name="fexpirationDate"]'),
+			dv2 = d2.val(),
+			now = Date.now();
+		d1.parents('.input-group:first').removeClass('has-error');
+		d2.parents('.input-group:first').removeClass('has-error');
+		if(dv1 && dv2){
+			dv1 = new Date(dv1).getTime();
+			dv2 = new Date(dv2).getTime();
+			if(dv1 < now){
+				pass = false;
+				d1.parents('.input-group:first').addClass('has-error');
+			}
+			if(dv2 < now){
+				pass = false;
+				d2.parents('.input-group:first').addClass('has-error');
+			}
+			if(dv1 > dv2){
+				pass = false;
+				d1.parents('.input-group:first').addClass('has-error');
+			}
+		}
 		return pass;
 	}
 
@@ -457,7 +481,8 @@ define(function(require, exports, module) {
 						Box.alert('所有者编号不存在，数据保存失败！');
 					} else if (json.code == '108') {
 						$("input[name='feffectiveDate']").parents('.form-group:first').addClass('has-error');
-						Box.alert('有效期起止时间必须大于当前时间，数据保存失败！');
+						$("input[name='fexpirationDate']").parents('.form-group:first').addClass('has-error');
+						Box.alert('有效期不正确，请确保结束时间大于开始时间并且都大于当前时间！');
 					} else if (json.code == '109') {
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
 						Box.alert('所有者编号重复，数据保存失败！');
