@@ -473,7 +473,7 @@ define(function(require, exports, module) {
 					} else if (json.code == '108') {
 						$("input[name='feffectiveDate']").parents('.form-group:first').addClass('has-error');
 						$("input[name='fexpirationDate']").parents('.form-group:first').addClass('has-error');
-						Box.alert('有效期不正确，请确保结束时间大于开始时间并且都大于当前时间！');
+						Box.alert('有效期不正确，请确保结束时间大于开始时间并且结束时间大于当前时间！');
 					} else if (json.code == '109') {
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
 						Box.alert('所有者编号重复，数据保存失败！');
