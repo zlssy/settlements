@@ -2,7 +2,7 @@
 <script id="ace_script_position" src="<%-setting.filePath%>/js/ace-elements.min.js"></script>
 <script src="<%-setting.filePath%>/js/ace.min.js"></script>
 <script>
-$('.nav-list').on('click', 'a', function(e) {
+$('.nav-list > li > a').on('click', function(e) {
 	var $el = $(this),
 		id = $el.attr('id');
 	if (id) {

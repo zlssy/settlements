@@ -200,6 +200,7 @@ define(function(require, exports, module) {
 				}
 			});
 		}
+		!accountCheck.isPass() && $('#shbh').parents('.form-group:first').addClass('has-error');
 		return accountCheck.isPass() && pass;
 	}
 
@@ -376,7 +377,7 @@ define(function(require, exports, module) {
 	 * @return {[type]} [description]
 	 */
 	function getUrl() {
-		return global_config.serverRoot + 'settleCard/list?userId=&' + Utils.object2param(userParam);
+		return global_config.serverRoot + 'settleCard/list?userId=&sort=merchantIds&' + Utils.object2param(userParam);
 	}
 
 	function getDictionaryFromServer(type, callback, errorback) {
@@ -593,7 +594,7 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val();
 		if (commercialId) {
-			newParam.commercialIds = encodeURIComponent(commercialId);
+			newParam.merchantIds = encodeURIComponent(commercialId);
 		}
 		if (issuer) {
 			newParam.issuer = encodeURIComponent(issuer);

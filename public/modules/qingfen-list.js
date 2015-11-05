@@ -32,6 +32,9 @@ define(function(require, exports, module) {
 				name: '商户编码',
 				index: 'merchantId'
 			}, {
+				name: '商户名称',
+				index: 'merchantName'
+			}, {
 				name: '清算日期',
 				index: 'clearingDate'
 			}, {
@@ -135,12 +138,19 @@ define(function(require, exports, module) {
 		$('.datepicker').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView:2
+			minView: 2
 		});
 	}
 
 	function exportExcel() {
+		var clearingDateStart = doms.qfstart.val(), clearingDateEnd = doms.qfend.val();
+		if(!clearingDateStart || !clearingDateEnd){
+			Box.alert('请选择清分起始日期后导出。');
+			return;
+		}
 		var a = document.createElement('a');
+		userParam.clearingDateStart = clearingDateStart;
+		userParam.clearingDateEnd = clearingDateEnd;
 		a.href = global_config.serverRoot + 'clearing/export?userId=&' + Utils.object2param(userParam);
 		a.target = '_blank';
 		a.height = 0;
@@ -217,7 +227,7 @@ define(function(require, exports, module) {
 			newParam.merchantIds = commercialId;
 		}
 		if (commercialName) {
-			newParam.commercialName = encodeURIComponent(commercialName);
+			newParam.merchantName = encodeURIComponent(commercialName);
 		}
 		if (account) {
 			newParam.account = account;

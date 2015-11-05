@@ -62,7 +62,7 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: '',
 				format: function(v, ov, col) {
-					if ('已付款' != col['settleStatus'].toString().trim()) {
+					if ('1' == col.status) {
 						return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认">付款确认</a></div>';
 					} else {
 						return ' '
@@ -104,6 +104,13 @@ define(function(require, exports, module) {
 	}
 
 	function exportExcel() {
+		var settleDateStart = $('#settleDateStart').val(), settleDateEnd = $('#settleDateEnd').val();
+		if(!settleDateStart || !settleDateEnd){
+			Box.alert('请选择结算日期后下载。');
+			return;
+		}
+		userParam.settleDateStart = settleDateStart;
+		userParam.settleDateEnd = settleDateEnd;
 		var a = document.createElement('a');
 		var url = 'http://testtclpay.tclclouds.com/settlement/settleStatement/export?userId=&' + Utils.object2param(userParam);
 		a.href = url; //global_config.serverRoot + '/settleStatement/export?userId=&' + Utils.object2param(userParam);
