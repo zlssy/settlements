@@ -10,3 +10,6 @@
 npm-debug.log
 /.idea
 local.js
+
+#file
+/views/test.ejs

@@ -2,7 +2,6 @@ define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
-		accountCheck = require('checkAccount'),
 
 		addEditTpl = $('#viewTpl-baseInfo').html(),
 		viewTpl = $('#viewTpl').html(),
@@ -145,26 +144,27 @@ define(function(require, exports, module) {
 	//新增编辑
 	function addAndUpdate(data, cb) {
 		var opt = {},
-			id = '';
+			id = '',
+			theDialog;
 		addEditTpl = baseTpl + gdTpl + jtTpl;
 		opt.message = '<h4><b>' + (data ? ('function' == typeof cb ? '查看费率' : '修改费率') : '添加费率') + '</b></h4><hr class="no-margin">' + addEditTpl;
 		opt.buttons = {
 			"save": {
 				label: '<i class="ace-icon fa fa-check"></i> 保存',
 				className: 'btn-sm btn-success',
-				callback: function() {
+				callback: function(a, b) {
+					console.log(a, b, arguments);
 					if (!validate()) {
 						return false;
 					} else {
 						if (!submitLock) {
 							submitLock = true;
-							if (!submitData(data)) {
-								return false;
-							}
+							submitData(data, theDialog);
 							setTimeout(function() {
 								submitLock = false;
 							}, submitInterval);
 						}
+						return false;
 					}
 				}
 			},
@@ -176,7 +176,7 @@ define(function(require, exports, module) {
 		if ('function' == typeof cb) {
 			delete opt.buttons.save;
 		}
-		showDialog(opt);
+		theDialog = showDialog(opt);
 		if (dictionaryCollection.chargeStatusArr) {
 			$('input[name="fchargeStatusInt"]:first').attr('value', dictionaryCollection.chargeStatusArr[0].innerValue).trigger('click');
 			$('input[name="fchargeStatusInt"]:last').attr('value', dictionaryCollection.chargeStatusArr[1].innerValue);
@@ -203,10 +203,6 @@ define(function(require, exports, module) {
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
-		});
-		accountCheck.check({
-			el: $('#fownerId'),
-			elp: $('#fownerId').parents('.form-group:first')
 		});
 	}
 
@@ -259,7 +255,6 @@ define(function(require, exports, module) {
 			var pass2 = validBase(obj); //各费率模块valid判断
 			pass = pass1 && pass2;
 		}
-		//return accountCheck.isPass() && pass;
 		return pass;
 	}
 
@@ -372,7 +367,7 @@ define(function(require, exports, module) {
 		}
 	}
 
-	function submitData(row) {
+	function submitData(row, dialog) {
 		var data = {},
 			start = 0,
 			fownerId = $("#fownerId").val(),
@@ -445,7 +440,6 @@ define(function(require, exports, module) {
 			arr[i].transactionCeiling = ftransactionCeiling[i];
 		}
 		data.dataArray = JSON.stringify(arr);
-		var pass = true;
 		$.ajax({
 			url: global_config.serverRoot + 'clearingCharge/addOrUpdate',
 			method: 'post',
@@ -453,22 +447,20 @@ define(function(require, exports, module) {
 			async: false,
 			success: function(json) {
 				if ('0' == json.code) {
+					dialog.remove();
 					_grid.loadData();
 				} else if (-102 == json.code) {
 					location.reload();
 				} else {
 					if (json.code == '106' || json.code == '107') {
-						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
-						alert('所有者编号不存在，数据保存失败！');
+						Box.alert('所有者编号不存在，数据保存失败！');
 					} else if (json.code == '108') {
-						pass = false;
 						$("input[name='feffectiveDate']").parents('.form-group:first').addClass('has-error');
-						alert('有效期起止时间必须大于当前时间，数据保存失败！');
+						Box.alert('有效期起止时间必须大于当前时间，数据保存失败！');
 					} else if (json.code == '109') {
-						pass = false;
 						$("#fownerId").parents('.form-group:first').addClass('has-error');
-						alert('所有者编号重复，数据保存失败！');
+						Box.alert('所有者编号重复，数据保存失败！');
 					} else {
 						Box.alert('数据保存失败！');
 					}
@@ -477,13 +469,12 @@ define(function(require, exports, module) {
 			error: function(json) {
 				Box.alert('数据保存失败~');
 			}
-		})
-		return pass;
+		});
 	}
 
 	//box dialog init
 	function showDialog(opt) {
-		Box.dialog(opt);
+		return Box.dialog(opt);
 	}
 
 	/**

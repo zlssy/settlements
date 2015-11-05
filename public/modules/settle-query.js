@@ -62,7 +62,7 @@ define(function(require, exports, module) {
 				name: '操作',
 				index: '',
 				format: function(v, ov, col) {
-					if ('已付款' != col['settleStatus'].toString().trim()) {
+					if ('1' == col.status) {
 						return '<div class="ui-pg-div align-center"><a href="javascript:;" class="confirm" title="付款确认">付款确认</a></div>';
 					} else {
 						return ' '
