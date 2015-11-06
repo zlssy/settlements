@@ -227,7 +227,7 @@ define(function(require, exports, module) {
 			newParam.merchantIds = commercialId;
 		}
 		if (commercialName) {
-			newParam.merchantName = encodeURIComponent(commercialName);
+			newParam.merchantName = commercialName;//encodeURIComponent(commercialName);
 		}
 		if (account) {
 			newParam.account = account;
