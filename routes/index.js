@@ -75,6 +75,12 @@ router.all('/tradeRecord/list', function(req, res, next){
 		req: req
 	})
 });
+router.all('/qingfen-detail', function(req, res, next){
+	res.render('qingfen-detail', {
+		title: 'TCL业务清算平台',
+		req: req
+	})
+});
 
 /** get root 放到最后 */
 router.get('/', function(req, res, next) {
