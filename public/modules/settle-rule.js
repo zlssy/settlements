@@ -169,7 +169,32 @@ define(function(require, exports, module) {
 		});
 		accountCheck.check({
 			el: $('#fmerchantId'),
-			elp: $('#fmerchantId').parents('.form-group:first')
+			elp: $('#fmerchantId').parents('.form-group:first'),
+			ajaxComplete: function(ajaxReturn, pass) {
+				var $shbh = $('#fmerchantId');
+				var accountInfo = $shbh.parent().find('.error-info.account');
+				var emptyInfo = $shbh.parent().find('.error-info.empty');
+
+				if ($shbh.val() == '') {
+					if (!emptyInfo.size()) {
+						$shbh.parent().append('<div class="error-info empty">' + $shbh.data('emptyinfo') + '</div>');
+					} else {
+						emptyInfo.show();
+					}
+				} else {
+					emptyInfo.hide();
+					if (!accountCheck.isPass()) {
+						$shbh.parents('.form-group:first').addClass('has-error');
+						if (!accountInfo.size()) {
+							$shbh.parent().append('<div class="error-info account">该账号不存在，请重新输入！</div>');
+						} else {
+							accountInfo.show();
+						}
+					} else {
+						accountInfo.hide();
+					}
+				}
+			}
 		});
 	}
 
@@ -431,8 +456,7 @@ define(function(require, exports, module) {
 					}
 				}
 			});
-		}
-		!accountCheck.isPass() && $('#fmerchantId').parents('.form-group:first').addClass('has-error');
+		}!accountCheck.isPass() && $('#fmerchantId').parents('.form-group:first').addClass('has-error');
 		return accountCheck.isPass() && pass;
 	}
 

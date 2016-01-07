@@ -10,7 +10,7 @@ var router = express.Router();
 
 //代理
 var daili = true; //是否启用代理
-var daili_url = setting.apiUrl || "http://testtclpay.tclclouds.com/settlement";
+var daili_url = setting.apiUrl || "http://172.27.9.15:10880" || "http://testtclpay.tclclouds.com/settlement";
 var userid = 12345;
 
 if (daili) {

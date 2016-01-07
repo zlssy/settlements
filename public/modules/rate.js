@@ -33,6 +33,7 @@ define(function(require, exports, module) {
 		},
 		submitLock = false,
 		submitInterval = 2000, // 点击按钮点击后锁定2秒钟
+		validatePass = false,
 		_grid;
 
 	function init() {
@@ -198,8 +199,48 @@ define(function(require, exports, module) {
 			todayHighlight: true,
 			minView: 2
 		});
-		$("#fownerId").on('change', function(e) {
-			validate($(this));
+		$("#fownerId").on('blur', function(e) {
+			var $el = $(this),
+				v = $el.val(),
+				errInfo = $el.parent().find('.error-info'),
+				ep = $el.parents('.form-group');
+			ep.removeClass('has-error');
+			if ('' == v.trim()) {
+				if (errInfo.size()) {
+					errInfo.html('请输入所有者编号。');
+				} else {
+					$el.parent().append('<div class="error-info">请输入所有者编号。</div>');
+				}
+				ep.addClass('has-error');
+				validatePass = false;
+			} else {
+				$.ajax({
+					url: global_config.serverRoot + '/clearingCharge/add/isValid?ownerId=' + v,
+					success: function(json) {
+						var msg = '';
+						if ('0' == json.code) {
+							validatePass = json.data.isValid;
+						} else if ('111' == json.code) {
+							msg = '改所有者的费率规则已存在，请直接修改。';
+							validatePass = false;
+						} else {
+							msg = '改所有者编号不存在。';
+							validatePass = false;
+						}
+						if (!validatePass) {
+							ep.addClass('has-error');
+							if (errInfo.size()) {
+								errInfo.html(msg);
+							} else {
+								$el.parent().append('<div class="error-info">' + msg + '</div>');
+							}
+						}
+					},
+					error: function(e) {
+						// report and retry
+					}
+				});
+			}
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));
@@ -262,15 +303,15 @@ define(function(require, exports, module) {
 			dv2 = d2.val();
 		d1.parents('.input-group:first').removeClass('has-error');
 		d2.parents('.input-group:first').removeClass('has-error');
-		if(dv1 && dv2){
+		if (dv1 && dv2) {
 			dv1 = new Date(dv1).getTime();
-			dv2 = new Date(dv2).getTime();			
-			if(dv1 > dv2){
+			dv2 = new Date(dv2).getTime();
+			if (dv1 > dv2) {
 				pass = false;
 				d1.parents('.input-group:first').addClass('has-error');
 			}
 		}
-		return pass;
+		return validatePass && pass;
 	}
 
 	//判断有效的根基func
@@ -282,6 +323,19 @@ define(function(require, exports, module) {
 				isInt = $el.data('int'),
 				isEmpty = $el.data('empty'),
 				isDate = $el.hasClass('datepicker');
+			if('fownerId' == $el.attr('id')){
+				if($el.val() != ''){
+					return ;
+				}
+				else{
+					if($el.parent().find('.error-info').size()){
+						$el.parent().find('.error-info').html('请输入所有者编号。');
+					}
+					else{
+						$el.parent().append('<div class="error-info">请输入所有者编号。</div>');
+					}
+				}
+			}
 			if (isDate) {
 				if (Utils.isDate($el.val())) {
 					$p.removeClass('has-error');

@@ -81,6 +81,18 @@ router.all('/qingfen-detail', function(req, res, next){
 		req: req
 	})
 });
+router.all('/daily-collect', function(req, res, next){
+	res.render('daily-collect', {
+		title: 'TCL业务清算平台',
+		req: req
+	})
+});
+router.all('/charge', function(req, res, next){
+	res.render('charge', {
+		title: 'TCL业务清算平台',
+		req: req
+	})
+});
 
 /** get root 放到最后 */
 router.get('/', function(req, res, next) {

@@ -195,7 +195,7 @@ define(function(require, exports, module) {
 					colval = d[col.index];
 					xsscheck = !!colval;
 					colval = 'function' === typeof colfn ? colfn(xsscheck ? colval : d[this.key], colval, d) : colval;
-					html.push('<td role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
+					html.push('<td style="word-wrap:break-word;word-break:break-all;white-space: pre-wrap;" role="gridcell" title="' + (xsscheck ? Xss.inDoubleQuotedAttr(colval) : '') + '" aria-describedby="' + this.id + '_' + col.index + '">' + (xsscheck ? Xss.inHTMLData(colval) : colval) + '</td>');
 				}
 				html.push('</tr>');
 			};

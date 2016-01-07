@@ -26,7 +26,7 @@ define(function(require, exports, module) {
 
 	function loadData() {
 		_grid = Grid.create({
-			key: 'merchantId',
+			key: 'id',
 			checkbox: false,
 			cols: [{
 				name: '商户编码',
@@ -76,6 +76,15 @@ define(function(require, exports, module) {
 			}, {
 				name: '状态',
 				index: 'status'
+			},{
+				name: '操作',
+				format: function(key, v, row){
+					var s = '<div style="text-align:center;"><a href="javascript:void(0)" class="action-settle">结算</a></div>';
+					if('1' == row.statusInt){
+						return s;
+					}
+					return '';
+				}
 			}],
 			url: getUrl(),
 			pagesize: 10,
@@ -109,7 +118,7 @@ define(function(require, exports, module) {
 				id = $el.attr('id') || '',
 				tag = $el.get(0).tagName.toLowerCase();
 			if (cls && cls.indexOf('fa-calendar') > -1) {
-				$el.parent().siblings().focus();
+				$el.parent().prev().focus();
 			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
 				if (getParams()) {
@@ -132,6 +141,11 @@ define(function(require, exports, module) {
 			if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
 				exportExcel();
 			}
+			if(cls && cls.indexOf('action-settle') > -1){
+				Box.confirm('确认结算', function(v){
+					v && settle();
+				});
+			}
 		};
 
 		$(document.body).on('click', evtListener);
@@ -140,6 +154,30 @@ define(function(require, exports, module) {
 			todayHighlight: true,
 			minView: 2
 		});
+	}
+
+	function settle(){
+		var row = _grid.getSelectedRow();
+		var id = row && row[0] && row[0].id;
+		if(id){
+			$.ajax({
+				url: global_config.serverRoot + 'clearing/doSettle',
+				type: 'post',
+				data: {id: id},
+				success: function(json){
+					if('0' == json.code){
+						Box.alert('结算成功。');
+						_grid.loadData();
+					}
+					else{
+						Box.alert('结算失败。');
+					}
+				},
+				error: function(e){
+					// report
+				}
+			})
+		}
 	}
 
 	function exportExcel() {

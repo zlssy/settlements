@@ -24,6 +24,9 @@
 			.row{
 				margin: 4px 0;
 			}
+			.error-info{
+				color: red;
+			}
 		</style>
 	</head>
 <body class="no-skin">
@@ -161,13 +164,13 @@
 	<div class="col-xs-12 col-sm-6 form-group">
 		<label class="col-sm-3 control-label no-padding lm-5" for="shbh">商户编号:</label>
 		<div class="col-sm-9">
-			<input type="text" id="shbh" class="form-control col-sm-5 input-sm" placeholder="必须填写" data-empty='true'>
+			<input type="text" id="shbh" class="form-control col-sm-5 input-sm" placeholder="必须填写" data-empty='true' data-emptyinfo="请输入商户编号！">
 		</div>
 	</div>
 	<div class="col-xs-12 col-sm-6 form-group">
 		<label class="col-sm-3 control-label no-padding lm-5" for="yhzh">银行账号:</label>
 		<div class="col-sm-9">
-			<input type="text" id="yhzh" class="form-control col-sm-5 input-sm">
+			<input type="text" id="yhzh" class="form-control col-sm-5 input-sm" data-empty="true" data-emptyinfo="请输入银行账号！">
 		</div>
 	</div>
 </div>

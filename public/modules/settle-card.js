@@ -139,14 +139,39 @@ define(function(require, exports, module) {
 			todayHighlight: true,
 			minView: 2
 		});
-		$('.bootbox input, .bootbox select').on('change', function(e) {
+		$('.bootbox input, .bootbox select').on('blur', function(e) {
 			validate($(this));
 		});
 		var shbh = $('#shbh'),
 			elp = shbh.parents('.form-group:first');
 		accountCheck.check({
 			el: shbh,
-			elp: elp
+			elp: elp,
+			ajaxComplete: function(ajaxReturn, pass) {
+				var $shbh = $('#shbh');
+				var accountInfo = $shbh.parent().find('.error-info.account');
+				var emptyInfo = $shbh.parent().find('.error-info.empty');
+
+				if ($shbh.val() == '') {
+					if (!emptyInfo.size()) {
+						$shbh.parent().append('<div class="error-info empty">' + $shbh.data('emptyinfo') + '</div>');
+					} else {
+						emptyInfo.show();
+					}
+				} else {
+					emptyInfo.hide();
+					if (!accountCheck.isPass()) {
+						$shbh.parents('.form-group:first').addClass('has-error');
+						if (!accountInfo.size()) {
+							$shbh.parent().append('<div class="error-info account">该账号不存在，请重新输入！</div>');
+						} else {
+							accountInfo.show();
+						}
+					} else {
+						accountInfo.hide();
+					}
+				}
+			}
 		});
 	}
 
@@ -163,8 +188,27 @@ define(function(require, exports, module) {
 				if (!isDate(el.val())) {
 					pass = false;
 					elp.addClass('has-error');
+					if (el.parent().parent().find('.error-info').size()) {
+						el.parent().parent().find('.error-info').show();
+					} else {
+						el.parent().parent().append('<div class="error-info">请填写正确的日期。</div>');
+					}
 				} else {
 					elp.removeClass('has-error');
+				}
+			} else if (el.data('empty')) {
+				var errorInfo = elp.find('.error-info.empty');
+				if ('' == el.val().trim()) {
+					var msg = el.data('emptyinfo');
+					elp.addClass('has-error');
+					if (!errorInfo.size()) {
+						el.parent().append('<div class="error-info empty">' + msg + '</div>');
+					} else {
+						errorInfo.show();
+					}
+				} else {
+					elp.removeClass('has-error');
+					errorInfo.hide();
 				}
 			}
 		} else {
@@ -173,13 +217,20 @@ define(function(require, exports, module) {
 					$p = $el.parents('.form-group:first'),
 					isInt = $el.data('int'),
 					isEmpty = $el.data('empty'),
-					isDate = $el.hasClass('datepicker');
+					isDate = $el.hasClass('datepicker'),
+					emptyInfo = $el.parent().find('.error-info.empty');
 				if (isDate) {
 					if (Utils.isDate($el.val())) {
 						$p.removeClass('has-error');
+						$el.parent().find('.error-info').remove();
 					} else {
 						pass = false;
 						$p.addClass('has-error');
+						if ($el.parent().parent().find('.error-info').size()) {
+							$el.parent().parent().find('.error-info').show();
+						} else {
+							$el.parent().parent().append('<div class="error-info">请填写正确的日期。</div>');
+						}
 					}
 				}
 				if (isInt) {
@@ -193,14 +244,22 @@ define(function(require, exports, module) {
 				if (isEmpty) {
 					if ('' != $el.val().trim()) {
 						$p.removeClass('has-error');
+						if (emptyInfo.size()) {
+							emptyInfo.hide()
+						}
 					} else {
 						pass = false;
 						$p.addClass('has-error');
+						if (emptyInfo.size()) {
+							emptyInfo.show();
+						} else {
+							$el.parent().append('<div class="error-info empty">' + $el.data('emptyinfo') + '</div>')
+						}
 					}
 				}
 			});
 		}
-		!accountCheck.isPass() && $('#shbh').parents('.form-group:first').addClass('has-error');
+
 		return accountCheck.isPass() && pass;
 	}
 

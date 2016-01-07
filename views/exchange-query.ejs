@@ -52,7 +52,31 @@
                             <div class="widget-body">
                                 <div class="widget-main">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-4">
+                                        <div class="col-xs-12 col-sm-6">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">源币种:</label></div>
+                                            <div class="col-sm-9 no-padding">
+                                                <select class="form-control" name="srcCurrencyCode" dict-name="currencyCode">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">目标币种:</label></div>
+                                            <div class="col-sm-9 no-padding">
+                                                <select class="form-control" name="targetCurrencyCode" dict-name="currencyCode">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">状态:</label></div>
+                                            <div class="col-sm-9 no-padding">
+                                                <select class="form-control" dict-name="exchangeStatus" name="status">
+                                                    <option value="">全部</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6">
                                             <label class="col-sm-3 no-padding lm-5">创建日期:</label>
                                             <div class="col-xs-12 col-sm-9 no-padding">
                                                 <div class="input-group">
@@ -62,32 +86,6 @@
                                                     <input type="text" class="input-sm form-control datepicker" id="endDate" name="creationDateEnd" placeholder="to" data-date-format="yyyy-mm-dd hh:ii" />
                                                     <label for="endDate" class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></label>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-4">
-                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">源币种:</label></div>
-                                            <div class="col-sm-9 no-padding">
-                                                <select class="form-control" name="srcCurrencyCode" dict-name="currencyCode">
-                                                    <option value="">全部</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-4">
-                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">目标币种:</label></div>
-                                            <div class="col-sm-9 no-padding">
-                                                <select class="form-control" name="targetCurrencyCode" dict-name="currencyCode">
-                                                    <option value="">全部</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-4">
-                                            <div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">状态:</label></div>
-                                            <div class="col-sm-9 no-padding">
-                                                <select class="form-control" dict-name="exchangeStatus" name="status">
-                                                    <option value="">全部</option>
-                                                </select>
                                             </div>
                                         </div>
                                     </div>
