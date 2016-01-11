@@ -29,6 +29,7 @@ define(function(require, exports, module) {
 	function init() {
 		_grid = Grid.create({
 			key: 'id',
+			checkbox: false,
 			cols: [{
 				name: '商户编号',
 				index: 'merchantId'
