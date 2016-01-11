@@ -654,16 +654,16 @@ define(function(require, exports, module) {
 			expirationDateStart = doms.expirationDateStart.val(),
 			expirationDateEnd = doms.expirationDateEnd.val();
 		if (commercialId) {
-			newParam.merchantIds = encodeURIComponent(commercialId);
+			newParam.merchantIds = commercialId;
 		}
 		if (issuer) {
-			newParam.issuer = encodeURIComponent(issuer);
+			newParam.issuer = issuer;
 		}
 		if (userName) {
-			newParam.userName = encodeURIComponent(userName);
+			newParam.userName = userName;
 		}
 		if (cardNumber) {
-			newParam.cardNumber = encodeURIComponent(cardNumber);
+			newParam.cardNumber = cardNumber;
 		}
 		if (cardType != '0') {
 			newParam.cardType = cardType;

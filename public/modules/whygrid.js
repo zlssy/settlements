@@ -175,6 +175,10 @@ var Lang_config = {
         .on('errdata','table,ul.tree',function(e,err){
         		var errmsg="";
         		if(typeof err == "object"){
+        			if('-100' == err.code){
+        				location.reload();
+        				return;
+        			}
         			errmsg += err.status ? "status:" + err.status : '';
         			errmsg += err.statusText ? " statusText:" + err.statusText : '';
         			errmsg += err.responseText ? " responseText:" + err.responseText : '';
