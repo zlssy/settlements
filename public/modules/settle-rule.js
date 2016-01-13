@@ -22,8 +22,8 @@ define(function(require, exports, module) {
 		addEditTpl = $('#addEditTpl').html(),
 		viewTpl = $('#viewTpl').html(),
 		listContainer = $('#grid_list'),
-		submitLock = false,
-		submitInterval = 2000, // 2秒之内限定只能点击提交按钮一次
+		actionLock = {},
+		lockInterval = 3000, // 3秒之内限定只能点击提交按钮一次
 		_grid;
 
 	function init() {
@@ -120,6 +120,14 @@ define(function(require, exports, module) {
 	 * @param {[type]} data [description]
 	 */
 	function addAndUpdate(data) {
+		if (actionLock.addAndUpdate) {
+			return;
+		}
+		actionLock.addAndUpdate = true;
+		setTimeout(function() {
+			actionLock.addAndUpdate = false;
+		}, lockInterval);
+
 		var opt = {
 				modal: true,
 				dragable: true,
@@ -137,12 +145,12 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						if (!submitLock) {
+						if (!actionLock.submitData) {
 							submitData(data);
-							submitLock = true;
+							actionLock.submitData = true;
 							setTimeout(function() {
-								submitLock = false;
-							}, submitInterval);
+								actionLock.submitData = false;
+							}, lockInterval);
 						}
 					}
 				}
@@ -160,7 +168,15 @@ define(function(require, exports, module) {
 			$('input[name="fstatus"]:last').attr('value', dictionaryCollection.statusArr[1].innerValue);
 		}
 		data && getRowDetail(data[0].id);
-		$('.bootbox .datepicker').datetimepicker({
+		$('.bootbox #feffectiveDate').datetimepicker({
+			autoclose: true,
+			todayHighlight: true,
+			minView: 2,
+			endDate: new Date()
+		}).on('changeDate', function(ev) {
+			$('.bootbox #fexpirationDate').val('').datetimepicker('setStartDate', ev.date);
+		});
+		$('.bootbox #fexpirationDate').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
 			minView: 2
@@ -510,6 +526,14 @@ define(function(require, exports, module) {
 	}
 
 	function viewHistory(row) {
+		if (actionLock.viewHistory) {
+			return;
+		}
+		actionLock.viewHistory = true;
+		setTimeout(function() {
+			actionLock.viewHistory = false;
+		}, lockInterval);
+
 		var id = row[0].id;
 		$.ajax({
 			url: global_config.serverRoot + '/settleRule/history?userId=' + '&id=' + id,

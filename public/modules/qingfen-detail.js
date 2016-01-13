@@ -96,11 +96,18 @@ define(function(require, exports, module) {
 					}
 					if (data.data && data.data.dataArray) {
 						var html = '',
-							arr = data.data.dataArray;
+							arr = data.data.dataArray,
+							val;
 						dataTypes[typename] = arr;
 						for (var i = 0; i < arr.length; i++) {
 							var item = arr[i];
-							html += '<option value=' + item.innerValue + '>' + item.label + '</option>'
+							if('payChannel' == typename){
+								val = item.label;
+							}
+							else{
+								val = item.innerValue;
+							}
+							html += '<option value=' + val + '>' + item.label + '</option>'
 						}
 					}
 					s.append(html);

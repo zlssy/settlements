@@ -33,8 +33,8 @@ define(function(require, exports, module) {
 			label: '电商'
 		}],
 		businessTypeDefault = '',
-		submitLock = false,
-		submitInterval = 2000,
+		actionLock = {},
+		lockInterval = 2000,
 		_grid;
 
 	function init() {
@@ -92,6 +92,13 @@ define(function(require, exports, module) {
 			addAndUpdate(row);
 		});
 		_grid.listen('viewCallback', function(row) {
+			if(actionLock.view){
+				return;
+			}
+			actionLock.view = true;
+			setTimeout(function(){
+				actionLock.view = false;
+			}, lockInterval);
 			view(row);
 		})
 		listContainer.html(_grid.getHtml());
@@ -148,6 +155,13 @@ define(function(require, exports, module) {
 	 * @param {[type]} data [description]
 	 */
 	function addAndUpdate(data) {
+		if(actionLock.addAndUpdate){
+			return;
+		}
+		actionLock.addAndUpdate = true;
+		setTimeout(function(){
+			actionLock.addAndUpdate = false;
+		}, lockInterval);
 		var opt = {
 				modal: true,
 				dragable: true,
@@ -165,12 +179,12 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						if (!submitLock) {
+						if (!actionLock.submitData) {
 							submitData(data);
-							submitLock = true;
+							actionLock.submitData = true;
 							setTimeout(function() {
-								submitLock = false;
-							}, submitInterval);
+								actionLock.submitData = false;
+							}, lockInterval);
 						}
 					}
 				}
@@ -296,10 +310,12 @@ define(function(require, exports, module) {
 		if (data.tranOneHolidayLimit) {
 			$("#ftOneHolidayLimit").val(data.tranOneHolidayLimit)
 		}
-		$("#fmerchantId").focus();
-		setTimeout(function() {
-			$("#fmerchantId").blur();
-		}, 0);
+		// $("#fmerchantId").focus();
+		// setTimeout(function() {
+		// 	$("#fmerchantId").blur();
+		// }, 0);
+		
+		$('#fmerchantId').prop('readonly', true);
 	}
 
 	/**
@@ -424,6 +440,13 @@ define(function(require, exports, module) {
 	}
 
 	function viewHistory(row) {
+		if(actionLock.viewHistory){
+			return;
+		}
+		actionLock.viewHistory = true;
+		setTimeout(function(){
+			actionLock.viewHistory = false;
+		}, lockInterval);
 		var id = row[0].id;
 		$.ajax({
 			url: global_config.serverRoot + '/settleLimit/history?userId=' + '&id=' + id,

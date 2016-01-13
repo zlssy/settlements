@@ -221,10 +221,10 @@ define(function(require, exports, module) {
 						if ('0' == json.code) {
 							validatePass = json.data.isValid;
 						} else if ('111' == json.code) {
-							msg = '改所有者的费率规则已存在，请直接修改。';
+							msg = '该所有者的费率规则已存在，请直接修改。';
 							validatePass = false;
 						} else {
-							msg = '改所有者编号不存在。';
+							msg = '该所有者编号不存在。';
 							validatePass = false;
 						}
 						if (!validatePass) {

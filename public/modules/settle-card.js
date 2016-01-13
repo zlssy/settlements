@@ -11,9 +11,9 @@ define(function(require, exports, module) {
 		importTpl = $('#importTpl').html(),
 		_grid, doms = {},
 		dictionaryCollection = {},
+		actionLock = {}, // 行为频率控制
 		userParam = {},
-		submitLock = false,
-		submitInterval = 2000;
+		lockInterval = 3000;
 
 	function init() {
 		_grid = Grid.create({
@@ -104,6 +104,14 @@ define(function(require, exports, module) {
 	 * @param {[type]} data [description]
 	 */
 	function addAndUpdate(data) {
+		if (actionLock.addAndUpdate) {
+			return;
+		}
+		actionLock.addAndUpdate = true;
+		setTimeout(function() {
+			actionLock.addAndUpdate = false;
+		}, lockInterval);
+
 		var opt = {},
 			id = '';
 
@@ -116,12 +124,12 @@ define(function(require, exports, module) {
 					if (!validate()) {
 						return false;
 					} else {
-						if (!submitLock) {
+						if (!actionLock.submitData) {
 							submitData(data);
-							submitLock = true;
+							actionLock.submitData = true;
 							setTimeout(function() {
-								submitLock = false;
-							}, submitInterval);
+								actionLock.submitData = false;
+							}, lockInterval);
 						}
 					}
 				}
@@ -135,10 +143,18 @@ define(function(require, exports, module) {
 		setSelect('typeArr', $('#lx'));
 		setSelect('statusArr', $('#zt'));
 		data && fillData(data);
-		$('.bootbox .datepicker').datetimepicker({
+		$('.bootbox #sxsj').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView: 2
+			minView: 2,
+			endDate: new Date()
+		}).on('changeDate', function(ev){
+			$('.bootbox #xxsj').val('').datetimepicker('setStartDate', ev.date);
+		});
+		$('.bootbox #xxsj').datetimepicker({
+			autoclose: true,
+			todayHighlight: true,
+			minView:2
 		});
 		$('.bootbox input, .bootbox select').on('blur', function(e) {
 			validate($(this));
@@ -182,25 +198,27 @@ define(function(require, exports, module) {
 	 * @return {[Boolean]}    [description]
 	 */
 	function validate(el) {
-		var pass = true;
+		var pass = true,
+			errorInfo, msg, val, len, min, max;
 		if (el) {
 			var elp = el.parents('.form-group:first');
 			if (el.data('date-format')) {
-				if (!isDate(el.val())) {
-					pass = false;
-					elp.addClass('has-error');
-					if (el.parent().parent().find('.error-info').size()) {
-						el.parent().parent().find('.error-info').show();
-					} else {
-						el.parent().parent().append('<div class="error-info">请填写正确的日期。</div>');
-					}
-				} else {
-					elp.removeClass('has-error');
-				}
+				// if (!isDate(el.val())) {
+				// 	pass = false;
+				// 	elp.addClass('has-error');
+				// 	if (el.parent().parent().find('.error-info').size()) {
+				// 		el.parent().parent().find('.error-info').show();
+				// 	} else {
+				// 		el.parent().parent().append('<div class="error-info">请填写正确的日期。</div>');
+				// 	}
+				// } else {
+				// 	elp.removeClass('has-error');
+				// 	elp.find('.error-info').hide();
+				// }
 			} else if (el.data('empty')) {
-				var errorInfo = elp.find('.error-info.empty');
+				errorInfo = elp.find('.error-info.empty');
 				if ('' == el.val().trim()) {
-					var msg = el.data('emptyinfo');
+					msg = el.data('emptyinfo');
 					elp.addClass('has-error');
 					if (!errorInfo.size()) {
 						el.parent().append('<div class="error-info empty">' + msg + '</div>');
@@ -211,6 +229,26 @@ define(function(require, exports, module) {
 					elp.removeClass('has-error');
 					errorInfo.hide();
 				}
+			} else if (el.data('len')) {
+				len = el.data('len').split(','),
+					min = len[0],
+					max = len[1],
+					val = el.val().trim();
+				errorInfo = elp.find('.error-info.len');
+				if (null != min && null != max) {
+					if (min - 0 <= val.length && val.length <= max - 0) {
+						elp.removeClass('has-error');
+						errorInfo.hide();
+					} else {
+						msg = el.data('leninfo');
+						elp.addClass('has-error');
+						if (errorInfo.size()) {
+							errorInfo.show();
+						} else {
+							el.parent().append('<div class="error-info len">' + msg + '</div>')
+						}
+					}
+				}
 			}
 		} else {
 			$('.bootbox input').each(function(i, v) {
@@ -219,7 +257,9 @@ define(function(require, exports, module) {
 					isInt = $el.data('int'),
 					isEmpty = $el.data('empty'),
 					isDate = $el.hasClass('datepicker'),
-					emptyInfo = $el.parent().find('.error-info.empty');
+					isLen = $el.data('len'),
+					emptyInfo = $el.parent().find('.error-info.empty'),
+					lenMsg = $el.data('leninfo');
 				if (isDate) {
 					if (Utils.isDate($el.val())) {
 						$p.removeClass('has-error');
@@ -254,7 +294,25 @@ define(function(require, exports, module) {
 						if (emptyInfo.size()) {
 							emptyInfo.show();
 						} else {
-							$el.parent().append('<div class="error-info empty">' + $el.data('emptyinfo') + '</div>')
+							$el.parent().append('<div class="error-info empty">' + $el.data('emptyinfo') + '</div>');
+						}
+					}
+				}
+				if (isLen) {
+					val = $el.val().trim();
+					len = $el.data('len').split(',');
+					min = len[0];
+					max = len[1];
+					errorInfo = $p.find('.error-info.len');
+
+					if (null != min && null != max) {
+						if (min - 0 <= val.length && val.length <= max - 0) {
+							$p.removeClass('has-error');
+							errorInfo.size() && errorInfo.hide();
+						} else {
+							pass = false;
+							$p.addClass('has-error');
+							$el.parent().append('<div class="error-info len">' + lenMsg + '</div>');
 						}
 					}
 				}
@@ -374,7 +432,7 @@ define(function(require, exports, module) {
 			error: function(json) {
 				Box.alert('数据保存失败~');
 			}
-		})
+		});
 	}
 
 	/**
@@ -384,19 +442,25 @@ define(function(require, exports, module) {
 	 */
 	function viewHistory(row) {
 		var id = row[0].id;
-		$.ajax({
-			url: global_config.serverRoot + '/settleCard/history?userId=' + '&id=' + id,
-			success: function(json) {
-				if ('0' == json.code) {
-					showHistory(json.data.pageData);
-				} else if (-100 == json.code) {
-					location.reload();
+		if (!actionLock.viewHistory) {
+			actionLock.viewHistory = true; // 正在访问，不可以连续访问
+			$.ajax({
+				url: global_config.serverRoot + '/settleCard/history?userId=' + '&id=' + id,
+				success: function(json) {
+					if ('0' == json.code) {
+						showHistory(json.data.pageData);
+					} else if (-100 == json.code) {
+						location.reload();
+					}
+				},
+				error: function(json) {
+					// some report
 				}
-			},
-			error: function(json) {
-				// some report
-			}
-		})
+			});
+			setTimeout(function() {
+				actionLock.viewHistory = false;
+			}, lockInterval);
+		}
 	}
 
 	/**
