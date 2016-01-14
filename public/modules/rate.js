@@ -154,7 +154,6 @@ define(function(require, exports, module) {
 				label: '<i class="ace-icon fa fa-check"></i> 保存',
 				className: 'btn-sm btn-success',
 				callback: function(a, b) {
-					console.log(a, b, arguments);
 					if (!validate()) {
 						return false;
 					} else {
@@ -193,13 +192,20 @@ define(function(require, exports, module) {
 		if (dictionaryCollection.chargeServiceTypeArr) {
 			setSelect('chargeServiceTypeArr', $('#fchargeServiceTypeInt'));
 		}
-		data && getRowDetail(data[0].id, cb);
-		$('.bootbox .datepicker').datetimepicker({
+		data && (validatePass = true, getRowDetail(data[0].id, cb));
+		$('.bootbox input[name="feffectiveDate"]').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView: 2
+			minView: 2,
+			endDate: new Date()
 		});
-		$("#fownerId").on('blur', function(e) {
+		$('.bootbox input[name="fexpirationDate"]').datetimepicker({
+			autoclose: true,
+			todayHighlight: true,
+			minView: 2,
+			startDate: new Date()
+		});
+		$("#fownerId").off().on('blur', function(e) {
 			var $el = $(this),
 				v = $el.val(),
 				errInfo = $el.parent().find('.error-info'),
@@ -297,20 +303,20 @@ define(function(require, exports, module) {
 			pass = pass1 && pass2;
 		}
 		/** 特殊校验 */
-		var d1 = $('input[name="feffectiveDate"]'),
-			dv1 = d1.val(),
-			d2 = $('input[name="fexpirationDate"]'),
-			dv2 = d2.val();
-		d1.parents('.input-group:first').removeClass('has-error');
-		d2.parents('.input-group:first').removeClass('has-error');
-		if (dv1 && dv2) {
-			dv1 = new Date(dv1).getTime();
-			dv2 = new Date(dv2).getTime();
-			if (dv1 > dv2) {
-				pass = false;
-				d1.parents('.input-group:first').addClass('has-error');
-			}
-		}
+		// var d1 = $('input[name="feffectiveDate"]'),
+		// 	dv1 = d1.val(),
+		// 	d2 = $('input[name="fexpirationDate"]'),
+		// 	dv2 = d2.val();
+		// d1.parents('.input-group:first').removeClass('has-error');
+		// d2.parents('.input-group:first').removeClass('has-error');
+		// if (dv1 && dv2) {
+		// 	dv1 = new Date(dv1).getTime();
+		// 	dv2 = new Date(dv2).getTime();
+		// 	if (dv1 > dv2) {
+		// 		pass = false;
+		// 		d1.parents('.input-group:first').addClass('has-error');
+		// 	}
+		// }
 		return validatePass && pass;
 	}
 
@@ -323,15 +329,13 @@ define(function(require, exports, module) {
 				isInt = $el.data('int'),
 				isEmpty = $el.data('empty'),
 				isDate = $el.hasClass('datepicker');
-			if('fownerId' == $el.attr('id')){
-				if($el.val() != ''){
-					return ;
-				}
-				else{
-					if($el.parent().find('.error-info').size()){
+			if ('fownerId' == $el.attr('id')) {
+				if ($el.val() != '') {
+					return;
+				} else {
+					if ($el.parent().find('.error-info').size()) {
 						$el.parent().find('.error-info').html('请输入所有者编号。');
-					}
-					else{
+					} else {
 						$el.parent().append('<div class="error-info">请输入所有者编号。</div>');
 					}
 				}
@@ -358,6 +362,28 @@ define(function(require, exports, module) {
 				} else {
 					pass = false;
 					$p.addClass('has-error');
+				}
+			}
+			if ('fexpirationDate' == $el.attr('name')) {
+				val = $el.val();
+				errorInfo = $p.find('.error-info');
+				if (val) {
+					try {
+						if (new Date(val).getTime() < new Date(Utils.date.getTodayStr() + ' 00:00:00').getTime()) {
+							if (errorInfo.size()) {
+								errorInfo.html('请选择正确的日期。');
+							} else {
+								$el.parent().parent().append('<div class="error-info len">请选择正确的日期。</div>');
+							}
+							$p.addClass('has-error');
+							pass = false;
+						} else {
+							errorInfo.hide();
+							$p.removeClass('has-error');
+						}
+					} catch (e) {
+						pass = false;
+					}
 				}
 			}
 		});

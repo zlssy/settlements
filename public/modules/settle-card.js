@@ -148,13 +148,12 @@ define(function(require, exports, module) {
 			todayHighlight: true,
 			minView: 2,
 			endDate: new Date()
-		}).on('changeDate', function(ev){
-			$('.bootbox #xxsj').val('').datetimepicker('setStartDate', ev.date);
 		});
 		$('.bootbox #xxsj').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView:2
+			minView: 2,
+			startDate: new Date()
 		});
 		$('.bootbox input, .bootbox select').on('blur', function(e) {
 			validate($(this));
@@ -313,6 +312,28 @@ define(function(require, exports, module) {
 							pass = false;
 							$p.addClass('has-error');
 							$el.parent().append('<div class="error-info len">' + lenMsg + '</div>');
+						}
+					}
+				}
+				if ('xxsj' == $el.attr('id')) {
+					val = $el.val();
+					errorInfo = $p.find('.error-info');
+					if (val) {
+						try {
+							if (new Date(val).getTime() < new Date(Utils.date.getTodayStr() + ' 00:00:00').getTime()) {
+								if (errorInfo.size()) {
+									errorInfo.html('请选择正确的日期。');
+								} else {
+									$el.parent().parent().append('<div class="error-info len">请选择正确的日期。</div>');
+								}
+								$p.addClass('has-error');
+								pass = false;
+							} else {
+								errorInfo.hide();
+								$p.removeClass('has-error');
+							}
+						} catch (e) {
+							pass = false;
 						}
 					}
 				}

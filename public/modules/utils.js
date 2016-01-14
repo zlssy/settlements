@@ -302,6 +302,17 @@ define(function(require, exports, module) {
 		}
 	}
 
+	/**
+	 * [getTodayStr 获取日期的今天年月日表示法]
+	 * @param {Date|String} [date] [要获取的日期对象或日期对象字符串]
+	 * @return {[String]} [年月日字符串]
+	 */
+	function getTodayStr(date) {
+		var d = date || new Date();
+		d = 'string' === typeof d ? new Date(d) : d;
+		return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDay();
+	}
+
 	return {
 		object2param: object2param,
 		cookie: {
@@ -322,6 +333,10 @@ define(function(require, exports, module) {
 		formatJson: formatJson,
 		loadJsonp: loadJsonp,
 		isDate: isDate,
+		date: {
+			isDate: isDate,
+			getTodayStr: getTodayStr
+		},
 		once: once
 	};
 });
