@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 		Grid = require('gridBootstrap'),
 		Box = require('boxBootstrap'),
 		Xss = require('xss'),
+		Table = require('whygrid'),
 
 		content = $('#content'),
 		listContainer = $('#grid_list'),
@@ -18,10 +19,110 @@ define(function(require, exports, module) {
 			account: $('#account')
 		},
 		dictionaryCollection = {},
+		dataTypes = {},
 		_grid;
 
 	function init() {
-		loadData();
+		// loadData();
+		_grid = Table('#grid_list', getUrl(), {
+			checkRow: false,
+			seachForm: '#sform',
+			//oldApi: true, //是否是老接口
+			pagenav: true,
+			cols: [{
+				name: '商户编码',
+				index: 'merchantId'
+			}, {
+				name: '商户名称',
+				index: 'merchantName'
+			}, {
+				name: '清算日期',
+				index: 'clearingDate'
+			}, {
+				name: '交易开始日期',
+				index: 'tradeStartDate'
+			}, {
+				name: '交易结束日期',
+				index: 'tradeEndDate'
+			}, {
+				name: '交易总金额',
+				index: 'tradeAmount'
+			}, {
+				name: '交易总笔数',
+				index: 'tradeTrans'
+			}, {
+				name: '退款总金额',
+				index: 'refundAmount'
+			}, {
+				name: '退款总笔数',
+				index: 'refundTrans'
+			}, {
+				name: '币种',
+				index: 'currencyCode'
+			}, {
+				name: '交易渠道',
+				index: 'payChannel'
+			}, {
+				name: '交易成本',
+				index: 'cost'
+			}, {
+				name: '交易手续费',
+				index: 'serviceCharge'
+			}, {
+				name: '结算总金额',
+				index: 'settleAmount'
+			}, {
+				name: '毛利润',
+				index: 'profit'
+			}, {
+				name: '状态',
+				index: 'status',
+				width: 80
+			}, {
+				name: '操作',
+				width: 80,
+				format: function(row, x, y) {
+					var s = '<div style="text-align:center;"><a href="javascript:void(0)" class="action-settle" data-id="' + row.id + '">结算</a></div>';
+					if ('1' == row.statusInt) {
+						return s;
+					}
+					return '';
+				}
+			}]
+		});
+
+		var stypes = $("#sform").find('select[data-typename]');
+		var ajaxArr = []
+		for (var i = 0; i < stypes.length; i++) {
+			+ function() {
+				var s = $(stypes[i]);
+				var typename = s.data('typename');
+				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+					type: s.data('typename')
+				}, function(data) {
+					if (data.code != 0) {
+						return $.Deferred().reject(data.message || data.msg || "未知错误!")
+					}
+					if (data.data && data.data.dataArray) {
+						var html = '',
+							arr = data.data.dataArray,
+							val;
+						dataTypes[typename] = arr;
+						for (var i = 0; i < arr.length; i++) {
+							var item = arr[i];
+							html += '<option value=' + val + '>' + item.label + '</option>'
+						}
+					}
+					s.append(html);
+				}))
+			}()
+		}
+		$.when.apply($, ajaxArr).then(function() {
+			_grid.load(); //加载列表数据;
+		}).then(null, function(e) {
+			Box.alert('加载数据失败，请稍后刷新重试~');
+		});
+		registerEvents();
 	}
 
 	function loadData() {
@@ -76,11 +177,11 @@ define(function(require, exports, module) {
 			}, {
 				name: '状态',
 				index: 'status'
-			},{
+			}, {
 				name: '操作',
-				format: function(key, v, row){
+				format: function(key, v, row) {
 					var s = '<div style="text-align:center;"><a href="javascript:void(0)" class="action-settle">结算</a></div>';
-					if('1' == row.statusInt){
+					if ('1' == row.statusInt) {
 						return s;
 					}
 					return '';
@@ -121,11 +222,11 @@ define(function(require, exports, module) {
 				$el.parent().prev().focus();
 			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
-				if (getParams()) {
-					console.log(userParam);
-					_grid.setUrl(getUrl());
-					_grid.loadData();
-				}
+				// if (getParams()) {
+				// 	console.log(userParam);
+				// _grid.setUrl(getUrl());
+				// _grid.loadData();					
+				// }
 			}
 			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
 				userParam = {};
@@ -141,9 +242,10 @@ define(function(require, exports, module) {
 			if (cls && cls.indexOf('fa-file-excel-o') > -1 || (id && 'export-btn' == id)) {
 				exportExcel();
 			}
-			if(cls && cls.indexOf('action-settle') > -1){
-				Box.confirm('确认结算', function(v){
-					v && settle();
+			if (cls && cls.indexOf('action-settle') > -1) {
+				var settleId = $el.data('id');
+				Box.confirm('确认结算', function(v) {
+					v && settle(settleId);
 				});
 			}
 		};
@@ -156,24 +258,25 @@ define(function(require, exports, module) {
 		});
 	}
 
-	function settle(){
-		var row = _grid.getSelectedRow();
-		var id = row && row[0] && row[0].id;
-		if(id){
+	function settle() {
+		// var row = _grid.getSelectedRow();
+		var id = arguments[0]; //row && row[0] && row[0].id;
+		if (id) {
 			$.ajax({
 				url: global_config.serverRoot + 'clearing/doSettle',
 				type: 'post',
-				data: {id: id},
-				success: function(json){
-					if('0' == json.code){
+				data: {
+					id: id
+				},
+				success: function(json) {
+					if ('0' == json.code) {
 						Box.alert('结算成功。');
 						_grid.loadData();
-					}
-					else{
+					} else {
 						Box.alert('结算失败。');
 					}
 				},
-				error: function(e){
+				error: function(e) {
 					// report
 				}
 			})
@@ -181,8 +284,9 @@ define(function(require, exports, module) {
 	}
 
 	function exportExcel() {
-		var clearingDateStart = doms.qfstart.val(), clearingDateEnd = doms.qfend.val();
-		if(!clearingDateStart || !clearingDateEnd){
+		var clearingDateStart = doms.qfstart.val(),
+			clearingDateEnd = doms.qfend.val();
+		if (!clearingDateStart || !clearingDateEnd) {
 			Box.alert('请选择清分起始日期后导出。');
 			return;
 		}
@@ -265,7 +369,7 @@ define(function(require, exports, module) {
 			newParam.merchantIds = commercialId;
 		}
 		if (commercialName) {
-			newParam.merchantName = commercialName;//encodeURIComponent(commercialName);
+			newParam.merchantName = commercialName; //encodeURIComponent(commercialName);
 		}
 		if (account) {
 			newParam.account = account;

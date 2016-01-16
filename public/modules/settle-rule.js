@@ -4,6 +4,7 @@ define(function(require, exports, module) {
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
 		accountCheck = require('checkAccount'),
+		Table = require('whygrid'),
 
 		userParam = {},
 		doms = {
@@ -24,9 +25,84 @@ define(function(require, exports, module) {
 		listContainer = $('#grid_list'),
 		actionLock = {},
 		lockInterval = 3000, // 3秒之内限定只能点击提交按钮一次
+		dataTypes = {},
+		dataMap = {},
 		_grid;
 
 	function init() {
+		_grid = Table('#grid_list', getUrl(), {
+			checkRow: false,
+			seachForm: '#sform',
+			pagenav: true,
+			cols: [{
+				name: '商户编号',
+				index: 'merchantId'
+			}, {
+				name: '结算卡选择方式',
+				index: 'settleCardMethod'
+			}, {
+				name: '结算类型',
+				index: 'settleRuleType'
+			}, {
+				name: '状态',
+				index: 'settleRuleStatus'
+			}, {
+				name: '创建日期',
+				index: 'creationDate'
+			}, {
+				name: '生效日期',
+				index: 'effectiveDate'
+			}, {
+				name: '失效日期',
+				index: 'expirationDate'
+			}, {
+				name: '操作',
+				index: '',
+				width:150,
+				format: function(v) {
+					// return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus blue" title="查看"></span><span class="ui-icon ace-icon fa fa-clock-o blue" title="历史记录"></span></div>';
+					dataMap[v.id] = v;
+					return '<a href="javascript:void(0)" data-id="' + v.id + '" class="edit">编辑</a>&nbsp;<a href="javascript:void(0)" data-id="' + v.id + '" class="view">查看</a>&nbsp;<a href="javascript:void(0)" data-id="' + v.id + '" class="history">历史记录</a>';
+				}
+			}]
+		});
+		var stypes = $("#sform").find('select[data-typename]');
+		var ajaxArr = []
+		for (var i = 0; i < stypes.length; i++) {
+			+ function() {
+				var s = $(stypes[i]);
+				var typename = s.data('typename');
+				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+					type: s.data('typename')
+				}, function(data) {
+					if (data.code != 0) {
+						return $.Deferred().reject(data.message || data.msg || "未知错误!")
+					}
+					if (data.data && data.data.dataArray) {
+						var html = '',
+							arr = data.data.dataArray,
+							val;
+						dataTypes[typename] = arr;
+						dictionaryCollection[typename] = arr;
+						for (var i = 0; i < arr.length; i++) {
+							var item = arr[i];
+							val = item.innerValue;
+							html += '<option value=' + val + '>' + item.label + '</option>'
+						}
+					}
+					s.append(html);
+				}))
+			}()
+		}
+		$.when.apply($, ajaxArr).then(function() {
+			_grid.load(); //加载列表数据;
+		}).then(null, function(e) {
+			Box.alert('加载数据失败，请稍后刷新重试~');
+		});
+		registerEvents();
+	}
+
+	function initData() {
 		_grid = Grid.create({
 			key: 'id',
 			checkbox: false,
@@ -161,18 +237,25 @@ define(function(require, exports, module) {
 			}
 		};
 		Box.dialog(opt);
-		setSelect('ruleCardTypeArr', $('#fruleCardMethod'));
-		setSelect('ruleTypeArr', $('#fruleType'));
-		if (dictionaryCollection.statusArr) {
-			$('input[name="fstatus"]:first').attr('value', dictionaryCollection.statusArr[0].innerValue);
-			$('input[name="fstatus"]:last').attr('value', dictionaryCollection.statusArr[1].innerValue);
+		setSelect('settleCardMethod', $('#fruleCardMethod'));
+		setSelect('settleRuleType', $('#fruleType'));
+		if (dictionaryCollection.settleRuleStatus) {
+			$('input[name="fstatus"]:first').attr('value', dictionaryCollection.settleRuleStatus[0].innerValue);
+			$('input[name="fstatus"]:last').attr('value', dictionaryCollection.settleRuleStatus[1].innerValue);
 		}
 		data && getRowDetail(data[0].id);
 		$('.bootbox #feffectiveDate').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView: 2,
-			endDate: new Date()
+			minView: 2
+		}).on('changeDate', function(d) {
+			var dd, dt = new Date();
+			if (d.date.getTime() > dt.getTime()) {
+				dd = d.date;
+			} else {
+				dd = dt;
+			}
+			$('.bootbox #fexpirationDate').val('').datetimepicker('setStartDate', dd);
 		});
 		$('.bootbox #fexpirationDate').datetimepicker({
 			autoclose: true,
@@ -305,7 +388,7 @@ define(function(require, exports, module) {
 			data: data,
 			success: function(json) {
 				if ('0' == json.code) {
-					_grid.loadData();
+					_grid.load();
 				} else if (-100 == json.code) {
 					location.reload();
 				} else {
@@ -471,28 +554,28 @@ define(function(require, exports, module) {
 						$p.addClass('has-error');
 					}
 				}
-				if ('fexpirationDate' == $el.attr('id')) {
-					val = $el.val();
-					errorInfo = $p.find('.error-info');
-					if (val) {
-						try {
-							if (new Date(val).getTime() < new Date(Utils.date.getTodayStr() + ' 00:00:00').getTime()) {
-								if (errorInfo.size()) {
-									errorInfo.html('请选择正确的日期。');
-								} else {
-									$el.parent().parent().append('<div class="error-info len">请选择正确的日期。</div>');
-								}
-								$p.addClass('has-error');
-								pass = false;
-							} else {
-								errorInfo.hide();
-								$p.removeClass('has-error');
-							}
-						} catch (e) {
-							pass = false;
-						}
-					}
-				}
+				// if ('fexpirationDate' == $el.attr('id')) {
+				// 	val = $el.val();
+				// 	errorInfo = $p.find('.error-info');
+				// 	if (val) {
+				// 		try {
+				// 			if (new Date(val).getTime() < new Date(Utils.date.getTodayStr() + ' 00:00:00').getTime()) {
+				// 				if (errorInfo.size()) {
+				// 					errorInfo.html('请选择正确的日期。');
+				// 				} else {
+				// 					$el.parent().parent().append('<div class="error-info len">请选择正确的日期。</div>');
+				// 				}
+				// 				$p.addClass('has-error');
+				// 				pass = false;
+				// 			} else {
+				// 				errorInfo.hide();
+				// 				$p.removeClass('has-error');
+				// 			}
+				// 		} catch (e) {
+				// 			pass = false;
+				// 		}
+				// 	}
+				// }
 			});
 		}!accountCheck.isPass() && $('#fmerchantId').parents('.form-group:first').addClass('has-error');
 		return accountCheck.isPass() && pass;
@@ -533,9 +616,9 @@ define(function(require, exports, module) {
 			};
 		opt.message = Utils.formatJson(viewTpl, {
 			data: d,
-			ruleCardType: arr2map(dictionaryCollection['ruleCardTypeArr'], 'innerValue', 'label'),
-			ruleType: arr2map(dictionaryCollection['ruleTypeArr'], 'innerValue', 'label'),
-			status: arr2map(dictionaryCollection['statusArr'], 'innerValue', 'label')
+			ruleCardType: arr2map(dictionaryCollection['settleCardMethod'], 'innerValue', 'label'),
+			ruleType: arr2map(dictionaryCollection['settleRuleType'], 'innerValue', 'label'),
+			status: arr2map(dictionaryCollection['settleRuleStatus'], 'innerValue', 'label')
 		});
 		opt.buttons = {
 			'ok': {
@@ -557,7 +640,7 @@ define(function(require, exports, module) {
 
 		var id = row[0].id;
 		$.ajax({
-			url: global_config.serverRoot + '/settleRule/history?userId=' + '&id=' + id,
+			url: global_config.serverRoot + '/settleRule/history?userId=&id=' + id,
 			success: function(json) {
 				if ('0' == json.code) {
 					showHistory(json.data.pageData);
@@ -604,7 +687,8 @@ define(function(require, exports, module) {
 			minView: 2
 		});
 		$('#add-btn').on('click', function() {
-			_grid.trigger('addCallback');
+			// _grid.trigger('addCallback');
+			addAndUpdate();
 		});
 		$(document.body).on('click', function(e) {
 			var $el = $(e.target || e.srcElement),
@@ -615,10 +699,10 @@ define(function(require, exports, module) {
 				$el.parent().siblings('input').focus();
 			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
-				if (getParams()) {
-					_grid.setUrl(getUrl());
-					_grid.loadData();
-				}
+				// if (getParams()) {
+				// 	_grid.setUrl(getUrl());
+				// 	_grid.loadData();
+				// }
 			}
 			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
 				userParam = {};
@@ -632,6 +716,15 @@ define(function(require, exports, module) {
 				doms.effectiveDateEnd.val('');
 				doms.expirationDateStart.val('');
 				doms.expirationDateEnd.val('');
+			}
+			if(cls && cls.indexOf('edit') > -1){
+				addAndUpdate([dataMap[$el.data('id')]]);
+			}
+			if(cls && cls.indexOf('view') > -1){
+				view([dataMap[$el.data('id')]]);
+			}
+			if(cls && cls.indexOf('history') > -1){
+				viewHistory([dataMap[$el.data('id')]]);
 			}
 		});
 	}

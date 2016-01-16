@@ -2,6 +2,7 @@ define(function(require, exports, module) {
 	var Utils = require('utils'),
 		Grid = require('gridBootstrap'),
 		Xss = require('xss'),
+		Table = require('whygrid'),
 
 		addEditTpl = $('#viewTpl-baseInfo').html(),
 		viewTpl = $('#viewTpl').html(),
@@ -34,10 +35,82 @@ define(function(require, exports, module) {
 		submitLock = false,
 		submitInterval = 2000, // 点击按钮点击后锁定2秒钟
 		validatePass = false,
-		_grid;
+		_grid,
+		dataTypes = {},
+		dataMap = {};
 
 	function init() {
-		loadData();
+		//loadData();
+		_grid = Table('#grid_list', getUrl(), {
+			checkRow: false,
+			seachForm: '#sform',
+			pagenav: true,
+			cols: [{
+				name: '计费编号',
+				index: 'id'
+			}, {
+				name: '所有者编号',
+				index: 'ownerId'
+			}, {
+				name: '所有者名称',
+				index: 'ownerName'
+			}, {
+				name: '所属系统',
+				index: 'chargeSystemProperty'
+			}, {
+				name: '计费状态',
+				index: 'chargeStatus'
+			}, {
+				name: '计费类型',
+				index: 'chargeType'
+			}, {
+				name: '创建时间',
+				index: 'creationDate'
+			}, {
+				name: '操作',
+				index: '',
+				width: 150,
+				format: function(v) {
+					//return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-search-plus blue" title="查看"></span><span class="ui-icon ace-icon fa fa-clock-o blue" title="历史记录"></span></div>';
+					dataMap[v.id] = v;
+					return '<a href="javascript:void(0)" data-id="' + v.id + '" class="edit">编辑</a>&nbsp;<a href="javascript:void(0)" data-id="' + v.id + '" class="view">查看</a>&nbsp;<a href="javascript:void(0)" data-id="' + v.id + '" class="history">历史记录</a>';
+				}
+			}]
+		});
+		var stypes = $("#sform").find('select[data-typename]');
+		var ajaxArr = []
+		for (var i = 0; i < stypes.length; i++) {
+			+ function() {
+				var s = $(stypes[i]);
+				var typename = s.data('typename');
+				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+					type: s.data('typename')
+				}, function(data) {
+					if (data.code != 0) {
+						return $.Deferred().reject(data.message || data.msg || "未知错误!")
+					}
+					if (data.data && data.data.dataArray) {
+						var html = '',
+							arr = data.data.dataArray,
+							val;
+						dataTypes[typename] = arr;
+						dictionaryCollection[typename] = arr;
+						for (var i = 0; i < arr.length; i++) {
+							var item = arr[i];
+							val = item.innerValue;
+							html += '<option value=' + val + '>' + item.label + '</option>'
+						}
+					}
+					s.append(html);
+				}))
+			}()
+		}
+		$.when.apply($, ajaxArr).then(function() {
+			_grid.load(); //加载列表数据;
+		}).then(null, function(e) {
+			Box.alert('加载数据失败，请稍后刷新重试~');
+		});
+		registerEvents();
 	}
 
 	function loadData() {
@@ -177,20 +250,20 @@ define(function(require, exports, module) {
 			delete opt.buttons.save;
 		}
 		theDialog = showDialog(opt);
-		if (dictionaryCollection.chargeStatusArr) {
-			$('input[name="fchargeStatusInt"]:first').attr('value', dictionaryCollection.chargeStatusArr[0].innerValue).trigger('click');
-			$('input[name="fchargeStatusInt"]:last').attr('value', dictionaryCollection.chargeStatusArr[1].innerValue);
+		if (dictionaryCollection.chargeStatus) {
+			$('input[name="fchargeStatusInt"]:first').attr('value', dictionaryCollection.chargeStatus[0].innerValue).trigger('click');
+			$('input[name="fchargeStatusInt"]:last').attr('value', dictionaryCollection.chargeStatus[1].innerValue);
 		}
-		if (dictionaryCollection.chargeTypeArr) {
-			$('input[name="fchargeTypeInt"]:first').attr('value', dictionaryCollection.chargeTypeArr[0].innerValue);
-			$('input[name="fchargeTypeInt"]:last').attr('value', dictionaryCollection.chargeTypeArr[1].innerValue);
+		if (dictionaryCollection.chargeType) {
+			$('input[name="fchargeTypeInt"]:first').attr('value', dictionaryCollection.chargeType[0].innerValue);
+			$('input[name="fchargeTypeInt"]:last').attr('value', dictionaryCollection.chargeType[1].innerValue);
 		}
-		if (dictionaryCollection.chargeSystemPropertyArr) {
-			$('input[name="fchargeSystemPropertyInt"]:first').attr('value', dictionaryCollection.chargeSystemPropertyArr[0].innerValue).trigger('click');
-			$('input[name="fchargeSystemPropertyInt"]:last').attr('value', dictionaryCollection.chargeSystemPropertyArr[1].innerValue);
+		if (dictionaryCollection.chargeSystemProperty) {
+			$('input[name="fchargeSystemPropertyInt"]:first').attr('value', dictionaryCollection.chargeSystemProperty[0].innerValue).trigger('click');
+			$('input[name="fchargeSystemPropertyInt"]:last').attr('value', dictionaryCollection.chargeSystemProperty[1].innerValue);
 		}
-		if (dictionaryCollection.chargeServiceTypeArr) {
-			setSelect('chargeServiceTypeArr', $('#fchargeServiceTypeInt'));
+		if (dictionaryCollection.chargeServiceType) {
+			setSelect('chargeServiceType', $('#fchargeServiceTypeInt'));
 		}
 		data && (validatePass = true, getRowDetail(data[0].id, cb));
 		$('.bootbox input[name="feffectiveDate"]').datetimepicker({
@@ -440,7 +513,7 @@ define(function(require, exports, module) {
 		if (data.expirationDate) {
 			$("input[name='fexpirationDate']").val(data.expirationDate);
 		}
-		if (data.chargeTypeInt == dictionaryCollection.chargeTypeArr[1].innerValue) {
+		if (data.chargeTypeInt == dictionaryCollection.chargeType[1].innerValue) {
 			var atpl = [];
 			start = 1;
 			$('#gdPanel').addClass('hide');
@@ -520,7 +593,7 @@ define(function(require, exports, module) {
 		if (fexpirationDate) {
 			data.expirationDate = fexpirationDate;
 		}
-		if (fchargeTypeInt == dictionaryCollection.chargeTypeArr[1].innerValue) {
+		if (fchargeTypeInt == dictionaryCollection.chargeType[1].innerValue) {
 			start = 1;
 		}
 		for (var i = 0; i < ffixedCharge.length - 1; i++) {
@@ -543,7 +616,7 @@ define(function(require, exports, module) {
 			success: function(json) {
 				if ('0' == json.code) {
 					dialog.remove();
-					_grid.loadData();
+					_grid.load();
 				} else if (-102 == json.code) {
 					location.reload();
 				} else {
@@ -663,7 +736,8 @@ define(function(require, exports, module) {
 
 	function registerEvents() {
 		$('#add-btn').on('click', function() {
-			_grid.trigger('addCallback');
+			// _grid.trigger('addCallback');
+			addAndUpdate();
 		});
 		$('.datepicker').datetimepicker({
 			autoclose: true,
@@ -680,10 +754,10 @@ define(function(require, exports, module) {
 				$el.parent().siblings('input').focus();
 			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
-				if (getParams()) {
-					_grid.setUrl(getUrl());
-					_grid.loadData();
-				}
+				// if (getParams()) {
+				// 	_grid.setUrl(getUrl());
+				// 	_grid.loadData();
+				// }
 			}
 			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
 				userParam = {};
@@ -702,7 +776,7 @@ define(function(require, exports, module) {
 			}
 			if ('input' == tag && 'fchargeTypeInt' == name) {
 				var val = $el.val();
-				if (val == dictionaryCollection.chargeTypeArr[1].innerValue) {
+				if (val == dictionaryCollection.chargeType[1].innerValue) {
 					$('#gdPanel').addClass('hide');
 					$('#jtPanel').removeClass('hide');
 				} else {
@@ -712,9 +786,9 @@ define(function(require, exports, module) {
 			}
 			if ('input' == tag && 'fchargeSystemPropertyInt' == name) {
 				var val = $el.val();
-				if (val == dictionaryCollection.chargeSystemPropertyArr[1].innerValue) {
+				if (val == dictionaryCollection.chargeSystemProperty[1].innerValue) {
 					$('#fownerId').attr('placeholder', '通道ID');
-				} else if (val == dictionaryCollection.chargeSystemPropertyArr[0].innerValue) {
+				} else if (val == dictionaryCollection.chargeSystemProperty[0].innerValue) {
 					$('#fownerId').attr('placeholder', '商户ID');
 				}
 			}
@@ -723,6 +797,15 @@ define(function(require, exports, module) {
 			}
 			if (cls && cls.indexOf('glyphicon-minus') > -1) {
 				$el.parent().parent().remove();
+			}
+			if (cls && cls.indexOf('edit') > -1) {
+				addAndUpdate([dataMap[$el.data('id')]]);
+			}
+			if (cls && cls.indexOf('view') > -1) {
+				view([dataMap[$el.data('id')]]);
+			}
+			if (cls && cls.indexOf('history') > -1) {
+				viewHistory([dataMap[$el.data('id')]]);
 			}
 		});
 	}

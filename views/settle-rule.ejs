@@ -45,26 +45,27 @@
 					</div>
 					<div class="widget-body">
 						<div class="widget-main">
+						<form id="sform">
 							<div class="row">
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 control-label no-padding lm-5" for="commercialId">商户编号:</label>
 									<div class="col-sm-9 no-padding">
-										<input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+										<input type="text" id="commercialId" name="merchantIds" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="type">结算类型:</label></div>
 									<div class="col-sm-9 no-padding">
-									  	<select class="form-control" id="type">
-									  		<option value="0">全部</option>
+									  	<select class="form-control" id="type" name="ruleType" data-typename="settleRuleType">
+									  		<option value="">全部</option>
 										</select>
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="cardType">结算卡方式:</label></div>
 									<div class="col-sm-9 no-padding">
-									  	<select class="form-control" id="cardType">
-									  		<option value="0">全部</option>
+									  	<select class="form-control" id="cardType" name="ruleCardMethod" data-typename="settleCardMethod">
+									  		<option value="">全部</option>
 										</select>
 									</div>
 								</div>
@@ -73,25 +74,25 @@
 								<div class="col-xs-12 col-sm-4">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="status">状态:</label></div>
 									<div class="col-sm-9 no-padding">
-									  	<select class="form-control" id="status">
-									  		<option value="0">全部</option>
+									  	<select class="form-control" id="status" name="status" data-typename="settleRuleStatus">
+									  		<option value="">全部</option>
 										</select>
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 								 <label class="col-sm-3 no-padding lm-5">生效时间:</label>
 								 <div class="col-sm-9 no-padding">
-							 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="effectiveDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+							 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="effectiveDateStart" name="effectiveDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 							 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-							 		<input type="text" class="input-sm form-control datepicker" id="effectiveDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+							 		<input type="text" class="input-sm form-control datepicker" id="effectiveDateEnd" name="effectiveDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
 								 </div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 								 <label class="col-sm-3 no-padding lm-5">失效时间:</label>
 								 <div class="col-sm-9 no-padding">
-							 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="expirationDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+							 		<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="expirationDateStart" name="expirationDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 							 		<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-							 		<input type="text" class="input-sm form-control datepicker" id="expirationDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+							 		<input type="text" class="input-sm form-control datepicker" id="expirationDateEnd" name="expirationDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
 								 </div>
 								</div>
 							</div>
@@ -99,15 +100,15 @@
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 no-padding lm-5">创建时间:</label>
 									<div class="col-sm-9 no-padding">
-										<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="createTimeStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+										<div class="input-group"><input type="text" class="input-sm form-control datepicker" id="createTimeStart" name="creationDateStart" data-date-format="yyyy-mm-dd" placeholder="from" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 										<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-										<input type="text" class="input-sm form-control datepicker" id="createTimeEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
+										<input type="text" class="input-sm form-control datepicker" id="createTimeEnd" name="creationDateEnd" data-date-format="yyyy-mm-dd" placeholder="to" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div>
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<button id="query-btn" class="btn btn-info btn-sm" type="button">
+									<button id="query-btn" class="btn btn-info btn-sm" type="submit">
 										<i class="ace-icon fa fa-check bigger-110"></i>
 										查询
 									</button>
@@ -123,6 +124,7 @@
 									</button>
 								</div>
 							</div>
+						</form>
 						</div>
 					</div>
 				</div>

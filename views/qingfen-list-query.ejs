@@ -42,22 +42,23 @@
 					</div>
 					<div class="widget-body">
 						<div class="widget-main">
+						<form id="sform">
 							<div class="row">
 								<div class="col-xs-12 col-sm-4">
 								 <label class="col-sm-3 no-padding lm-5">清分日期:</label>
 								 <div class="col-sm-9 no-padding">
-								  <div class="col-sm-12 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="qfstart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+								  <div class="col-sm-12 no-padding"><div class="input-group"><input type="text" class="input-sm form-control datepicker" name="clearingDateStart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 								  <span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-								  <input type="text" class="input-sm form-control datepicker" name="qfend" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
+								  <input type="text" class="input-sm form-control datepicker" name="clearingDateEnd" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span></div></div>
 								 </div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 no-padding lm-5">交易日期:</label>
 									<div class="col-sm-9 no-padding">
 										<div class="col-sm-12 no-padding">
-											<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="jystart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+											<div class="input-group"><input type="text" class="input-sm form-control datepicker" name="tranDateStart" placeholder="from" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 											<span class="input-group-addon" style="background:none; border:0 none; padding-left:3px; padding-right:3px;">-</span>
-											<input type="text" class="input-sm form-control datepicker" name="jyend" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
+											<input type="text" class="input-sm form-control datepicker" name="tranDateEnd" placeholder="to" data-date-format="yyyy-mm-dd" /><span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span>
 											</div>
 										</div>
 									</div>
@@ -65,8 +66,8 @@
 								<div class="col-xs-12 col-sm-4">
 									<div class="col-sm-3 no-padding"><label class="align-right no-padding lm-5" for="qfstatus">清分状态:</label></div>
 									<div class="col-sm-9 no-padding">
-								  	<select class="form-control" id="qfstatus">
-								  		<option value="0">全部</option>
+								  	<select class="form-control" id="qfstatus" name="statusInt" data-typename="clearingStatus">
+								  		<option value="">全部</option>
 									</select>
 									</div>
 								</div>
@@ -75,19 +76,19 @@
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 control-label no-padding lm-5" for="commercialId">商户编号:</label>
 									<div class="col-sm-9 no-padding">
-										<input type="text" id="commercialId" class="form-control col-sm-5 input-sm">
+										<input type="text" id="commercialId" name="merchantIds" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-4">
 									<label class="col-sm-3 control-label no-padding lm-5" for="commercialName">商户名称:</label>
 									<div class="col-sm-9 no-padding">
-										<input type="text" id="commercialName" class="form-control col-sm-5 input-sm">
+										<input type="text" id="commercialName" name="merchantName" class="form-control col-sm-5 input-sm">
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-9">
-									<button id="query-btn" class="btn btn-info btn-sm" type="button">
+									<button id="query-btn" class="btn btn-info btn-sm" type="submit">
 										<i class="ace-icon fa fa-check bigger-110"></i>
 										查询
 									</button>
@@ -103,6 +104,7 @@
 									</button>
 								</div>
 							</div>
+						</form>
 						</div>
 					</div>
 				</div>

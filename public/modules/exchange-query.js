@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
     var Utils = require('utils'),
         Grid = require('gridBootstrap'),
+        Table = require('whygrid'),
         form2json = require('form2json'),
         template = require('template'),
         art_dialog = require('dialog'),
@@ -17,10 +18,85 @@ define(function(require, exports, module) {
             detailUrl: global_config.serverRoot + "/exchangeRate/detail",
             addUrl: global_config.serverRoot + "/exchangeRate/addOrUpdate"
         },
-        _grid;
+        _grid,
+        dataTypes = {},
+        dataMap = {};
 
     function init() {
-        loadData();
+        //loadData();
+        _grid = Table('#grid_list', getUrl(), {
+            checkRow: false,
+            seachForm: '#dataForm',
+            pagenav: true,
+            cols: [{
+                name: '源币种',
+                index: 'srcCurrencyCode'
+            }, {
+                name: '目标币种',
+                index: 'targetCurrencyCode'
+            }, {
+                name: '汇率',
+                index: 'exchangeRate'
+            }, {
+                name: '状态',
+                index: 'statusName'
+            }, {
+                name: '创建时间',
+                index: 'creationDate'
+            }, {
+                name: '操作',
+                index: '',
+                width: 90,
+                format: function(v) {
+                    dataMap[v.id] = v;
+                    var html_arr = [
+                        '<div class="ui-pg-div align-center">',
+                        '<a href="javascript:void(0)" class="icon_edit" data-id="' + v.id + '">编辑</a>&nbsp;',
+                        '<a href="javascript:void(0)" class="icon_trash" data-id="' + v.id + '">删除</a>',
+                        '<div>'
+                    ];
+                    return html_arr.join('')
+                }
+            }]
+        });
+        var stypes = $("#dataForm").find('select[data-typename]');
+        var ajaxArr = []
+        for (var i = 0; i < stypes.length; i++) {
+            + function() {
+                var s = $(stypes[i]);
+                var typename = s.data('typename');
+                ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+                    type: s.data('typename')
+                }, function(data) {
+                    if (data.code != 0) {
+                        return $.Deferred().reject(data.message || data.msg || "未知错误!")
+                    }
+                    if (data.data && data.data.dataArray) {
+                        var html = '',
+                            arr = data.data.dataArray,
+                            val;
+                        dataTypes[typename] = arr;
+                        // dictionaryCollection[typename] = arr;
+                        for (var i = 0; i < arr.length; i++) {
+                            var item = arr[i];
+                            if ('exchangeStatus' == typename) {
+                                val = item.innerValue;
+                            } else {
+                                val = item.label;
+                            }
+                            html += '<option value=' + val + '>' + item.label + '</option>'
+                        }
+                    }
+                    s.append(html);
+                }))
+            }()
+        }
+        $.when.apply($, ajaxArr).then(function() {
+            _grid.load(); //加载列表数据;
+        }).then(null, function(e) {
+            Box.alert('加载数据失败，请稍后刷新重试~');
+        });
+        registerEvents();
     }
 
     function loadData() {
@@ -80,11 +156,11 @@ define(function(require, exports, module) {
             var $el = $(e.target || e.srcElement);
             //查询
             if ($el.closest('#query-btn').length) {
-                userParam = $form.form2json();
-                if (userParam) {
-                    _grid.setUrl(getUrl());
-                    _grid.loadData();
-                }
+                // userParam = $form.form2json();
+                // if (userParam) {
+                //     _grid.setUrl(getUrl());
+                //     _grid.loadData();
+                // }
             }
             //新增
             if ($el.closest('#add-btn').length) {
@@ -95,13 +171,13 @@ define(function(require, exports, module) {
         //编辑
         $grid_list.on("click", ".icon_edit", function() {
             var $this = $(this),
-                id = $this.closest("tr").attr('data-id');
+                id = $this.data('id');
             editItem(id);
         });
         //删除
         $grid_list.on("click", ".icon_trash", function() {
             var $this = $(this),
-                id = $this.closest("tr").attr('data-id');
+                id = $this.data('id');
             delItem(id);
         });
 
@@ -135,7 +211,7 @@ define(function(require, exports, module) {
             ok: function(v) {
                 $.get(urls.delUrl + "?id=" + id, function(res) {
                     if (res.code == 0) {
-                        _grid.loadData();
+                        _grid.load();
                     } else {
                         art_dialog.error('错误', res.msg);
                     }
@@ -166,7 +242,7 @@ define(function(require, exports, module) {
                     }
                     var val = $form.form2json();
                     doCreateItem(val, function() {
-                        _grid.loadData();
+                        _grid.load();
                         pop.remove();
                     });
                 }

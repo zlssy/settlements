@@ -66,7 +66,7 @@ define(function(require, exports, module) {
 				index: 'clearingStatus',
 				width: 80,
 				format: function(v) {
-					return dictionaryCollection['clearingStatus'][v];
+					return dictionaryCollection['clearingStatus'][v[this.index]];
 				}
 			}]
 		});

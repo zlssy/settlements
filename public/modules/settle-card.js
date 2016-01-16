@@ -5,6 +5,7 @@ define(function(require, exports, module) {
 		Xss = require('xss'),
 		art_dialog = require('dialog'),
 		accountCheck = require('checkAccount'),
+		Table = require('whygrid'),
 
 		listContainer = $('#grid_list'),
 		addEditTpl = $('#addEditTpl').html(),
@@ -13,9 +14,92 @@ define(function(require, exports, module) {
 		dictionaryCollection = {},
 		actionLock = {}, // 行为频率控制
 		userParam = {},
-		lockInterval = 3000;
+		lockInterval = 3000,
+		dataTypes = {},
+		dataMap = {};
 
 	function init() {
+		_grid = Table('#grid_list', getUrl(), {
+			checkRow: false,
+			seachForm: '#sform',
+			//oldApi: true, //是否是老接口
+			pagenav: true,
+			cols: [{
+				name: '商户编号',
+				index: 'merchantId'
+			}, {
+				name: '状态',
+				index: 'settleCardStatus'
+			}, {
+				name: '结算类型',
+				index: 'settleCardType'
+			}, {
+				name: '开户行',
+				index: 'issuer'
+			}, {
+				name: '银行账号',
+				index: 'cardNumber'
+			}, {
+				name: '开户名',
+				index: 'userName'
+			}, {
+				name: '优先级',
+				index: 'priority'
+			}, {
+				name: '生效日期',
+				index: 'effectiveDate'
+			}, {
+				name: '失效日期',
+				index: 'expirationDate'
+			}, {
+				name: '操作',
+				index: '',
+				width: 120,
+				format: function(v) {
+					dataMap[v.id] = v;
+					//return '<div class="ui-pg-div align-center"><span class="ui-icon ace-icon fa fa-pencil blue" title="编辑"></span><span class="ui-icon ace-icon fa fa-clock-o blue" title="历史记录"></span></div>';
+					return '<a href="javascript:void(0)" class="edit" data-id="' + v.id + '">编辑</a>&nbsp;<a href="javascript:void(0)" class="view" data-id="' + v.id + '">历史记录</a>'
+				}
+			}]
+		});
+
+		var stypes = $("#sform").find('select[data-typename]');
+		var ajaxArr = []
+		for (var i = 0; i < stypes.length; i++) {
+			+ function() {
+				var s = $(stypes[i]);
+				var typename = s.data('typename');
+				ajaxArr.push($.get(global_config.serverRoot + 'dataDictionary/dropdownlist', {
+					type: s.data('typename')
+				}, function(data) {
+					if (data.code != 0) {
+						return $.Deferred().reject(data.message || data.msg || "未知错误!")
+					}
+					if (data.data && data.data.dataArray) {
+						var html = '',
+							arr = data.data.dataArray,
+							val;
+						dataTypes[typename] = arr;
+						dictionaryCollection[typename] = arr;
+						for (var i = 0; i < arr.length; i++) {
+							var item = arr[i];
+							val = item.innerValue;
+							html += '<option value=' + val + '>' + item.label + '</option>'
+						}
+					}
+					s.append(html);
+				}))
+			}()
+		}
+		$.when.apply($, ajaxArr).then(function() {
+			_grid.load(); //加载列表数据;
+		}).then(null, function(e) {
+			Box.alert('加载数据失败，请稍后刷新重试~');
+		});
+		registerEvents();
+	}
+
+	function initData() {
 		_grid = Grid.create({
 			key: 'id',
 			checkbox: false,
@@ -140,14 +224,21 @@ define(function(require, exports, module) {
 			}
 		};
 		showDialog(opt);
-		setSelect('typeArr', $('#lx'));
-		setSelect('statusArr', $('#zt'));
+		setSelect('settleCardType', $('#lx'));
+		setSelect('settleCardStatus', $('#zt'));
 		data && fillData(data);
 		$('.bootbox #sxsj').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView: 2,
-			endDate: new Date()
+			minView: 2
+		}).on('changeDate', function(d) {
+			var dd;
+			if (d.date.getTime() > new Date().getTime()) {
+				dd = d.date;
+			} else {
+				dd = new Date();
+			}
+			$('.bootbox #xxsj').val('').datetimepicker('setStartDate', dd);
 		});
 		$('.bootbox #xxsj').datetimepicker({
 			autoclose: true,
@@ -199,6 +290,7 @@ define(function(require, exports, module) {
 	function validate(el) {
 		var pass = true,
 			errorInfo, msg, val, len, min, max;
+
 		if (el) {
 			var elp = el.parents('.form-group:first');
 			if (el.data('date-format')) {
@@ -262,7 +354,7 @@ define(function(require, exports, module) {
 				if (isDate) {
 					if (Utils.isDate($el.val())) {
 						$p.removeClass('has-error');
-						$el.parent().find('.error-info').remove();
+						$el.parent().parent().find('.error-info').remove();
 					} else {
 						pass = false;
 						$p.addClass('has-error');
@@ -311,32 +403,36 @@ define(function(require, exports, module) {
 						} else {
 							pass = false;
 							$p.addClass('has-error');
-							$el.parent().append('<div class="error-info len">' + lenMsg + '</div>');
-						}
-					}
-				}
-				if ('xxsj' == $el.attr('id')) {
-					val = $el.val();
-					errorInfo = $p.find('.error-info');
-					if (val) {
-						try {
-							if (new Date(val).getTime() < new Date(Utils.date.getTodayStr() + ' 00:00:00').getTime()) {
-								if (errorInfo.size()) {
-									errorInfo.html('请选择正确的日期。');
-								} else {
-									$el.parent().parent().append('<div class="error-info len">请选择正确的日期。</div>');
-								}
-								$p.addClass('has-error');
-								pass = false;
+							if (errorInfo.size()) {
+								errorInfo.show();
 							} else {
-								errorInfo.hide();
-								$p.removeClass('has-error');
+								$el.parent().append('<div class="error-info len">' + lenMsg + '</div>');
 							}
-						} catch (e) {
-							pass = false;
 						}
 					}
 				}
+				// if ('xxsj' == $el.attr('id')) {
+				// 	val = $el.val();
+				// 	errorInfo = $p.find('.error-info');
+				// 	if (val) {
+				// 		try {
+				// 			if (new Date(val).getTime() < new Date(Utils.date.getTodayStr() + ' 00:00:00').getTime()) {
+				// 				if (errorInfo.size()) {
+				// 					errorInfo.html('请选择正确的日期。');
+				// 				} else {
+				// 					$el.parent().parent().append('<div class="error-info len">请选择正确的日期。</div>');
+				// 				}
+				// 				$p.addClass('has-error');
+				// 				pass = false;
+				// 			} else {
+				// 				errorInfo.hide();
+				// 				$p.removeClass('has-error');
+				// 			}
+				// 		} catch (e) {
+				// 			pass = false;
+				// 		}
+				// 	}
+				// }
 			});
 		}
 
@@ -442,7 +538,7 @@ define(function(require, exports, module) {
 			data: data,
 			success: function(json) {
 				if ('0' == json.code) {
-					_grid.loadData();
+					_grid.load();
 					Box.alert('数据保存成功.');
 				} else if (-100 == json.code) {
 					location.reload();
@@ -574,55 +670,7 @@ define(function(require, exports, module) {
 	}
 
 	function importExcel() {
-		// var opt = {};
-		// opt.message = importTpl;
-		// opt.buttons = {
-		// 	"save": {
-		// 		label: '<i class="ace-icon fa fa-check"></i> 上传',
-		// 		className: 'btn-sm btn-success',
-		// 		callback: function(e, dialog) {
-		// 			var fd = $('#file'),
-		// 				fdv = fd.val();
-		// 			if (fdv) {
-		// 				fd.fileupload({
-		// 					url: "",
-		// 					beforeSend: function(e, data) {
-		// 						data.url = global_config.serverRoot + "/settleCard/import?userId=" + "&t=" + Math.random();
-		// 					},
-		// 					start: function() {
-		// 						art_dialog.loading.start("uploading");
-		// 					},
-		// 					always: function(e, data) {
-		// 						art_dialog.loading.end();
-		// 						if (data.result) {
-		// 							(typeof data.result === "string") && (data.result = JSON.parse(data.result));
-		// 							if (data.result.code == 0) {
-		// 								art_dialog.error('导入成功', data.result.msg);
-		// 							} else {
-		// 								art_dialog.error('导入失败', data.result.msg);
-		// 							}
-		// 						}
-		// 					}
-		// 				});
-		// 				return false;
-		// 			} else {
-		// 				Box.alert('请先选择要上传的文件~');
-		// 			}
-		// 			return false;
-		// 		}
-		// 	},
-		// 	"cancel": {
-		// 		label: '取消',
-		// 		className: 'btn-sm'
-		// 	}
-		// };
-		// showDialog(opt);
-		// $('#file').ace_file_input({
-		// 	style: 'well',
-		// 	btn_choose: '点击上传文件',
-		// 	btn_change: '已选文件如下：',
-		// 	droppable: true
-		// });
+
 	}
 
 	/**
@@ -642,7 +690,7 @@ define(function(require, exports, module) {
 		doms.expirationDateEnd = $('#expirationDateEnd');
 
 		$('#add-btn').on('click', function() {
-			_grid.trigger('addCallback');
+			addAndUpdate();
 		});
 		$('.datepicker').datetimepicker({
 			autoclose: true,
@@ -658,10 +706,10 @@ define(function(require, exports, module) {
 				$el.parent().siblings('input').focus();
 			}
 			if (cls && cls.indexOf('fa-check') > -1 || (id && 'query-btn' == id)) {
-				if (getParams()) {
-					_grid.setUrl(getUrl());
-					_grid.loadData();
-				}
+				// if (getParams()) {
+				// 	_grid.setUrl(getUrl());
+				// 	_grid.loadData();
+				// }
 			}
 			if (cls && cls.indexOf('fa-undo') > -1 || (id && 'reset-btn' == id)) {
 				userParam = {};
@@ -675,6 +723,14 @@ define(function(require, exports, module) {
 				doms.effectiveDateEnd.val('');
 				doms.expirationDateStart.val('');
 				doms.expirationDateEnd.val('');
+			}
+			if (cls && cls.indexOf('edit') > -1) {
+				addAndUpdate([dataMap[$el.data('id')]]);
+			}
+			if (cls && cls.indexOf('view') > -1) {
+				viewHistory([{
+					id: $el.data('id')
+				}]);
 			}
 		});
 		$('#downtemplate-btn').on('click', function() {
