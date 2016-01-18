@@ -219,7 +219,7 @@ define(function(require, exports, module) {
 	}
 
 	function concatQuery() {
-		console.log('concat result');
+		getParams();
 		$.ajax({
 			url: global_config.serverRoot + 'settleStatement/total?userId=&' + Utils.object2param(userParam),
 			success: function(json) {
