@@ -94,7 +94,7 @@ define(function(require, exports, module) {
 						dataTypes[typename] = arr;
 						for (var i = 0; i < arr.length; i++) {
 							var item = arr[i];
-							html += '<option value=' + item.innerValue + '>' + item.label + '</option>'
+							html += '<option value=' + item.label + '>' + item.label + '</option>'
 						}
 					}
 					s.append(html);
