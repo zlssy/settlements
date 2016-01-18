@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 	var D = window.D = require("dialog.ace");
 	var rooturl = global_config.serverRoot.replace(/\/+$/, '');
 	var apis = {
-		list: rooturl + '/reconciliation/list', //clearingDetail/list
+		list: rooturl + '/reconciliation/chargeDifference', //clearingDetail/list
 		typeList: rooturl + '/dataDictionary/dropdownlist',
 		down: rooturl + '/downloadTradeRecord'
 	}
