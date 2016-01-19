@@ -126,34 +126,19 @@
 <div id="mask" class="widget-box-overlay hide"></div>
 <script id="totalTpl" type="text/html">
 <table id="total_table" class="table table-striped table-bordered table-hover">
-	<thead>
-		<tr>
-			<th class="center">
-				<label class="pos-rel">&nbsp;</label>
-			</th>
-			<th>款项类型</th>
-			<th>币种（USD）</th>
-		</tr>
-	</thead>
 	<tbody>
 		<tr>
-			<td class="center" rowspan="3" valign="bottom">合计</td>
-			<td>
-				结算金额
-			</td>
+			<td rowspan="2" style="vertical-align:middle; text-align:center;">合计</td>
+			<td>结算金额</td>
+			<td>付款金额</td>
+			<td>付款手续费</td>
+			<td>币种</td>
+		</tr>
+		<tr>
 			<td><%%=settleAmount%></td>
-		</tr>
-		<tr>
-			<td>
-				付款金额
-			</td>
 			<td><%%=payAmount%></td>
-		</tr>
-		<tr>
-			<td>
-				付款手续费
-			</td>
-			<td><%%=serviceCharge%></td>
+			<td><%%=serviceCharge%><</td>
+			<td><%%=settleCurrencyCode || "USD"%></td>
 		</tr>
 	</tbody>
 </table>
