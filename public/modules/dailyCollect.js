@@ -243,6 +243,12 @@ define(function(require, exports, module) {
 							}
 						}]
 					});
+					var func = grid.option.getSearch;
+					grid.option.getSearch = function(){
+						var s = func();
+						s.pageSize = 10000;
+						return s;
+					}
 					grid.load();
 					// $.ajax({
 					// 	url: rooturl + '/reconciliation/getDetail?arrivalDateStart=' + d.arrivalDate + '&arrivalDateEnd=' + d.arrivalDate + '&payChannelName=' + d.payChannelName + '&unilateralAccount=' + type + '&currencyCode=' + d.currencyCode + '&t=' + Math.random(),
