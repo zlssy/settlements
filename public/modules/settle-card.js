@@ -227,24 +227,25 @@ define(function(require, exports, module) {
 		setSelect('settleCardType', $('#lx'));
 		setSelect('settleCardStatus', $('#zt'));
 		data && fillData(data);
+		var tomorrow = new Date(new Date().getTime() + 86400000);
 		$('.bootbox #sxsj').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
 			minView: 2
 		}).on('changeDate', function(d) {
 			var dd;
-			if (d.date.getTime() > new Date().getTime()) {
+			if (d.date.getTime() > tomorrow.getTime()) {
 				dd = d.date;
 			} else {
-				dd = new Date();
+				dd = tomorrow;
 			}
 			$('.bootbox #xxsj').val('').datetimepicker('setStartDate', dd);
 		});
 		$('.bootbox #xxsj').datetimepicker({
 			autoclose: true,
-			todayHighlight: true,
+			todayHighlight: false,
 			minView: 2,
-			startDate: new Date()
+			startDate: tomorrow
 		});
 		$('.bootbox input, .bootbox select').on('blur', function(e) {
 			validate($(this));

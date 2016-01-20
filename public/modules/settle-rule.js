@@ -244,24 +244,25 @@ define(function(require, exports, module) {
 			$('input[name="fstatus"]:last').attr('value', dictionaryCollection.settleRuleStatus[1].innerValue);
 		}
 		data && getRowDetail(data[0].id);
+		var tomorrow = new Date(new Date().getTime() + 86400000);
 		$('.bootbox #feffectiveDate').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
 			minView: 2
 		}).on('changeDate', function(d) {
-			var dd, dt = new Date();
-			if (d.date.getTime() > dt.getTime()) {
+			var dd;
+			if (d.date.getTime() > tomorrow.getTime()) {
 				dd = d.date;
 			} else {
-				dd = dt;
+				dd = tomorrow;
 			}
 			$('.bootbox #fexpirationDate').val('').datetimepicker('setStartDate', dd);
 		});
 		$('.bootbox #fexpirationDate').datetimepicker({
 			autoclose: true,
-			todayHighlight: true,
+			todayHighlight: false,
 			minView: 2,
-			startDate: new Date()
+			startDate: tomorrow
 		});
 		$('.bootbox input, .bootbox select').on('change', function(e) {
 			validate($(this));

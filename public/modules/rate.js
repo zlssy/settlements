@@ -266,17 +266,25 @@ define(function(require, exports, module) {
 			setSelect('chargeServiceType', $('#fchargeServiceTypeInt'));
 		}
 		data && (validatePass = true, getRowDetail(data[0].id, cb));
+		var tomorrow = new Date(new Date().getTime() + 86400000);
 		$('.bootbox input[name="feffectiveDate"]').datetimepicker({
 			autoclose: true,
 			todayHighlight: true,
-			minView: 2,
-			endDate: new Date()
+			minView: 2
+		}).on('changeDate', function(d) {
+			var dd;
+			if (d.date.getTime() > tomorrow.getTime()) {
+				dd = d.date;
+			} else {
+				dd = tomorrow;
+			}
+			$('.bootbox input[name="fexpirationDate"]').val('').datetimepicker('setStartDate', dd);
 		});
 		$('.bootbox input[name="fexpirationDate"]').datetimepicker({
 			autoclose: true,
-			todayHighlight: true,
+			todayHighlight: false,
 			minView: 2,
-			startDate: new Date()
+			startDate: tomorrow
 		});
 		$("#fownerId").off().on('blur', function(e) {
 			var $el = $(this),

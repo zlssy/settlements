@@ -30,20 +30,14 @@ define(function(require, exports, module) {
 			//oldApi: true, //是否是老接口
 			pagenav: true,
 			cols: [{
-				name: '商户编码',
+				name: '商户编号',
 				index: 'merchantId'
 			}, {
-				name: '商户名称',
-				index: 'merchantName'
-			}, {
-				name: '清算日期',
+				name: '清分日期',
 				index: 'clearingDate'
 			}, {
-				name: '交易开始日期',
+				name: '交易日期',
 				index: 'tradeStartDate'
-			}, {
-				name: '交易结束日期',
-				index: 'tradeEndDate'
 			}, {
 				name: '交易总金额',
 				index: 'tradeAmount'
@@ -51,22 +45,22 @@ define(function(require, exports, module) {
 				name: '交易总笔数',
 				index: 'tradeTrans'
 			}, {
+				name: '币种',
+				index: 'currencyCode'
+			}, {
 				name: '退款总金额',
 				index: 'refundAmount'
 			}, {
 				name: '退款总笔数',
 				index: 'refundTrans'
 			}, {
-				name: '币种',
-				index: 'currencyCode'
-			}, {
 				name: '交易渠道',
 				index: 'payChannel'
 			}, {
-				name: '交易成本',
+				name: '通道成本',
 				index: 'cost'
 			}, {
-				name: '交易手续费',
+				name: '商户成本',
 				index: 'serviceCharge'
 			}, {
 				name: '结算总金额',
@@ -75,7 +69,7 @@ define(function(require, exports, module) {
 				name: '毛利润',
 				index: 'profit'
 			}, {
-				name: '状态',
+				name: '清分状态',
 				index: 'status',
 				width: 80
 			}, {
