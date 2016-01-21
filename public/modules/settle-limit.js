@@ -324,7 +324,7 @@ define(function(require, exports, module) {
 			data: data,
 			success: function(json) {
 				if ('0' == json.code) {
-					_grid.loadData();
+					_grid.load();
 				} else {
 					Box.alert('数据保存失败！');
 				}
@@ -382,10 +382,10 @@ define(function(require, exports, module) {
 		if (data.tranOneHolidayLimit) {
 			$("#ftOneHolidayLimit").val(data.tranOneHolidayLimit)
 		}
-		// $("#fmerchantId").focus();
-		// setTimeout(function() {
-		// 	$("#fmerchantId").blur();
-		// }, 0);
+		$("#fmerchantId").focus();
+		setTimeout(function() {
+			$("#fmerchantId").blur();
+		}, 0);
 
 		$('#fmerchantId').prop('readonly', true);
 	}
