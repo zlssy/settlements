@@ -66,7 +66,15 @@ define(function(require, exports, module) {
 				index: 'clearingStatus',
 				width: 80,
 				format: function(v) {
-					return dictionaryCollection['clearingStatus'][v[this.index]];
+					var d;
+					if(!dataTypes['clearingCollectionStatus'].map){
+						dataTypes['clearingCollectionStatus'].map = {};
+						for(var i=0;i<dataTypes['clearingCollectionStatus'].length;i++){
+							d = dataTypes['clearingCollectionStatus'][i];
+							dataTypes['clearingCollectionStatus'].map[d.innerValue] = d.label;
+						}
+					}
+					return dataTypes['clearingCollectionStatus'].map[v[this.index]];
 				}
 			}]
 		});
