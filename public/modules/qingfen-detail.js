@@ -67,14 +67,14 @@ define(function(require, exports, module) {
 				width: 80,
 				format: function(v) {
 					var d;
-					if(!dataTypes['clearingCollectionStatus'].map){
-						dataTypes['clearingCollectionStatus'].map = {};
+					if(!dataTypes['clearingCollectionStatus'].dataMap){
+						dataTypes['clearingCollectionStatus'].dataMap = {};
 						for(var i=0;i<dataTypes['clearingCollectionStatus'].length;i++){
 							d = dataTypes['clearingCollectionStatus'][i];
-							dataTypes['clearingCollectionStatus'].map[d.innerValue] = d.label;
+							dataTypes['clearingCollectionStatus'].dataMap[d.innerValue] = d.label;
 						}
 					}
-					return dataTypes['clearingCollectionStatus'].map[v[this.index]];
+					return dataTypes['clearingCollectionStatus'].dataMap[v[this.index]];
 				}
 			}]
 		});
