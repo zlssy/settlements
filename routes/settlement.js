@@ -25,6 +25,7 @@ if (daili) {
         ,'/settleCard/importReturnJson'
         ,'/reconciliation'
         ,"/test"
+        ,'/financialStatistic/export'
     ]
 
     var conditions = [
